@@ -10,16 +10,38 @@ type: portfolio
 
 
 
+<style type="text/css">
+
+.pink { background-color:#fae6e6 ; 
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+
+.blue { background-color:#DFF5F6 ; 
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+    
+.whitep { background-color:#fffafa ;
+    border: 3px gray;
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+    
+.whiteb { background-color:#f7ffff ;
+    border: 3px gray;
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+
+    
+</style>
 <p>In this piece I will analyse the data on interest rates in the Lendign Club. First I will conduct the ICE of the data together with visualisation of the variables disributions and correlations for better understanding. Then, I will first build a linear regression model</p>
 <div id="load-and-prepare-the-data" class="section level1">
 <h1>Load and prepare the data</h1>
 <p>I start by loading the data to R in a dataframe.</p>
-<pre class="r"><code>lc_raw &lt;- read_csv(&quot;~/Documents/LBS/Data Science/Session 03/LendingClub Data.csv&quot;,  skip=1) %&gt;%  clean_names() # use janitor::clean_names()</code></pre>
+<pre class="r blue"><code>lc_raw &lt;- read_csv(&quot;~/Documents/LBS/Data Science/Session 03/LendingClub Data.csv&quot;,  skip=1) %&gt;%  clean_names() # use janitor::clean_names()</code></pre>
 </div>
 <div id="ice-the-data-inspect-clean-explore" class="section level1">
 <h1>ICE the data: Inspect, Clean, Explore</h1>
 <p>Any data science engagement starts with ICE. Inspect, Clean and Explore the data. For this workshop I have cleaned the data for you.</p>
-<pre class="r"><code>#glimpse(lc_raw) 
+<pre class="r blue"><code>#glimpse(lc_raw) 
 
 lc_clean&lt;- lc_raw %&gt;%
   dplyr::select(-x20:-x80) %&gt;% #delete empty columns
@@ -34,7 +56,7 @@ lc_clean&lt;- lc_raw %&gt;%
 
 #glimpse(lc_clean) 
 summary(lc_clean)</code></pre>
-<pre><code>##     int_rate      loan_amnt          dti         delinq_2yrs   
+<pre class="whiteb"><code>##     int_rate      loan_amnt          dti         delinq_2yrs   
 ##  Min.   :0.05   Min.   :  500   Min.   : 0.00   0      :33782  
 ##  1st Qu.:0.09   1st Qu.: 5500   1st Qu.: 8.14   1      : 3141  
 ##  Median :0.12   Median :10000   Median :13.36   2      :  637  
@@ -78,7 +100,7 @@ summary(lc_clean)</code></pre>
 </div>
 <div id="explore-the-data-by-building-some-visualizations." class="section level1">
 <h1>Explore the data by building some visualizations.</h1>
-<pre class="r"><code># Build a histogram of interest rates. Make sure it looks nice!
+<pre class="r blue"><code># Build a histogram of interest rates. Make sure it looks nice!
 ggplot(lc_clean, aes(x=int_rate))+ 
   geom_histogram(bins=20) + 
   labs(title=&quot;Histogram of Interest Rate&quot;,
@@ -87,7 +109,7 @@ ggplot(lc_clean, aes(x=int_rate))+
   scale_x_continuous(labels = scales::percent)+
   theme_bw()</code></pre>
 <p><img src="/portfolio/project-01_files/figure-html/data_visualisation-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code># Build a histogram of interest rates but use different color for loans of different grades 
+<pre class="r blue"><code># Build a histogram of interest rates but use different color for loans of different grades 
 ggplot(lc_clean, aes(x=int_rate, fill=grade))+ 
   geom_histogram(bins=20)+
   labs(title=&quot;Histogram of Interest Rate by Grade&quot;,
@@ -96,14 +118,14 @@ ggplot(lc_clean, aes(x=int_rate, fill=grade))+
   scale_x_continuous(labels = scales::percent)+
   theme_bw()</code></pre>
 <p><img src="/portfolio/project-01_files/figure-html/data_visualisation-2.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code># Produce a scatter plot of loan amount against interest rate and add visually the line of best fit
+<pre class="r blue"><code># Produce a scatter plot of loan amount against interest rate and add visually the line of best fit
 ggplot(lc_clean[seq(1, nrow(lc_clean), 10), ] , aes(y=int_rate, x=loan_amnt)) +  geom_smooth(method=&quot;lm&quot;,se=0)+
   geom_point()+
 scale_x_continuous(label=scales::dollar)+
   labs(y=&quot;Interest Rate&quot;, x=&quot;Annual Income&quot;)+
   theme_bw()</code></pre>
 <p><img src="/portfolio/project-01_files/figure-html/data_visualisation-3.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code># Produce a scatter plot of annual income against interest rate and add visually the line of best fit 
+<pre class="r blue"><code># Produce a scatter plot of annual income against interest rate and add visually the line of best fit 
 ggplot(lc_clean[seq(1, nrow(lc_clean), 10), ] , aes(y=int_rate, x=annual_inc)) + 
   geom_point(size=0.1)+ 
   geom_smooth(method=&quot;lm&quot;, se=0) +
@@ -111,7 +133,7 @@ ggplot(lc_clean[seq(1, nrow(lc_clean), 10), ] , aes(y=int_rate, x=annual_inc)) +
   labs(y=&quot;Interest Rate&quot;, x=&quot;Annual Income&quot;)+
   theme_bw()</code></pre>
 <p><img src="/portfolio/project-01_files/figure-html/data_visualisation-4.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code># In the same axes, produce box plots of the interest rate for every value of delinquencies
+<pre class="r blue"><code># In the same axes, produce box plots of the interest rate for every value of delinquencies
 ggplot(lc_clean , aes(y=int_rate, x=delinq_2yrs, colour= delinq_2yrs)) + 
   geom_boxplot()+
   # geom_jitter()+
@@ -124,7 +146,7 @@ ggplot(lc_clean , aes(y=int_rate, x=delinq_2yrs, colour= delinq_2yrs)) +
   )+
   theme_bw()</code></pre>
 <p><img src="/portfolio/project-01_files/figure-html/data_visualisation-5.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#loan period vs interest rate
+<pre class="r blue"><code>#loan period vs interest rate
 ggplot(lc_clean, aes(x=term, y = int_rate))+
   geom_boxplot()+
   labs(title=&quot;Interest Rate Spread by Loan Term&quot;,
@@ -133,7 +155,7 @@ ggplot(lc_clean, aes(x=term, y = int_rate))+
   scale_y_continuous(labels=scales::percent)+
   theme_bw()</code></pre>
 <p><img src="/portfolio/project-01_files/figure-html/data_visualisation-6.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#home ownership vs interest rate
+<pre class="r blue"><code>#home ownership vs interest rate
 ggplot(lc_clean, aes(x=home_ownership, y = int_rate))+
   geom_boxplot()+
   labs(title=&quot;Interest Rate Spread by Ownership Status&quot;,
@@ -142,7 +164,7 @@ ggplot(lc_clean, aes(x=home_ownership, y = int_rate))+
   scale_y_continuous(labels=scales::percent)+
   theme_bw()</code></pre>
 <p><img src="/portfolio/project-01_files/figure-html/data_visualisation-7.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#Employment Length vs Interest 
+<pre class="r blue"><code>#Employment Length vs Interest 
 ggplot(lc_clean, aes(x=emp_length, y = int_rate))+
   geom_boxplot()+
   labs(title=&quot;Interest Rate Spread by Ownership Status&quot;,
@@ -155,12 +177,12 @@ ggplot(lc_clean, aes(x=emp_length, y = int_rate))+
 <div id="estimate-simple-linear-regression-models" class="section level1">
 <h1>Estimate simple linear regression models</h1>
 <p>I start with a simple but quite powerful model.</p>
-<pre class="r"><code>#Use the lm command to estimate a regression model with the following variables &quot;loan_amnt&quot;,  &quot;term&quot;, &quot;dti&quot;, &quot;annual_inc&quot;, and &quot;grade&quot;
+<pre class="r blue"><code>#Use the lm command to estimate a regression model with the following variables &quot;loan_amnt&quot;,  &quot;term&quot;, &quot;dti&quot;, &quot;annual_inc&quot;, and &quot;grade&quot;
 
 model1&lt;-lm( int_rate ~ loan_amnt+ term+ dti+ annual_inc+ grade, data = lc_clean
   )
 summary(model1) # noticed that annual income has a p value of over 0.05</code></pre>
-<pre><code>## 
+<pre class="whiteb"><code>## 
 ## Call:
 ## lm(formula = int_rate ~ loan_amnt + term + dti + annual_inc + 
 ##     grade, data = lc_clean)
@@ -206,12 +228,12 @@ summary(model1) # noticed that annual income has a p value of over 0.05</code></
 <div id="feature-engineering" class="section level1">
 <h1>Feature Engineering</h1>
 <p>Let’s build progressively more complex models with more features.</p>
-<pre class="r"><code>#Add to the previous model an interaction between loan amount and grade. Use the &quot;var1*var2&quot; notation to define an interaction term in the linear regression model. This will add the interaction and the individual variables to the model. 
+<pre class="r blue"><code>#Add to the previous model an interaction between loan amount and grade. Use the &quot;var1*var2&quot; notation to define an interaction term in the linear regression model. This will add the interaction and the individual variables to the model. 
 model2 &lt;-lm( int_rate ~ loan_amnt*grade+ term+ dti+ annual_inc, data = lc_clean
   )
 
 summary(model2)</code></pre>
-<pre><code>## 
+<pre class="whiteb"><code>## 
 ## Call:
 ## lm(formula = int_rate ~ loan_amnt * grade + term + dti + annual_inc, 
 ##     data = lc_clean)
@@ -245,11 +267,11 @@ summary(model2)</code></pre>
 ## Residual standard error: 0.0105 on 37852 degrees of freedom
 ## Multiple R-squared:  0.92,   Adjusted R-squared:  0.92 
 ## F-statistic: 2.74e+04 on 16 and 37852 DF,  p-value: &lt;2e-16</code></pre>
-<pre class="r"><code>#Add to the model the square and the cube of annual income. Use the poly(var_name,3) command as a variable in the linear regression model.  
+<pre class="r blue"><code>#Add to the model the square and the cube of annual income. Use the poly(var_name,3) command as a variable in the linear regression model.  
 model3 &lt;- lm( int_rate ~ loan_amnt*grade+ term+ dti+poly(annual_inc,3), data = lc_clean
   ) 
 summary(model3) # makes no difference</code></pre>
-<pre><code>## 
+<pre class="whiteb"><code>## 
 ## Call:
 ## lm(formula = int_rate ~ loan_amnt * grade + term + dti + poly(annual_inc, 
 ##     3), data = lc_clean)
@@ -285,7 +307,7 @@ summary(model3) # makes no difference</code></pre>
 ## Residual standard error: 0.0105 on 37850 degrees of freedom
 ## Multiple R-squared:  0.92,   Adjusted R-squared:  0.92 
 ## F-statistic: 2.43e+04 on 18 and 37850 DF,  p-value: &lt;2e-16</code></pre>
-<pre class="r"><code>#Continuing with the previous model, instead of annual income as a continuous variable break it down into quartiles and use quartile dummy variables. You can do this with the following command. 
+<pre class="r blue"><code>#Continuing with the previous model, instead of annual income as a continuous variable break it down into quartiles and use quartile dummy variables. You can do this with the following command. 
   
 lc_clean2 &lt;- lc_clean %&gt;% 
   mutate(quartiles_annual_inc = as.factor(ntile(annual_inc, 4)))
@@ -293,7 +315,7 @@ lc_clean2 &lt;- lc_clean %&gt;%
 model4 &lt;-lm( int_rate ~ loan_amnt*grade+ term+ dti+quartiles_annual_inc, data = lc_clean2
   ) 
 summary(model4)  # still makes no difference</code></pre>
-<pre><code>## 
+<pre class="whiteb"><code>## 
 ## Call:
 ## lm(formula = int_rate ~ loan_amnt * grade + term + dti + quartiles_annual_inc, 
 ##     data = lc_clean2)
@@ -329,7 +351,7 @@ summary(model4)  # still makes no difference</code></pre>
 ## Residual standard error: 0.0105 on 37850 degrees of freedom
 ## Multiple R-squared:  0.92,   Adjusted R-squared:  0.92 
 ## F-statistic: 2.43e+04 on 18 and 37850 DF,  p-value: &lt;2e-16</code></pre>
-<pre class="r"><code>#Compare the performance of these four models using the anova command
+<pre class="r blue"><code>#Compare the performance of these four models using the anova command
 anova(model1, model2, model3, model4
       )</code></pre>
 <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:Feature Engineering">
@@ -357,7 +379,7 @@ anova(model1, model2, model3, model4
 <div id="out-of-sample-testing" class="section level1">
 <h1>Out of sample testing</h1>
 <p>Let’s check the predictive accuracy of model2 by holding out a subset of the data to use as testing. This method is sometimes refered to as the hold-out method for out-of-sample testing.</p>
-<pre class="r"><code>#split the data in dataframe called &quot;testing&quot; and another one called  &quot;training&quot;. The &quot;training&quot; dataframe should have 80% of the data and the &quot;testing&quot; dataframe 20%.
+<pre class="r blue"><code>#split the data in dataframe called &quot;testing&quot; and another one called  &quot;training&quot;. The &quot;training&quot; dataframe should have 80% of the data and the &quot;testing&quot; dataframe 20%.
 set.seed(176823769)
 train_test_split &lt;- initial_split(lc_clean2, prop=0.8) # splitting dataset
 lc_clean_train&lt;- training(train_test_split)
@@ -367,7 +389,7 @@ lc_clean_test&lt;- testing(train_test_split)
 #Fit model2 on the training set 
 model2_training&lt;-lm(int_rate ~ loan_amnt + term+ dti + annual_inc + grade +grade:loan_amnt, data=lc_clean_train)
 summary(model2_training)</code></pre>
-<pre><code>## 
+<pre class="whiteb"><code>## 
 ## Call:
 ## lm(formula = int_rate ~ loan_amnt + term + dti + annual_inc + 
 ##     grade + grade:loan_amnt, data = lc_clean_train)
@@ -401,7 +423,7 @@ summary(model2_training)</code></pre>
 ## Residual standard error: 0.0105 on 30279 degrees of freedom
 ## Multiple R-squared:  0.921,  Adjusted R-squared:  0.921 
 ## F-statistic: 2.2e+04 on 16 and 30279 DF,  p-value: &lt;2e-16</code></pre>
-<pre class="r"><code>#Calculate the RMSE of the model in the training set (in sample)
+<pre class="r blue"><code>#Calculate the RMSE of the model in the training set (in sample)
 rmse_training&lt;-sqrt(mean((residuals(model2_training))^2))
 #USe the model to make predictions out of sample in the testing set
 pred&lt;-predict(model2_training,lc_clean_test)
@@ -409,9 +431,9 @@ pred&lt;-predict(model2_training,lc_clean_test)
 rmse_testing&lt;- RMSE(pred,lc_clean_test$int_rate)
 
 rmse_training</code></pre>
-<pre><code>## [1] 0.0105</code></pre>
-<pre class="r"><code>rmse_testing</code></pre>
-<pre><code>## [1] 0.0106</code></pre>
+<pre class="whiteb"><code>## [1] 0.0105</code></pre>
+<pre class="r blue"><code>rmse_testing</code></pre>
+<pre class="whiteb"><code>## [1] 0.0106</code></pre>
 <div id="how-much-does-the-predictive-accuracy-of-model-2-deteriorate-when-we-move-from-in-sample-to-out-of-sample-testing-is-this-sensitive-to-the-random-seed-chosen-is-there-any-evidence-of-overfitting" class="section level2">
 <h2>How much does the predictive accuracy of model 2 deteriorate when we move from in sample to out of sample testing? Is this sensitive to the random seed chosen? Is there any evidence of overfitting?</h2>
 <p>The predictive accuracy of model 2 does not much deteriorate when I move from in sample to out of sample testing. For purpose of checking it I compare the rmse_training to rmse_testing (0.0104 compared to 0.01061). I tried to check if the model is sensitive for the multiple random seed choices and I discovered that the model is not much sensitive (rmse is still a factor of e-2). There isn’t any evidence of overfitting.</p>
@@ -420,7 +442,7 @@ rmse_training</code></pre>
 <div id="k-fold-cross-validation" class="section level1">
 <h1>k-fold cross validation</h1>
 <p>I can also do out of sample testing using the method of k-fold cross validation. Using the caret package this is easy.</p>
-<pre class="r"><code>#the method &quot;cv&quot; stands for cross validation. I am going to create 10 folds.  
+<pre class="r blue"><code>#the method &quot;cv&quot; stands for cross validation. I am going to create 10 folds.  
 
 control &lt;- trainControl (
     method=&quot;cv&quot;,
@@ -434,7 +456,7 @@ plsFit&lt;-train(
    method = &quot;lm&quot;,
     trControl = control
    )</code></pre>
-<pre><code>## + Fold01: intercept=TRUE 
+<pre class="whiteb"><code>## + Fold01: intercept=TRUE 
 ## - Fold01: intercept=TRUE 
 ## + Fold02: intercept=TRUE 
 ## - Fold02: intercept=TRUE 
@@ -456,8 +478,8 @@ plsFit&lt;-train(
 ## - Fold10: intercept=TRUE 
 ## Aggregating results
 ## Fitting final model on full training set</code></pre>
-<pre class="r"><code>summary(plsFit)</code></pre>
-<pre><code>## 
+<pre class="r blue"><code>summary(plsFit)</code></pre>
+<pre class="whiteb"><code>## 
 ## Call:
 ## lm(formula = .outcome ~ ., data = dat)
 ## 
@@ -498,7 +520,7 @@ plsFit&lt;-train(
 <div id="sample-size-estimation-and-learning-curves" class="section level1">
 <h1>Sample size estimation and learning curves</h1>
 <p>I can use the hold out method for out-of-sample testing to check if I have a sufficiently large sample to estimate the model reliably. The idea is to set aside some of the data as a testing set. From the remaining data draw progressively larger training sets and check how the performance of the model on the testing set changes. If the performance no longer improves with larger datasets we will be sure that the sample is large enough.</p>
-<pre class="r"><code>#select a testing dataset (25% of all data)
+<pre class="r blue"><code>#select a testing dataset (25% of all data)
 set.seed(12)
 
 train_test_split &lt;- initial_split(lc_clean, prop = 0.75)
@@ -530,7 +552,7 @@ sample
 }
 plot(sample_size,rmse_sample)</code></pre>
 <p><img src="/portfolio/project-01_files/figure-html/learning%20curves-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>plot(sample_size,Rsq_sample)</code></pre>
+<pre class="r blue"><code>plot(sample_size,Rsq_sample)</code></pre>
 <p><img src="/portfolio/project-01_files/figure-html/learning%20curves-2.png" width="648" style="display: block; margin: auto;" /></p>
 <div id="using-the-learning-curves-above-approximately-how-large-of-a-sample-size-would-we-need-to-estimate-model-3-reliably-once-we-reach-this-sample-size-if-we-want-to-reduce-the-prediction-error-further-what-options-do-we-have" class="section level2">
 <h2>Using the learning curves above, approximately how large of a sample size would we need to estimate model 3 reliably? Once we reach this sample size, if we want to reduce the prediction error further what options do we have?</h2>
@@ -541,7 +563,7 @@ plot(sample_size,rmse_sample)</code></pre>
 <h1>Regularization using LASSO regression</h1>
 <p>If we are in the region of the learning curve where we do not have enough data, one option is to use a regularization method such as LASSO.</p>
 <p>Let’s try to estimate large and complicated model (many interactions and polynomials) on a small training dataset using OLS regression and hold-out validation method.</p>
-<pre class="r"><code>#split the data in testing and training. The training test is really small.
+<pre class="r blue"><code>#split the data in testing and training. The training test is really small.
 set.seed(1234)
 train_test_split &lt;- initial_split(lc_clean, prop = 0.01)
 training &lt;- training(train_test_split)
@@ -565,7 +587,7 @@ data.frame(
 
 <p>Not surprisingly this model does not perform well – as I knew from the learning curves I constructed for a simpler model, I would need a lot more data to estimate this model reliably.</p>
 <p>LASSO regression offers one solution – it extends the OLS regression by penalizing the model for setting any coefficient to a value that is different from zero. The penalty is proportional to a parameter $$ (pronounced lambda). This parameter cannot be estimated directly (and for this reason sometimes it is refered to as hyperparameter) and will be selected through k-fold cross validation in order to provide the best out-of-sample performance. As result of the LASSO precedure, only those features that are more strongly associated with the outcome will have non-zero coefficients and the estimated model will be less sensitive to the training set. Sometimes LASSO regression is refered to as regularization.</p>
-<pre class="r"><code>#I will look for the optimal lambda in this sequence (I will try 1000 different lambdas)
+<pre class="r blue"><code>#I will look for the optimal lambda in this sequence (I will try 1000 different lambdas)
 lambda_seq &lt;- seq(0, 0.01, length = 1000)
 #lasso regression using k-fold cross validation to select the best lambda
 
@@ -577,7 +599,7 @@ lasso &lt;- train(
   trControl = control,
   tuneGrid = expand.grid(alpha = 1, lambda = lambda_seq) #alpha=1 specifies to run a LASSO regression. If alpha=0 the model would run ridge regression.
   )</code></pre>
-<pre><code>## + Fold01: alpha=1, lambda=0.01 
+<pre class="whiteb"><code>## + Fold01: alpha=1, lambda=0.01 
 ## - Fold01: alpha=1, lambda=0.01 
 ## + Fold02: alpha=1, lambda=0.01 
 ## - Fold02: alpha=1, lambda=0.01 
@@ -600,9 +622,9 @@ lasso &lt;- train(
 ## Aggregating results
 ## Selecting tuning parameters
 ## Fitting alpha = 1, lambda = 0.000581 on full training set</code></pre>
-<pre class="r"><code># Model coefficients
+<pre class="r blue"><code># Model coefficients
 coef(lasso$finalModel, lasso$bestTune$lambda)</code></pre>
-<pre><code>## 58 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
+<pre class="whiteb"><code>## 58 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
 ##                                           1
 ## (Intercept)                        1.19e-01
 ## poly(loan_amnt, 3)1                .       
@@ -662,15 +684,15 @@ coef(lasso$finalModel, lasso$bestTune$lambda)</code></pre>
 ## poly(loan_amnt, 3)1:term60:gradeG  3.95e-06
 ## poly(loan_amnt, 3)2:term60:gradeG  5.06e-08
 ## poly(loan_amnt, 3)3:term60:gradeG  .</code></pre>
-<pre class="r"><code>#Best lambda
+<pre class="r blue"><code>#Best lambda
 lasso$bestTune$lambda</code></pre>
-<pre><code>## [1] 0.000581</code></pre>
-<pre class="r"><code># Count of how many coefficients are greater than zero and how many are equal to zero
+<pre class="whiteb"><code>## [1] 0.000581</code></pre>
+<pre class="r blue"><code># Count of how many coefficients are greater than zero and how many are equal to zero
 sum(coef(lasso$finalModel, lasso$bestTune$lambda)!=0)</code></pre>
-<pre><code>## [1] 23</code></pre>
-<pre class="r"><code>sum(coef(lasso$finalModel, lasso$bestTune$lambda)==0)</code></pre>
-<pre><code>## [1] 35</code></pre>
-<pre class="r"><code># Make predictions
+<pre class="whiteb"><code>## [1] 23</code></pre>
+<pre class="r blue"><code>sum(coef(lasso$finalModel, lasso$bestTune$lambda)==0)</code></pre>
+<pre class="whiteb"><code>## [1] 35</code></pre>
+<pre class="r blue"><code># Make predictions
 predictions &lt;- predict(lasso,testing)
 
 # Model prediction performance
@@ -703,19 +725,19 @@ data.frame(
 <h1>Using Time Information</h1>
 <p>Let’s try to further improve the model’s predictive performance. So far I have not used any time series information. Effectively, all things being equal, my prediction for the interest rate of a loan given in 2009 would be the same as that of a loan given in 2011.</p>
 <p>First, I will investigate graphically whether there are any time trends in the interest rates. I will try controlling for time in a linear fashion (i.e., a linear time trend) and controlling for time as quarter dummies. Finally, I will check if time affect loans of different grades differently.</p>
-<pre class="r"><code>#linear time trend (add code below)
+<pre class="r blue"><code>#linear time trend (add code below)
 
 ggplot(lc_clean, aes(x=issue_d,y=int_rate))+
   geom_point()+
   geom_smooth(method=&quot;lm&quot;)</code></pre>
 <p><img src="/portfolio/project-01_files/figure-html/time%20trends-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#linear time trend by grade (add code below)
+<pre class="r blue"><code>#linear time trend by grade (add code below)
 ggplot(lc_clean, aes(x=issue_d,y=int_rate, colour=grade))+
   geom_point()+
   geom_smooth(method=&quot;lm&quot;)</code></pre>
 <p><img src="/portfolio/project-01_files/figure-html/time%20trends-2.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>glimpse(lc_clean2)</code></pre>
-<pre><code>## Rows: 37,869
+<pre class="r blue"><code>glimpse(lc_clean2)</code></pre>
+<pre class="whiteb"><code>## Rows: 37,869
 ## Columns: 21
 ## $ int_rate             &lt;dbl&gt; 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, …
 ## $ loan_amnt            &lt;dbl&gt; 8000, 6000, 6500, 8000, 5500, 6000, 10200, 15000…
@@ -738,7 +760,7 @@ ggplot(lc_clean, aes(x=issue_d,y=int_rate, colour=grade))+
 ## $ installment          &lt;dbl&gt; 241.3, 181.0, 196.0, 241.3, 165.9, 181.0, 307.6,…
 ## $ emp_title            &lt;chr&gt; NA, &quot;coral graphics&quot;, NA, &quot;Honeywell&quot;, &quot;O T Plus…
 ## $ quartiles_annual_inc &lt;fct&gt; 2, 2, 1, 3, 4, 4, 4, 4, 2, 2, 4, 3, 3, 2, 1, 3, …</code></pre>
-<pre class="r"><code>#Train models using OLS regression and k-fold cross-validation
+<pre class="r blue"><code>#Train models using OLS regression and k-fold cross-validation
 #The first model has some explanatory variables and a linear time trend
 
 time1&lt;-train(
@@ -746,7 +768,7 @@ time1&lt;-train(
   lc_clean,
   method = &quot;lm&quot;,
   trControl = control)</code></pre>
-<pre><code>## + Fold01: intercept=TRUE 
+<pre class="whiteb"><code>## + Fold01: intercept=TRUE 
 ## - Fold01: intercept=TRUE 
 ## + Fold02: intercept=TRUE 
 ## - Fold02: intercept=TRUE 
@@ -768,8 +790,8 @@ time1&lt;-train(
 ## - Fold10: intercept=TRUE 
 ## Aggregating results
 ## Fitting final model on full training set</code></pre>
-<pre class="r"><code>summary(time1) # seems like dti is corrolated with issue_d (maybe lots of people defaulted because of the crisis)</code></pre>
-<pre><code>## 
+<pre class="r blue"><code>summary(time1) # seems like dti is corrolated with issue_d (maybe lots of people defaulted because of the crisis)</code></pre>
+<pre class="whiteb"><code>## 
 ## Call:
 ## lm(formula = .outcome ~ ., data = dat)
 ## 
@@ -802,14 +824,14 @@ time1&lt;-train(
 ## Residual standard error: 0.0103 on 37852 degrees of freedom
 ## Multiple R-squared:  0.923,  Adjusted R-squared:  0.923 
 ## F-statistic: 2.85e+04 on 16 and 37852 DF,  p-value: &lt;2e-16</code></pre>
-<pre class="r"><code>#The second model has a different linear time trend for each grade class
+<pre class="r blue"><code>#The second model has a different linear time trend for each grade class
 time2&lt;-train(
     int_rate ~ loan_amnt*grade+ term+ dti + issue_d*grade, #fill your variables here 
     lc_clean,
    method = &quot;lm&quot;,
     trControl = control
    )</code></pre>
-<pre><code>## + Fold01: intercept=TRUE 
+<pre class="whiteb"><code>## + Fold01: intercept=TRUE 
 ## - Fold01: intercept=TRUE 
 ## + Fold02: intercept=TRUE 
 ## - Fold02: intercept=TRUE 
@@ -831,8 +853,8 @@ time2&lt;-train(
 ## - Fold10: intercept=TRUE 
 ## Aggregating results
 ## Fitting final model on full training set</code></pre>
-<pre class="r"><code>summary(time2)</code></pre>
-<pre><code>## 
+<pre class="r blue"><code>summary(time2)</code></pre>
+<pre class="whiteb"><code>## 
 ## Call:
 ## lm(formula = .outcome ~ ., data = dat)
 ## 
@@ -871,7 +893,7 @@ time2&lt;-train(
 ## Residual standard error: 0.00905 on 37846 degrees of freedom
 ## Multiple R-squared:  0.941,  Adjusted R-squared:  0.941 
 ## F-statistic: 2.75e+04 on 22 and 37846 DF,  p-value: &lt;2e-16</code></pre>
-<pre class="r"><code>#Change the time trend to a quarter dummy variables.
+<pre class="r blue"><code>#Change the time trend to a quarter dummy variables.
 #zoo::as.yearqrt() creates quarter dummies 
 lc_clean_quarter&lt;-lc_clean %&gt;%
   mutate(yq = as.factor(as.yearqtr(lc_clean$issue_d, format = &quot;%Y-%m-%d&quot;)))
@@ -884,7 +906,7 @@ time3&lt;-train(
      method = &quot;lm&quot;,
     trControl = control
    )</code></pre>
-<pre><code>## + Fold01: intercept=TRUE 
+<pre class="whiteb"><code>## + Fold01: intercept=TRUE 
 ## - Fold01: intercept=TRUE 
 ## + Fold02: intercept=TRUE 
 ## - Fold02: intercept=TRUE 
@@ -906,8 +928,8 @@ time3&lt;-train(
 ## - Fold10: intercept=TRUE 
 ## Aggregating results
 ## Fitting final model on full training set</code></pre>
-<pre class="r"><code>summary(time3)</code></pre>
-<pre><code>## 
+<pre class="r blue"><code>summary(time3)</code></pre>
+<pre class="whiteb"><code>## 
 ## Call:
 ## lm(formula = .outcome ~ ., data = dat)
 ## 
@@ -957,14 +979,14 @@ time3&lt;-train(
 ## Residual standard error: 0.00907 on 37835 degrees of freedom
 ## Multiple R-squared:  0.941,  Adjusted R-squared:  0.941 
 ## F-statistic: 1.82e+04 on 33 and 37835 DF,  p-value: &lt;2e-16</code></pre>
-<pre class="r"><code>#specify one quarter dummy variable for each grade. This is going to be a large model as there are 19 quarters x 7 grades = 133 quarter-grade dummies.
+<pre class="r blue"><code>#specify one quarter dummy variable for each grade. This is going to be a large model as there are 19 quarters x 7 grades = 133 quarter-grade dummies.
 time4&lt;-train(
     int_rate ~loan_amnt*grade+ term+ dti + yq*grade ,#fill your variables here 
     lc_clean_quarter,
      method = &quot;lm&quot;,
     trControl = control
    )</code></pre>
-<pre><code>## + Fold01: intercept=TRUE 
+<pre class="whiteb"><code>## + Fold01: intercept=TRUE 
 ## - Fold01: intercept=TRUE 
 ## + Fold02: intercept=TRUE 
 ## - Fold02: intercept=TRUE 
@@ -986,8 +1008,8 @@ time4&lt;-train(
 ## - Fold10: intercept=TRUE 
 ## Aggregating results
 ## Fitting final model on full training set</code></pre>
-<pre class="r"><code>summary(time4)</code></pre>
-<pre><code>## 
+<pre class="r blue"><code>summary(time4)</code></pre>
+<pre class="whiteb"><code>## 
 ## Call:
 ## lm(formula = .outcome ~ ., data = dat)
 ## 
@@ -1145,7 +1167,7 @@ time4&lt;-train(
 ## Residual standard error: 0.00756 on 37738 degrees of freedom
 ## Multiple R-squared:  0.959,  Adjusted R-squared:  0.959 
 ## F-statistic: 6.78e+03 on 130 and 37738 DF,  p-value: &lt;2e-16</code></pre>
-<pre class="r"><code>data.frame(
+<pre class="r blue"><code>data.frame(
   time1$results$RMSE,
   time2$results$RMSE,
   time3$results$RMSE,
@@ -1163,7 +1185,7 @@ time4&lt;-train(
 <h1>Using Bond Yields</h1>
 <p>One concern with using time trends for forecasting is that in order to make predictions for future loans we will need to project trends to the future. This is an extrapolation that may not be reasonable, especially if macroeconomic conditions in the future change. Furthermore, if we are using quarter dummies, it is not even possible to estimate the coefficient of these dummy variables for future quarters.</p>
 <p>Instead, perhaps it’s better to find the reasons as to why different periods are different from one another. The csv file “MonthBondYields.csv” contains information on the yield of US Treasuries on the first day of each month. I will you it to see if I can improve my predictions without using time dummies?.</p>
-<pre class="r"><code>#load the data to memory as a dataframe
+<pre class="r blue"><code>#load the data to memory as a dataframe
 bond_prices&lt;-readr::read_csv(&quot;~/Documents/LBS/Data Science/Session 03/MonthBondYields.csv&quot;)
 
 #make the date of the bond file comparable to the lending club dataset
@@ -1178,7 +1200,7 @@ bond_prices &lt;- bond_prices %&gt;%
 bond_prices %&gt;%
   ggplot(aes(x=Date2, y=Price))+geom_point(size=0.1, alpha=0.5)</code></pre>
 <p><img src="/portfolio/project-01_files/figure-html/bond%20yields-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#join the data using a left join
+<pre class="r blue"><code>#join the data using a left join
 lc_with_bonds&lt;-lc_clean %&gt;%
   left_join(bond_prices, by = c(&quot;issue_d&quot; = &quot;Date2&quot;)) %&gt;%
   arrange(issue_d) %&gt;%
@@ -1188,10 +1210,10 @@ lc_with_bonds&lt;-lc_clean %&gt;%
 lc_with_bonds%&gt;%
   ggplot(aes(x=int_rate, y=Price))+geom_point(size=0.1, alpha=0.5)+geom_smooth(method=&quot;lm&quot;)</code></pre>
 <p><img src="/portfolio/project-01_files/figure-html/bond%20yields-2.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>lc_with_bonds%&gt;%
+<pre class="r blue"><code>lc_with_bonds%&gt;%
   ggplot(aes(x=int_rate, y=Price, color=grade))+geom_point(size=0.1, alpha=0.5)+geom_smooth(method=&quot;lm&quot;)</code></pre>
 <p><img src="/portfolio/project-01_files/figure-html/bond%20yields-3.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#let&#39;s train a model using the bond information
+<pre class="r blue"><code>#let&#39;s train a model using the bond information
 
 
 plsFit&lt;-train(
@@ -1200,7 +1222,7 @@ plsFit&lt;-train(
    method = &quot;lm&quot;,
     trControl = control
    )</code></pre>
-<pre><code>## + Fold01: intercept=TRUE 
+<pre class="whiteb"><code>## + Fold01: intercept=TRUE 
 ## - Fold01: intercept=TRUE 
 ## + Fold02: intercept=TRUE 
 ## - Fold02: intercept=TRUE 
@@ -1222,8 +1244,8 @@ plsFit&lt;-train(
 ## - Fold10: intercept=TRUE 
 ## Aggregating results
 ## Fitting final model on full training set</code></pre>
-<pre class="r"><code>summary(plsFit)</code></pre>
-<pre><code>## 
+<pre class="r blue"><code>summary(plsFit)</code></pre>
+<pre class="whiteb"><code>## 
 ## Call:
 ## lm(formula = .outcome ~ ., data = dat)
 ## 
@@ -1266,7 +1288,7 @@ plsFit&lt;-train(
 <div id="further-improvement" class="section level2">
 <h2>Further improvement</h2>
 <p>My final model can be observed below. It has an explanatory power with adjusted R-squared of 93.57%. It has a Confidence Interval at 95% of ±0.01852592%. It can be used to accuratley predict the mean. I used the linear model with method of stepwise k-fold cross validation.</p>
-<pre class="r"><code>lc_with_yq_bonds&lt;- lc_with_bonds %&gt;% 
+<pre class="r blue"><code>lc_with_yq_bonds&lt;- lc_with_bonds %&gt;% 
   mutate(yq = as.factor(as.yearqtr(issue_d, format = &quot;%Y-%m-%d&quot;)))
 
 model_wild_west &lt;- train(
@@ -1275,7 +1297,7 @@ model_wild_west &lt;- train(
    method = &quot;lm&quot;,
     trControl = control
    )</code></pre>
-<pre><code>## + Fold01: intercept=TRUE 
+<pre class="whiteb"><code>## + Fold01: intercept=TRUE 
 ## - Fold01: intercept=TRUE 
 ## + Fold02: intercept=TRUE 
 ## - Fold02: intercept=TRUE 
@@ -1297,8 +1319,8 @@ model_wild_west &lt;- train(
 ## - Fold10: intercept=TRUE 
 ## Aggregating results
 ## Fitting final model on full training set</code></pre>
-<pre class="r"><code>summary(model_wild_west)</code></pre>
-<pre><code>## 
+<pre class="r blue"><code>summary(model_wild_west)</code></pre>
+<pre class="whiteb"><code>## 
 ## Call:
 ## lm(formula = .outcome ~ ., data = dat)
 ## 
@@ -1351,26 +1373,26 @@ model_wild_west &lt;- train(
 ## Residual standard error: 0.00945 on 37831 degrees of freedom
 ## Multiple R-squared:  0.936,  Adjusted R-squared:  0.936 
 ## F-statistic: 1.53e+04 on 36 and 37831 DF,  p-value: &lt;2e-16</code></pre>
-<pre class="r"><code>0.009452*1.96</code></pre>
-<pre><code>## [1] 0.0185</code></pre>
+<pre class="r blue"><code>0.009452*1.96</code></pre>
+<pre class="whiteb"><code>## [1] 0.0185</code></pre>
 </div>
 <div id="use-of-additional-sources" class="section level2">
 <h2>Use of additional sources</h2>
 <p>I will now use other publicly available datasets to further improve performance (e.g., quarterly data on US inflation or <a href="https://fred.stlouisfed.org/series/CPALTT01USQ657N">CPI</a>).</p>
 <p>Changes in CPI should correlate to changes in inflation, therefore such a variable can better explain behaviour of interest rates in the market as behaviour of inlfation partially explaines the behaviour of loan takers and actions of investors/government.</p>
-<pre class="r"><code>CPI_df &lt;- read_csv(&quot;~/Documents/LBS/Data Science/Session 03/CPALTT01USM657N.csv&quot;) %&gt;%  clean_names() # use janitor::clean_names()
+<pre class="r blue"><code>CPI_df &lt;- read_csv(&quot;~/Documents/LBS/Data Science/Session 03/CPALTT01USM657N.csv&quot;) %&gt;%  clean_names() # use janitor::clean_names()
 
 glimpse(CPI_df)</code></pre>
-<pre><code>## Rows: 727
+<pre class="whiteb"><code>## Rows: 727
 ## Columns: 2
 ## $ date            &lt;date&gt; 1960-01-01, 1960-02-01, 1960-03-01, 1960-04-01, 1960…
 ## $ cpaltt01usm657n &lt;dbl&gt; -0.340, 0.341, 0.000, 0.340, 0.000, 0.339, 0.000, 0.0…</code></pre>
-<pre class="r"><code>lc_with_CPI&lt;-lc_with_bonds %&gt;%
+<pre class="r blue"><code>lc_with_CPI&lt;-lc_with_bonds %&gt;%
   left_join(CPI_df, by = c(&quot;issue_d&quot; = &quot;date&quot;)) %&gt;%
   arrange(issue_d)
 
 glimpse(lc_with_CPI)</code></pre>
-<pre><code>## Rows: 37,868
+<pre class="whiteb"><code>## Rows: 37,868
 ## Columns: 27
 ## $ int_rate            &lt;dbl&gt; 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.08, 0…
 ## $ loan_amnt           &lt;dbl&gt; 5750, 5000, 5000, 5000, 5000, 5000, 5000, 5400, 5…
@@ -1399,13 +1421,13 @@ glimpse(lc_with_CPI)</code></pre>
 ## $ Low                 &lt;dbl&gt; 4.73, 4.73, 4.73, 4.73, 4.73, 4.73, 4.73, 4.73, 4…
 ## $ `Change %`          &lt;chr&gt; &quot;-5.85%&quot;, &quot;-5.85%&quot;, &quot;-5.85%&quot;, &quot;-5.85%&quot;, &quot;-5.85%&quot;,…
 ## $ cpaltt01usm657n     &lt;dbl&gt; -0.0254, -0.0254, -0.0254, -0.0254, -0.0254, -0.0…</code></pre>
-<pre class="r"><code>model_wild_west2 &lt;- train(
+<pre class="r blue"><code>model_wild_west2 &lt;- train(
     int_rate ~loan_amnt*grade+ term+ dti + poly(Price, 3)*grade+cpaltt01usm657n*grade , #fill your variables here 
     lc_with_CPI,
    method = &quot;lm&quot;,
     trControl = control
    )</code></pre>
-<pre><code>## + Fold01: intercept=TRUE 
+<pre class="whiteb"><code>## + Fold01: intercept=TRUE 
 ## - Fold01: intercept=TRUE 
 ## + Fold02: intercept=TRUE 
 ## - Fold02: intercept=TRUE 
@@ -1427,8 +1449,8 @@ glimpse(lc_with_CPI)</code></pre>
 ## - Fold10: intercept=TRUE 
 ## Aggregating results
 ## Fitting final model on full training set</code></pre>
-<pre class="r"><code>summary(model_wild_west2)</code></pre>
-<pre><code>## 
+<pre class="r blue"><code>summary(model_wild_west2)</code></pre>
+<pre class="whiteb"><code>## 
 ## Call:
 ## lm(formula = .outcome ~ ., data = dat)
 ## 

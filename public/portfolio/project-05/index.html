@@ -101,6 +101,28 @@
             
 
 
+<style type="text/css">
+
+.pink { background-color:#fae6e6 ; 
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+
+.blue { background-color:#DFF5F6 ; 
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+    
+.whitep { background-color:#fffafa ;
+    border: 3px gray;
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+    
+.whiteb { background-color:#f7ffff ;
+    border: 3px gray;
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+
+    
+</style>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
 <p>Welcome to the second workshop. We will continue working with the lending club data. In this workshop we will take the perspective of an investor to the lending club. Our goal is to select a subset of the most promising loans to invest. We will do so using the method of logistic regression. Feel free to consult the R markdown file of session 4.</p>
@@ -111,7 +133,7 @@
 <div id="load-the-data" class="section level2">
 <h2>Load the data</h2>
 <p>First we need to start by loading the data.</p>
-<pre class="r"><code>lc_raw &lt;- read_csv(&quot;~/Documents/LBS/Data Science/Session 03/LendingClub Data.csv&quot;,  skip=1) %&gt;%  #since the first row is a title we want to skip it. 
+<pre class="r blue"><code>lc_raw &lt;- read_csv(&quot;~/Documents/LBS/Data Science/Session 03/LendingClub Data.csv&quot;,  skip=1) %&gt;%  #since the first row is a title we want to skip it. 
   clean_names() # use janitor::clean_names()</code></pre>
 </div>
 </div>
@@ -121,8 +143,8 @@
 <div id="inspect-the-data" class="section level2">
 <h2>Inspect the data</h2>
 <p>Inspect the data to understand what different variables mean. Variable definitions can be found in the excel version of the data.</p>
-<pre class="r"><code>summary(lc_raw)</code></pre>
-<pre><code>##     int_rate      loan_amnt      term_months    installment        dti      
+<pre class="r blue"><code>summary(lc_raw)</code></pre>
+<pre class="whiteb"><code>##     int_rate      loan_amnt      term_months    installment        dti      
 ##  Min.   :0      Min.   :  500   Min.   :36     Min.   :  16   Min.   : 0    
 ##  1st Qu.:0      1st Qu.: 5500   1st Qu.:36     1st Qu.: 169   1st Qu.: 8    
 ##  Median :0      Median :10000   Median :36     Median : 288   Median :13    
@@ -263,7 +285,7 @@
 <h2>Clean the data</h2>
 <p>Are there any redundant columns and rows? Are all the variables in the correct format (e.g., numeric, factor, date)? Lets fix it.</p>
 <p>The variable “loan_status” contains information as to whether the loan has been repaid or charged off (i.e., defaulted). Let’s create a binary factor variable for this. This variable will be the focus of this workshop.</p>
-<pre class="r"><code>lc_clean&lt;- lc_raw %&gt;%
+<pre class="r blue"><code>lc_clean&lt;- lc_raw %&gt;%
   dplyr::select(-x20:-x80) %&gt;% #delete empty columns
   filter(!is.na(int_rate)) %&gt;%   #delete empty rows
   mutate(
@@ -280,22 +302,22 @@
 <div id="explore-the-data" class="section level2">
 <h2>Explore the data</h2>
 <p>Let’s explore loan defaults by creating different visualizations. We start with examining how prevalent defaults are, whether the default rate changes by loan grade or number of delinquencies, and a couple of scatter plots of defaults against loan amount and income.</p>
-<pre class="r"><code>#bar chart of defaults
+<pre class="r blue"><code>#bar chart of defaults
 def_vis1&lt;-ggplot(data=lc_clean, aes(x=default)) +geom_bar(aes(y = (..count..)/sum(..count..))) + labs(x=&quot;Default, 1=Yes, 0=No&quot;, y=&quot;relative frequencies&quot;) +scale_y_continuous(labels=scales::percent) +geom_text(aes( label = scales::percent((..count..)/sum(..count..) ),y=(..count..)/sum(..count..) ), stat= &quot;count&quot;,vjust=-0.5) 
 def_vis1</code></pre>
 <p><img src="/portfolio/project-05_files/figure-html/visualization%20of%20defaults-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#bar chart of defaults per loan grade
+<pre class="r blue"><code>#bar chart of defaults per loan grade
 def_vis2&lt;-ggplot(data=lc_clean, aes(x=default), group=grade) +geom_bar(aes(y = (..count..)/sum(..count..), fill = factor(..x..)), stat=&quot;count&quot;)  + labs(title=&quot;Defaults by Grade&quot;, x=&quot;Default, 1=Yes, 0=No&quot;, y=&quot;relative frequencies&quot;) +scale_y_continuous(labels=scales::percent) +facet_grid(~grade) + theme(legend.position = &quot;none&quot;) +geom_text(aes( label = scales::percent((..count..)/sum(..count..) ),y=(..count..)/sum(..count..) ), stat= &quot;count&quot;,vjust=-0.5) 
 def_vis2</code></pre>
 <p><img src="/portfolio/project-05_files/figure-html/visualization%20of%20defaults-2.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#bar chart of defaults per number of Delinquencies
+<pre class="r blue"><code>#bar chart of defaults per number of Delinquencies
 def_vis3&lt;-lc_clean %&gt;%
   filter(as.numeric(delinq_2yrs)&lt;4) %&gt;%
   ggplot(aes(x=default), group=delinq_2yrs) +geom_bar(aes(y = (..count..)/sum(..count..), fill = factor(..x..)), stat=&quot;count&quot;)  + labs(title=&quot;Defaults by Number of Delinquencies&quot;, x=&quot;Default, 1=Yes, 0=No&quot;, y=&quot;relative frequencies&quot;)  +scale_y_continuous(labels=scales::percent) +facet_grid(~delinq_2yrs) + theme(legend.position = &quot;none&quot;) +geom_text(aes( label = scales::percent((..count..)/sum(..count..) ),y=(..count..)/sum(..count..) ), stat= &quot;count&quot;,vjust=-0.5)
 
 def_vis3</code></pre>
 <p><img src="/portfolio/project-05_files/figure-html/visualization%20of%20defaults-3.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#scatter plots 
+<pre class="r blue"><code>#scatter plots 
 
 #We select 2000 random loans to display only to make the display less busy. 
 set.seed(1234)
@@ -308,13 +330,13 @@ def_vis4&lt;-ggplot(data=reduced, aes(y=default,x=I(loan_amnt/1000)))  + labs(y=
 
 def_vis4</code></pre>
 <p><img src="/portfolio/project-05_files/figure-html/visualization%20of%20defaults-4.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#scatter plot of defaults against loan amount.
+<pre class="r blue"><code>#scatter plot of defaults against loan amount.
 def_vis5&lt;-ggplot(data=reduced, aes(y=default,x=I(annual_inc/1000)))   + labs(y=&quot;Default, 1=Yes, 0=No&quot;, x=&quot;Annual Income(1000 $)&quot;) +geom_jitter(width=0, height=0.05, alpha=0.7) +  xlim(0,400)
 
 def_vis5</code></pre>
 <p><img src="/portfolio/project-05_files/figure-html/visualization%20of%20defaults-5.png" width="648" style="display: block; margin: auto;" /></p>
 <p>We can also estimate a correlation table between defaults and other continuous variables.</p>
-<pre class="r"><code># correlation table using GGally::ggcor()
+<pre class="r blue"><code># correlation table using GGally::ggcor()
 # this takes a while to plot
 
 lc_clean %&gt;% 
@@ -326,17 +348,17 @@ lc_clean %&gt;%
 <p>Q1. Add one more visualization of your own. Describe what it shows and what you learn from it in 1-2 lines.</p>
 </blockquote>
 <p>Insert your code here:</p>
-<pre class="r"><code># My visualizations
+<pre class="r blue"><code># My visualizations
 ggplot(lc_clean, aes(x= loan_amnt,y= default, colour=term)) +
   geom_boxplot() +
   facet_wrap(~grade) +
   labs(title= &quot;Average annual income across all the grades for term 36 and 60&quot;, y=&quot;Default&quot;, x=&quot;Annual Income(1000 $)&quot;)</code></pre>
-<p><img src="/portfolio/project-05_files/figure-html/unnamed-chunk-1-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>lc_clean %&gt;% 
+<p><img src="/portfolio/project-05_files/figure-html/unnamed-chunk-2-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r blue"><code>lc_clean %&gt;% 
   select(grade, int_rate, default) %&gt;% 
            ggpairs(aes(colour=default), alpha=1)+
   theme_bw()</code></pre>
-<p><img src="/portfolio/project-05_files/figure-html/unnamed-chunk-1-2.png" width="648" style="display: block; margin: auto;" />
+<p><img src="/portfolio/project-05_files/figure-html/unnamed-chunk-2-2.png" width="648" style="display: block; margin: auto;" />
 &gt; ANSWER:</p>
 <p>From the graph it is interesting to observe that across particular loan grades from A to G the loan amount tends to increase in both terms for 36 months and 60 months. However, the loan amount for 36 months always stays slower disregard grade or default.</p>
 <p>From the ggpairs plot, we can draw a few conclusions. First of all, the amount of data on default=1 is much smaller than the smount of data on default=0. Second of all, the biggest group by grade is group B, and groups that mostly tend to default are B, C or D. Intrestingly, the interest rate tends to be bigger for people who fail to pay the loan back. Also the interest rate is the lowest for grade A and increases across the grades.</p>
@@ -345,9 +367,9 @@ ggplot(lc_clean, aes(x= loan_amnt,y= default, colour=term)) +
 <div id="linear-vs.-logistic-regression-for-binary-response-variables" class="section level1">
 <h1>Linear vs. logistic regression for binary response variables</h1>
 <p>It is certainly possible to use the OLS approach to find the line that minimizes the sum of square errors when the dependent variable is binary (i.e., default no default). In this case, the predicted values take the interpretation of a probability. We can also estimate a logistic regression instead. We do both below.</p>
-<pre class="r"><code>model_lm&lt;-lm(as.numeric(default)~I(annual_inc/1000), lc_clean)
+<pre class="r blue"><code>model_lm&lt;-lm(as.numeric(default)~I(annual_inc/1000), lc_clean)
 summary(model_lm)</code></pre>
-<pre><code>## 
+<pre class="whiteb"><code>## 
 ## Call:
 ## lm(formula = as.numeric(default) ~ I(annual_inc/1000), data = lc_clean)
 ## 
@@ -365,9 +387,9 @@ summary(model_lm)</code></pre>
 ## Residual standard error: 0.35 on 37867 degrees of freedom
 ## Multiple R-squared:  0.0019, Adjusted R-squared:  0.00188 
 ## F-statistic: 72.2 on 1 and 37867 DF,  p-value: &lt;2e-16</code></pre>
-<pre class="r"><code>logistic1&lt;-glm(default~I(annual_inc/1000), family=&quot;binomial&quot;, lc_clean)
+<pre class="r blue"><code>logistic1&lt;-glm(default~I(annual_inc/1000), family=&quot;binomial&quot;, lc_clean)
 summary(logistic1)</code></pre>
-<pre><code>## 
+<pre class="whiteb"><code>## 
 ## Call:
 ## glm(formula = default ~ I(annual_inc/1000), family = &quot;binomial&quot;, 
 ##     data = lc_clean)
@@ -390,7 +412,7 @@ summary(logistic1)</code></pre>
 ## AIC: 31009
 ## 
 ## Number of Fisher Scoring iterations: 5</code></pre>
-<pre class="r"><code>ggplot(data=reduced, aes(x=I(annual_inc/1000), y=default)) + geom_smooth(method=&quot;lm&quot;, se=0, aes(color=&quot;OLS&quot;))+ geom_smooth(method = &quot;glm&quot;, method.args = list(family = &quot;binomial&quot;),  se=0, aes(color=&quot;Logistic&quot;))+ labs(y=&quot;Prob of Default&quot;, x=&quot;Annual Income(1000 $)&quot;)+  xlim(0,450)+scale_y_continuous(labels=scales::percent)+geom_jitter(width=0, height=0.05, alpha=0.7) + scale_colour_manual(name=&quot;Fitted Model&quot;, values=c(&quot;blue&quot;, &quot;red&quot;))</code></pre>
+<pre class="r blue"><code>ggplot(data=reduced, aes(x=I(annual_inc/1000), y=default)) + geom_smooth(method=&quot;lm&quot;, se=0, aes(color=&quot;OLS&quot;))+ geom_smooth(method = &quot;glm&quot;, method.args = list(family = &quot;binomial&quot;),  se=0, aes(color=&quot;Logistic&quot;))+ labs(y=&quot;Prob of Default&quot;, x=&quot;Annual Income(1000 $)&quot;)+  xlim(0,450)+scale_y_continuous(labels=scales::percent)+geom_jitter(width=0, height=0.05, alpha=0.7) + scale_colour_manual(name=&quot;Fitted Model&quot;, values=c(&quot;blue&quot;, &quot;red&quot;))</code></pre>
 <p><img src="/portfolio/project-05_files/figure-html/linear%20and%20logisitc%20regression%20with%20binary%20response%20variable-1.png" width="648" style="display: block; margin: auto;" /></p>
 <blockquote>
 <p>Q2. Which model is more suitable for predicting probability of default, the linear regression or the logistic? Why?</p>
@@ -400,9 +422,9 @@ summary(logistic1)</code></pre>
 <div id="multivariate-logistic-regression" class="section level1">
 <h1>Multivariate logistic regression</h1>
 <p>We can estimate logistic regression with multiple explanatory variables as well. Let’s use annual_inc, term, grade, and loan amount as features. Let’s call this model logistic 2.</p>
-<pre class="r"><code>logistic2&lt;-glm(default~I(annual_inc/1000)+term+grade+loan_amnt, family=&quot;binomial&quot;, lc_clean)
+<pre class="r blue"><code>logistic2&lt;-glm(default~I(annual_inc/1000)+term+grade+loan_amnt, family=&quot;binomial&quot;, lc_clean)
 summary(logistic2)</code></pre>
-<pre><code>## 
+<pre class="whiteb"><code>## 
 ## Call:
 ## glm(formula = default ~ I(annual_inc/1000) + term + grade + loan_amnt, 
 ##     family = &quot;binomial&quot;, data = lc_clean)
@@ -433,7 +455,7 @@ summary(logistic2)</code></pre>
 ## AIC: 29306
 ## 
 ## Number of Fisher Scoring iterations: 5</code></pre>
-<pre class="r"><code>#compare the fit of logistic 1 and logistic 2
+<pre class="r blue"><code>#compare the fit of logistic 1 and logistic 2
 anova(logistic1,logistic2)</code></pre>
 <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:multivariate logistic regression">
 <col><col><col><col><tr>
@@ -467,7 +489,7 @@ Yes, Logistic 2 model is better than logistic 1 model as both deviance and AIC a
 <p>Q4. Calculate the predicted probabilities associated with logistic2 and plot them as a density chart. Also plot the density of the predictions for those loans that did default, and for the loans that did not (on the same chart).</p>
 </blockquote>
 <p>Insert your code here:</p>
-<pre class="r"><code>#Predict the probability of default
+<pre class="r blue"><code>#Predict the probability of default
 prob_default2&lt;-predict(logistic2, lc_clean, type=&quot;response&quot;)
 
 #plot 1: Density of predictions
@@ -475,13 +497,13 @@ g0&lt;-ggplot( lc_clean, aes( prob_default2 ) )+
   geom_density( size=1)+
   ggtitle( &quot;Predicted Probability with Logistic 2&quot; )+  xlab(&quot;Estimated Probability&quot;)
 g0</code></pre>
-<p><img src="/portfolio/project-05_files/figure-html/unnamed-chunk-2-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#plot 2: Density of predictions by default
+<p><img src="/portfolio/project-05_files/figure-html/unnamed-chunk-3-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r blue"><code>#plot 2: Density of predictions by default
 g1&lt;-ggplot( lc_clean, aes( prob_default2, color=default) ) +
   geom_density( size=1)+
   ggtitle( &quot;Predicted Probability with Logistic 2 by default&quot; )+  xlab(&quot;Estimated Probability&quot;)
 g1</code></pre>
-<p><img src="/portfolio/project-05_files/figure-html/unnamed-chunk-2-2.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-05_files/figure-html/unnamed-chunk-3-2.png" width="648" style="display: block; margin: auto;" /></p>
 <div id="from-probability-to-classification" class="section level2">
 <h2>From probability to classification</h2>
 <p>The logistic regression model gives us a sense of how likely defaults are; it gives us a probability estimate. To convert this into a prediction, we need to choose a cutoff probability and classify every loan with a predicted probability of default above the cutoff as a prediction of default (and vice versa for loans with a predicted probability below this cutoff).</p>
@@ -490,7 +512,7 @@ g1</code></pre>
 <p>Q5. Produce the confusion matrix for the model logistic 2 for a cutoff of 18%</p>
 </blockquote>
 <p>Insert your code here:</p>
-<pre class="r"><code>#using the logistic 2 model predict default probabilities
+<pre class="r blue"><code>#using the logistic 2 model predict default probabilities
 prob_default2&lt;- predict(logistic2, lc_clean, type=&quot;response&quot;)
   
 #Call any loan with probability more than 18% as default and any loan with lower probability as non-default. Make sure your prediction is a factor with the same levels as the default variable in the lc_clean data frame
@@ -501,7 +523,7 @@ con2&lt;-confusionMatrix(p_class,lc_clean$default,positive=&quot;1&quot;)
 
 #print the confusion matrix
 con2</code></pre>
-<pre><code>## Confusion Matrix and Statistics
+<pre class="whiteb"><code>## Confusion Matrix and Statistics
 ## 
 ##           Reference
 ## Prediction     0     1
@@ -546,7 +568,7 @@ Proportion of bad loans correctly identified as default.
 <p>Q7. Using the model logistic 2 produce the ROC curve and calculate the AUC measure. Explain what the ROC shows and what the AUC measure means. Why do we expect the AUC of any predictive model to be between 0.5 and 1? Could the AUC ever be below 0.5 or above 1?</p>
 </blockquote>
 <p>Insert your code here:</p>
-<pre class="r"><code>#estimate the ROC curve for Logistic 2
+<pre class="r blue"><code>#estimate the ROC curve for Logistic 2
 ROC_logistic2 &lt;- roc(lc_clean$default,prob_default2)
 
 #estimate the AUC for Logistic 2 and round it to two decimal places
@@ -562,7 +584,7 @@ The ROC curve shows for any given level of True Positives, what level of True Ne
 <p>Q8. So far we have only worked in-sample. Split the data into training and testing and estimate the models ROC curve and AUC measure out of sample. Is there any evidence of over fitting?</p>
 </blockquote>
 <p>Insert your code here::</p>
-<pre class="r"><code># splitting the data into training and testing
+<pre class="r blue"><code># splitting the data into training and testing
 set.seed(1234)
 train_test_split &lt;- initial_split(lc_clean, prop = 0.8)
 testing &lt;- testing(train_test_split) #20% of the data is set aside for testing
@@ -597,7 +619,7 @@ There is a very weak evidence in overfitting, because the ROC curve and AUC stat
 <h2>Selecting loans to invest using the model Logistic 2.</h2>
 <p>Before we look for a better model than logistic 2 let’s see how we can use this model to select loans to invest. Let’s make the simplistic assumption that every loan generates $20 profit if it is paid off and $100 loss if it is charged off for an investor. Let’s use a cut-off value to determine which loans to invest in, that is, if the predicted probability of default for a loan is below this value then we invest in that loan and not if it is above.</p>
 <p>To do this we split the data in three parts: training, validation, and testing. Feel free to experiment with different seeds but please use the seeds provided below for your submission.</p>
-<pre class="r"><code># splitting the data into training and testing
+<pre class="r blue"><code># splitting the data into training and testing
 set.seed(121)
 train_test_split &lt;- initial_split(lc_clean, prop = 0.6)
 training &lt;- training(train_test_split) #60% of the data is set aside for training
@@ -610,9 +632,9 @@ testing&lt;-testing(train_test_split) #50% of the remaining data (20% of total d
 <p>Q9. Train logistic 2 on the training set above. Use the trained model to determine the optimal cut-off threshold based on the validation test. What is the optimal cutoff threshold? How much profit does it generate? Using the testing set, what is the profit per loan associated with the cutoff?</p>
 </blockquote>
 <p>Insert your code here:</p>
-<pre class="r"><code>logistic2_in&lt;-glm(default~I(annual_inc/1000)+term+grade+loan_amnt, family=&quot;binomial&quot;, training)
+<pre class="r blue"><code>logistic2_in&lt;-glm(default~I(annual_inc/1000)+term+grade+loan_amnt, family=&quot;binomial&quot;, training)
 summary(logistic2_in)</code></pre>
-<pre><code>## 
+<pre class="whiteb"><code>## 
 ## Call:
 ## glm(formula = default ~ I(annual_inc/1000) + term + grade + loan_amnt, 
 ##     family = &quot;binomial&quot;, data = training)
@@ -643,7 +665,7 @@ summary(logistic2_in)</code></pre>
 ## AIC: 17513
 ## 
 ## Number of Fisher Scoring iterations: 5</code></pre>
-<pre class="r"><code>p_val&lt;-predict(logistic2_in, validation, type = &quot;response&quot;) #predict probability of default on the validation set
+<pre class="r blue"><code>p_val&lt;-predict(logistic2_in, validation, type = &quot;response&quot;) #predict probability of default on the validation set
 
 #we select the cutoff threshold using the estimated model and the validation set
 profit=0
@@ -658,10 +680,10 @@ for(i in 1:100) {
 }
 
 ggplot(as.data.frame(threshold), aes(x=threshold,y=profit)) + geom_smooth(method = &#39;loess&#39;, se=0) +labs(title=&quot;Profit curve with logistic 2 based on validation set, &quot;)</code></pre>
-<p><img src="/portfolio/project-05_files/figure-html/unnamed-chunk-4-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>paste0(&quot;Based on the validation set: Maximum profit per loan is $&quot;, round(max(profit)/nrow(validation),2), &quot; achieved at a threshold of &quot;, threshold[which.is.max(profit)]*100,&quot;%.&quot;)</code></pre>
-<pre><code>## [1] &quot;Based on the validation set: Maximum profit per loan is $5.55 achieved at a threshold of 17%.&quot;</code></pre>
-<pre class="r"><code>#calculate probability of default out of sample 
+<p><img src="/portfolio/project-05_files/figure-html/unnamed-chunk-5-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r blue"><code>paste0(&quot;Based on the validation set: Maximum profit per loan is $&quot;, round(max(profit)/nrow(validation),2), &quot; achieved at a threshold of &quot;, threshold[which.is.max(profit)]*100,&quot;%.&quot;)</code></pre>
+<pre class="whiteb"><code>## [1] &quot;Based on the validation set: Maximum profit per loan is $5.55 achieved at a threshold of 17%.&quot;</code></pre>
+<pre class="r blue"><code>#calculate probability of default out of sample 
 p_out&lt;-predict(logistic2_in, testing, type = &quot;response&quot;)
 
 #we select the cutoff threshold using the estimated model and the testing set
@@ -677,9 +699,9 @@ for(i in 1:100) {
 }
 
 ggplot(as.data.frame(thresholdt), aes(x=thresholdt,y=profitt)) + geom_smooth(method = &#39;loess&#39;, se=0) +labs(title=&quot;Profit curve with logistic 2 based on testing set, &quot;)</code></pre>
-<p><img src="/portfolio/project-05_files/figure-html/unnamed-chunk-4-2.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>paste0(&quot;Based on the testing set: Maximum profit per loan is $&quot;, round(max(profitt)/nrow(testing),2), &quot; achieved at a threshold of &quot;, thresholdt[which.is.max(profitt)]*100,&quot;%.&quot;)</code></pre>
-<pre><code>## [1] &quot;Based on the testing set: Maximum profit per loan is $5.62 achieved at a threshold of 17.75%.&quot;</code></pre>
+<p><img src="/portfolio/project-05_files/figure-html/unnamed-chunk-5-2.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r blue"><code>paste0(&quot;Based on the testing set: Maximum profit per loan is $&quot;, round(max(profitt)/nrow(testing),2), &quot; achieved at a threshold of &quot;, thresholdt[which.is.max(profitt)]*100,&quot;%.&quot;)</code></pre>
+<pre class="whiteb"><code>## [1] &quot;Based on the testing set: Maximum profit per loan is $5.62 achieved at a threshold of 17.75%.&quot;</code></pre>
 <p>Insert your comments here:
 Based on the validation set, we can observe that the maximum profit per loan is $5.55 achieved at a threshold of 17% optimal cutoff. In case of using the testing set, we obtain also the cutoff point of 17.5%, however the maximum profit per loan amount to $5.62.</p>
 </div>
@@ -691,21 +713,21 @@ Based on the validation set, we can observe that the maximum profit per loan is 
 <p>Q10. Under these assumptions, how much return would you get if you invested $1 in each loan in the validation set? Express your answer as a % return.</p>
 </blockquote>
 <p>Insert your code here:</p>
-<pre class="r"><code>validation2&lt;-validation%&gt;%
+<pre class="r blue"><code>validation2&lt;-validation%&gt;%
   mutate(default1=as.numeric(default)-1,
          return= ifelse (default1==1, -0.6, term_months*installment/loan_amnt-1))
 
 validation2 %&gt;% 
   summarize(total_return_percent = sum(return)/n()*100)</code></pre>
-<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-5">
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-6">
 <col><tr>
 <th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">total_return_percent</th></tr>
 <tr>
 <td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">11.5</td></tr>
 </table>
 
-<pre class="r"><code>summary(validation2)</code></pre>
-<pre><code>##     int_rate       loan_amnt          dti         delinq_2yrs  
+<pre class="r blue"><code>summary(validation2)</code></pre>
+<pre class="whiteb"><code>##     int_rate       loan_amnt          dti         delinq_2yrs  
 ##  Min.   :0.050   Min.   :  500   Min.   : 0.00   0      :6766  
 ##  1st Qu.:0.090   1st Qu.: 5500   1st Qu.: 8.07   1      : 630  
 ##  Median :0.120   Median :10000   Median :13.32   2      : 129  
@@ -760,7 +782,7 @@ validation2 %&gt;%
 <p>Q11. Calculate the expected return of the loans in the validation set using the logistic 2 model trained in the training set. Can you use the expected return metric to select a portfolio of the <span class="math inline">\(n\)</span> most promising loans to invest in (<span class="math inline">\(n\)</span> is an integer number)? How does the realized return vary as you change <span class="math inline">\(n\)</span>? What is the profit for <span class="math inline">\(n=800\)</span>?</p>
 </blockquote>
 <p>Insert your code here:</p>
-<pre class="r"><code>expected_return &lt;- p_val*(-0.6)+(1-p_val)*(validation2$term_months*validation2$installment/validation2$loan_amnt-1)
+<pre class="r blue"><code>expected_return &lt;- p_val*(-0.6)+(1-p_val)*(validation2$term_months*validation2$installment/validation2$loan_amnt-1)
 
 expected_return &lt;-as.data.frame(expected_return) %&gt;% 
   arrange(-expected_return) 
@@ -769,40 +791,40 @@ expected_return_800&lt;-expected_return %&gt;% head(800)
 
 expected_return_800%&gt;% 
   summarize(expected_return_in_percent = sum(expected_return)/800*100)</code></pre>
-<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-6">
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-7">
 <col><tr>
 <th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">expected_return_in_percent</th></tr>
 <tr>
 <td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">23.6</td></tr>
 </table>
 
-<pre class="r"><code>expected_return_2000&lt;-expected_return %&gt;% head(1500)
+<pre class="r blue"><code>expected_return_2000&lt;-expected_return %&gt;% head(1500)
 
 expected_return_2000%&gt;% 
   summarize(expected_return_in_percent =sum(expected_return)/1500*100)</code></pre>
-<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-6">
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-7">
 <col><tr>
 <th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">expected_return_in_percent</th></tr>
 <tr>
 <td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">20.5</td></tr>
 </table>
 
-<pre class="r"><code>expected_return_2000&lt;-expected_return %&gt;% head(8000)
+<pre class="r blue"><code>expected_return_2000&lt;-expected_return %&gt;% head(8000)
 
 expected_return_2000%&gt;% 
   summarize(expected_return_in_percent =sum(expected_return)/8000*100)</code></pre>
-<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-6">
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-7">
 <col><tr>
 <th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">expected_return_in_percent</th></tr>
 <tr>
 <td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">11</td></tr>
 </table>
 
-<pre class="r"><code>expected_return_2000&lt;-expected_return %&gt;% head(80)
+<pre class="r blue"><code>expected_return_2000&lt;-expected_return %&gt;% head(80)
 
 expected_return_2000%&gt;% 
   summarize(expected_return_in_percent =sum(expected_return)/80*100)</code></pre>
-<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-6">
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-7">
 <col><tr>
 <th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">expected_return_in_percent</th></tr>
 <tr>
@@ -815,7 +837,7 @@ In case n=800, our expected return amount to 23.64%. In case of increasing n, th
 <p>Q12. For <span class="math inline">\(n=800\)</span>, how sensitive is your answer to the assumption that if a loan defaults you lose 60% of the value? To answer this question assess how the realized return of the 800 loans chosen in your portfolio change if the loss proportion varies from 20%-80%?</p>
 </blockquote>
 <p>Insert your code here:</p>
-<pre class="r"><code>expected_return20 &lt;- p_val*(-0.2)+(1-p_val)*(validation2$term_months*validation2$installment/validation2$loan_amnt-1)
+<pre class="r blue"><code>expected_return20 &lt;- p_val*(-0.2)+(1-p_val)*(validation2$term_months*validation2$installment/validation2$loan_amnt-1)
 
 expected_return20 &lt;-as.data.frame(expected_return20) %&gt;% 
   arrange(-expected_return20) 
@@ -824,14 +846,14 @@ expected_return_800_20&lt;-expected_return20 %&gt;% head(800)
 
 expected_return_800_20%&gt;% 
   summarize(sum(expected_return20)/800*100)</code></pre>
-<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-7">
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-8">
 <col><tr>
 <th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">sum(expected_return20)/800 * 100</th></tr>
 <tr>
 <td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">33.4</td></tr>
 </table>
 
-<pre class="r"><code>expected_return80 &lt;- p_val*(-0.8)+(1-p_val)*(validation2$term_months*validation2$installment/validation2$loan_amnt-1)
+<pre class="r blue"><code>expected_return80 &lt;- p_val*(-0.8)+(1-p_val)*(validation2$term_months*validation2$installment/validation2$loan_amnt-1)
 
 expected_return80 &lt;-as.data.frame(expected_return80) %&gt;% 
   arrange(-expected_return80) 
@@ -840,14 +862,14 @@ expected_return_800_80&lt;-expected_return80 %&gt;% head(800)
 
 expected_return_800_80%&gt;% 
   summarize(sum(expected_return80)/800*100)</code></pre>
-<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-7">
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-8">
 <col><tr>
 <th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">sum(expected_return80)/800 * 100</th></tr>
 <tr>
 <td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">19.4</td></tr>
 </table>
 
-<pre class="r"><code>expected_return40 &lt;- p_val*(-0.4)+(1-p_val)*(validation2$term_months*validation2$installment/validation2$loan_amnt-1)
+<pre class="r blue"><code>expected_return40 &lt;- p_val*(-0.4)+(1-p_val)*(validation2$term_months*validation2$installment/validation2$loan_amnt-1)
 
 expected_return40 &lt;-as.data.frame(expected_return40) %&gt;% 
   arrange(-expected_return40) 
@@ -856,7 +878,7 @@ expected_return_800_40&lt;-expected_return40 %&gt;% head(800)
 
 expected_return_800_40%&gt;% 
   summarize(sum(expected_return40)/800*100)</code></pre>
-<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-7">
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-8">
 <col><tr>
 <th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">sum(expected_return40)/800 * 100</th></tr>
 <tr>
@@ -871,7 +893,7 @@ The return changes but we still gain profit from it. The expected return increas
 <p>Q13. Experiment with different models using more features, interactions, and non-linear transformations. You may also want to try to estimate models using regularization (e.g., LASSO regression). Feel free to use data from other sources but make sure your model does not use information that would not be available at the time the loan is extended (e.g., for a 4-year loan given in January 2008, you can’t use macro-economic indicators for 2008 or 2009 to predict whether the loan will default). Present below your best model ONLY and explain why you have chosen it (at the very least comment on AUC of your model against other models, e.g. logistic 2. Even better if you can compare your new model against logistic 2 on the realized return of 800 loans chosen out-of-sample from a data set of similar size to the validation set above.)</p>
 </blockquote>
 <p>Insert your code here:</p>
-<pre class="r"><code>#showing best model
+<pre class="r blue"><code>#showing best model
 #splitting the data again
 set.seed(121)
 train_test_split &lt;- initial_split(lc_clean, prop = 0.6)
@@ -889,7 +911,7 @@ logistic_wild&lt;-glm(default~
                      poly(int_rate,3):loan_amnt+
                      issue_d*grade, family=&quot;binomial&quot;, training)
 summary(logistic_wild)</code></pre>
-<pre><code>## 
+<pre class="whiteb"><code>## 
 ## Call:
 ## glm(formula = default ~ poly(I(annual_inc/1000), 3) + term + 
 ##     grade + poly(int_rate, 3):loan_amnt + issue_d * grade, family = &quot;binomial&quot;, 
@@ -932,7 +954,7 @@ summary(logistic_wild)</code></pre>
 ## AIC: 17420
 ## 
 ## Number of Fisher Scoring iterations: 10</code></pre>
-<pre class="r"><code>#calculate probability of default in the training sample 
+<pre class="r blue"><code>#calculate probability of default in the training sample 
 p_wild_in&lt;-predict(logistic_wild, training, type = &quot;response&quot;)
 
 #ROC curve using in-sample predictions
@@ -952,8 +974,8 @@ AUC_logistic_wild_out &lt;- round(auc(testing$default,p_wild_out)*100, digits=2)
 #plot in the same figure both ROC curves and print the AUC of both curves in the title
 ggroc(list(&quot;Logistic Wild in-sample&quot;=ROC_logistic_wild, &quot;Logistic Wild out-of-sample&quot;=ROC_logistic_wild_out))+ggtitle(paste(&quot;Model Logistic Wild in-sample AUC=&quot;,round(auc(training$default,p_wild_in)*100, digits=2),&quot;%\nModel Logistic Wild out-of-sample AUC=&quot;,round(auc(testing$default,p_wild_out)*100, digits=2),&quot;%&quot;))    +
 geom_segment(aes(x = 1, xend = 0, y = 0, yend = 1), color=&quot;grey&quot;, linetype=&quot;dashed&quot;)</code></pre>
-<p><img src="/portfolio/project-05_files/figure-html/unnamed-chunk-8-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#very weak evidence of overfitting, we can compare now our model logistic_wild to logistic2
+<p><img src="/portfolio/project-05_files/figure-html/unnamed-chunk-9-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r blue"><code>#very weak evidence of overfitting, we can compare now our model logistic_wild to logistic2
   
 logistic2_in&lt;-glm(default~I(annual_inc/1000)+term+grade+loan_amnt, family=&quot;binomial&quot;, training)
 
@@ -967,8 +989,8 @@ AUC_logistic2_in&lt;-round(auc(training$default,p_in)*100, digits=2)
 #plot in the same figure both ROC curves and print the AUC of both curves in the title
 ggroc(list(&quot;Logistic 2&quot;=ROC_logistic2_in, &quot;Logistic Wild&quot;=ROC_logistic_wild))+ggtitle(paste(&quot;Model Logistic 2 on training set AUC=&quot;,round(auc(training$default,p_in)*100, digits=2),&quot;%\nModel Logistic Wild on training set AUC=&quot;,round(auc(training$default,p_wild_in)*100, digits=2),&quot;%&quot;))    +
 geom_segment(aes(x = 1, xend = 0, y = 0, yend = 1), color=&quot;grey&quot;, linetype=&quot;dashed&quot;)</code></pre>
-<p><img src="/portfolio/project-05_files/figure-html/unnamed-chunk-8-2.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#calculate probability of default in the training sample 
+<p><img src="/portfolio/project-05_files/figure-html/unnamed-chunk-9-2.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r blue"><code>#calculate probability of default in the training sample 
 p_wild_val&lt;-predict(logistic_wild, validation, type = &quot;response&quot;)
 expected_return60l &lt;- p_wild_val*(-0.6)+(1-p_wild_val)*(validation$term_months*validation$installment/validation$loan_amnt-1)
 
@@ -979,14 +1001,14 @@ expected_return_800_60l&lt;-expected_return60l %&gt;% head(800)
 
 expected_return_800_60l%&gt;% 
   summarize(expected_return_in_percent= sum(expected_return60l)/800*100)</code></pre>
-<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-9">
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-10">
 <col><tr>
 <th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">expected_return_in_percent</th></tr>
 <tr>
 <td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(242, 242, 242); font-weight: normal;">24.3</td></tr>
 </table>
 
-<pre class="r"><code>p_val&lt;-predict(logistic2_in, validation, type = &quot;response&quot;)
+<pre class="r blue"><code>p_val&lt;-predict(logistic2_in, validation, type = &quot;response&quot;)
 expected_return &lt;- p_val*(-0.6)+(1-p_val)*(validation$term_months*validation$installment/validation$loan_amnt-1)
 
 expected_return &lt;-as.data.frame(expected_return) %&gt;% 
@@ -996,7 +1018,7 @@ expected_return_800&lt;-expected_return %&gt;% head(800)
 
 expected_return_800%&gt;% 
   summarize(expected_return_in_percent = sum(expected_return)/800*100)</code></pre>
-<p><table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-9">
+<p><table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-10">
 <col><tr>
 <th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">expected_return_in_percent</th></tr>
 <tr>
@@ -1016,7 +1038,7 @@ Insert comments here:</p>
 <p>(If you can’t see the picture make sure you download it from canvas in your working directory.)</p>
 <p>Please follow these instructions closely. For example, do not change the order of the loans, do not submit a list of the loan numbers you would invest in, do not invest in more (or fewer) than 200 loans, make sure the loan numbers are in column A and the choices in column B, start in cell A1, don’t forget to add your name, etc. For loans you do not want to invest you can write “0” or leave the cell empty. <em>Before you submit, open your file in EXCEL to make sure it looks like the sample above. Also check that the file size is not more that a few kilobytes. If it’s more you are doing something wrong.</em></p>
 <p>Add to the code below to do this:</p>
-<pre class="r"><code>lc_assessment&lt;- read_csv(&quot;~/Documents/LBS/Data Science/Session 05/Assessment Data_2020.csv&quot;) 
+<pre class="r blue"><code>lc_assessment&lt;- read_csv(&quot;~/Documents/LBS/Data Science/Session 05/Assessment Data_2020.csv&quot;) 
  lc_assessment&lt;-  lc_assessment %&gt;% 
    janitor::clean_names() %&gt;% # use janitor::clean_names() 
   mutate(
@@ -1025,7 +1047,7 @@ Insert comments here:</p>
     delinq_2yrs = factor(delinq_2yrs)) # turn &#39;delinq_2yrs&#39; into a categorical variable
  
   lc_assessment %&gt;% head(10)</code></pre>
-<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-10">
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-11">
 <col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><tr>
 <th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">loan_number</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">int_rate</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">loan_amnt</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">term_months</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">installment</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">dti</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">delinq_2yrs</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">annual_inc</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">grade</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">emp_title</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">emp_length</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">home_ownership</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">verification_status</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">issue_d</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">term</th></tr>
 <tr>
@@ -1050,12 +1072,12 @@ Insert comments here:</p>
 <td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">10</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.14&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1e+04&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">36</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">342</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">16.7&nbsp;</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3.84e+04</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">C</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">n/a</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">MORTGAGE</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Not Verified</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">2010-06-01</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">36</td></tr>
 </table>
 
-<pre class="r"><code> p_assessment&lt;-predict(logistic_wild, lc_assessment, type = &quot;response&quot;)
+<pre class="r blue"><code> p_assessment&lt;-predict(logistic_wild, lc_assessment, type = &quot;response&quot;)
 
   p_assessment %&gt;% head(10)</code></pre>
-<pre><code>##      1      2      3      4      5      6      7      8      9     10 
+<pre class="whiteb"><code>##      1      2      3      4      5      6      7      8      9     10 
 ## 0.0873 0.1225 0.0498 0.1685 0.2225 0.1730 0.1021 0.0771 0.1113 0.1775</code></pre>
-<pre class="r"><code>   expected_return_assessment &lt;- p_assessment*(-0.6)+(1-p_assessment)*(lc_assessment$term_months*lc_assessment$installment/lc_assessment$loan_amnt-1)
+<pre class="r blue"><code>   expected_return_assessment &lt;- p_assessment*(-0.6)+(1-p_assessment)*(lc_assessment$term_months*lc_assessment$installment/lc_assessment$loan_amnt-1)
 
 lc_assessment_total&lt;- lc_assessment %&gt;% 
   mutate(expected_return=expected_return_assessment ) %&gt;% 
