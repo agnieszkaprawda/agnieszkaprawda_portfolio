@@ -59,6 +59,15 @@ from sklearn.preprocessing import LabelEncoder from sklearn.neural_network impor
     </item>
     
     <item>
+      <title>Stop &amp; Search Police - Further visuals</title>
+      <link>/portfolio/project-12/</link>
+      <pubDate>Wed, 18 Nov 2020 15:58:10 +0600</pubDate>
+      
+      <guid>/portfolio/project-12/</guid>
+      <description>Let’s begin Hello, my name is Agnieszka, I am going to visualise three data visualisations basing on the Stop &amp;amp; Search dataset. You can find more on the topic here: https://www.</description>
+    </item>
+    
+    <item>
       <title>Clustering BBC iPlayer users using K means, PAM and H-Clustering  methods</title>
       <link>/portfolio/project-06/</link>
       <pubDate>Sun, 15 Nov 2020 15:58:10 +0600</pubDate>
