@@ -440,7 +440,8 @@ primenrolment_fertility_df <- data %>%
          SP.DYN.TFRT.IN, 
          SE.PRM.NENR) %>% 
   rename("births_per_woman" = "SP.DYN.TFRT.IN",
-         "net_school_enrolment" = "SE.PRM.NENR")
+         "net_school_enrolment" = "SE.PRM.NENR") %>% 
+  filter(region!="Aggregates")
 
 #primenrolment_fertility_df
 

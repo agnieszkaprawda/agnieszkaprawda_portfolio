@@ -391,7 +391,8 @@ primenrolment_fertility_df &lt;- data %&gt;%
          SP.DYN.TFRT.IN, 
          SE.PRM.NENR) %&gt;% 
   rename(&quot;births_per_woman&quot; = &quot;SP.DYN.TFRT.IN&quot;,
-         &quot;net_school_enrolment&quot; = &quot;SE.PRM.NENR&quot;)
+         &quot;net_school_enrolment&quot; = &quot;SE.PRM.NENR&quot;) %&gt;% 
+  filter(region!=&quot;Aggregates&quot;)
 
 #primenrolment_fertility_df
 
