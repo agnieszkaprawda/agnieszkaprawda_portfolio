@@ -335,7 +335,9 @@ omega %>%
         legend.title=element_text(family="Montserrat", size=8, face="bold"))
 ```
 
-**From the scatterplot we can see that the majority of women in the sample have a comparable salary to men with the same experience level.** 
+##### Conclusion
+
+From the scatterplot we can see that the majority of women in the sample have a comparable salary to men with the same experience level.
 
 The majority of women in the sample have experience between 0 and 20 years, whereas the approximate range of experience for most men is between 10 and 35 years. I also saw above that there is a statistically significant difference between the levels of experience for both genders, which confirms what we are seeing. Women seem to end their careers earlier, at least within the given sample.
 
