@@ -51,8 +51,6 @@ knitr::opts_chunk$set(class.source = "pink")
 knitr::opts_chunk$set(class.output = "whitep")
 ```
 
-# R Markdown Kick Off
-
 ```{r, include= FALSE}
 library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
 library(mosaic)
@@ -75,8 +73,6 @@ library(magick)
 library(Hmisc)
 library(scales)
 ```
-
-# Stop and Search plots
 
 The raw data on "Stop and Search" comes from the following [webiste](https://data.police.uk/data/).
 
