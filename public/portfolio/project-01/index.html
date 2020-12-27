@@ -265,8 +265,8 @@ ggplot(lc_clean, aes(x=emp_length, y = int_rate))+
   theme_bw()</code></pre>
 <p><img src="/portfolio/project-01_files/figure-html/data_visualisation-8.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
-<div id="estimatimation-of-simple-linear-regression-models" class="section level1">
-<h1>Estimatimation of simple linear regression models</h1>
+<div id="estimatimation-of-simple-linear-regression-models" class="section level3">
+<h3>Estimatimation of simple linear regression models</h3>
 <p>I start with a simple but quite powerful model.</p>
 <pre class="r blue"><code>#I will use the lm command to estimate a regression model with the following variables &quot;loan_amnt&quot;,  &quot;term&quot;, &quot;dti&quot;, &quot;annual_inc&quot;, and &quot;grade&quot;
 
@@ -318,6 +318,7 @@ All things being equal and on average compared to grade A, the interest rate inc
 My model has 91.97% explanatory power (I checked it looking at Adjusted R-squared).</p>
 <p><code>d. Approximately, how wide would the 95% confidence interval of any prediction based on this model be?</code>
 The 95% Confidence Interval of any prediction based on model1, would amount to 1.96*0.01056 = ~±0.021.</p>
+</div>
 </div>
 <div id="feature-engineering" class="section level3">
 <h3>Feature Engineering</h3>
@@ -872,41 +873,9 @@ time1&lt;-train(
 ## - Fold10: intercept=TRUE 
 ## Aggregating results
 ## Fitting final model on full training set</code></pre>
-<pre class="r blue"><code>summary(time1) # seems like dti is corrolated with issue_d (maybe lots of people defaulted because of the crisis)</code></pre>
-<pre class="whiteb"><code>## 
-## Call:
-## lm(formula = .outcome ~ ., data = dat)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -0.11902 -0.00659 -0.00075  0.00695  0.03618 
-## 
-## Coefficients:
-##                     Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)        -2.51e-02   2.51e-03  -10.00  &lt; 2e-16 ***
-## loan_amnt           8.84e-08   1.98e-08    4.46  8.4e-06 ***
-## gradeB              3.61e-02   2.68e-04  134.68  &lt; 2e-16 ***
-## gradeC              6.25e-02   2.93e-04  212.96  &lt; 2e-16 ***
-## gradeD              8.13e-02   3.42e-04  237.89  &lt; 2e-16 ***
-## gradeE              9.73e-02   4.54e-04  214.17  &lt; 2e-16 ***
-## gradeF              1.15e-01   7.59e-04  151.81  &lt; 2e-16 ***
-## gradeG              1.34e-01   1.52e-03   87.88  &lt; 2e-16 ***
-## term60              2.26e-03   1.45e-04   15.60  &lt; 2e-16 ***
-## dti                 1.20e-05   8.04e-06    1.50    0.134    
-## issue_d             6.54e-06   1.69e-07   38.67  &lt; 2e-16 ***
-## `loan_amnt:gradeB` -1.29e-11   2.40e-08    0.00    1.000    
-## `loan_amnt:gradeC` -1.21e-07   2.57e-08   -4.69  2.8e-06 ***
-## `loan_amnt:gradeD`  1.14e-07   2.75e-08    4.14  3.4e-05 ***
-## `loan_amnt:gradeE`  2.46e-07   2.96e-08    8.31  &lt; 2e-16 ***
-## `loan_amnt:gradeF`  3.01e-07   4.06e-08    7.42  1.2e-13 ***
-## `loan_amnt:gradeG`  1.58e-07   7.12e-08    2.22    0.026 *  
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 0.0103 on 37852 degrees of freedom
-## Multiple R-squared:  0.923,  Adjusted R-squared:  0.923 
-## F-statistic: 2.85e+04 on 16 and 37852 DF,  p-value: &lt;2e-16</code></pre>
-<pre class="r blue"><code>#The second model has a different linear time trend for each grade class
+<pre class="r blue"><code>#summary(time1) # seems like dti is corrolated with issue_d (maybe lots of people defaulted because of the crisis)
+
+#The second model has a different linear time trend for each grade class
 time2&lt;-train(
     int_rate ~ loan_amnt*grade+ term+ dti + issue_d*grade, #fill your variables here 
     lc_clean,
@@ -935,47 +904,9 @@ time2&lt;-train(
 ## - Fold10: intercept=TRUE 
 ## Aggregating results
 ## Fitting final model on full training set</code></pre>
-<pre class="r blue"><code>summary(time2)</code></pre>
-<pre class="whiteb"><code>## 
-## Call:
-## lm(formula = .outcome ~ ., data = dat)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -0.12043 -0.00661 -0.00015  0.00676  0.03076 
-## 
-## Coefficients:
-##                     Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)         2.86e-01   4.36e-03   65.62  &lt; 2e-16 ***
-## loan_amnt           3.03e-07   1.76e-08   17.24  &lt; 2e-16 ***
-## gradeB             -2.30e-01   5.81e-03  -39.55  &lt; 2e-16 ***
-## gradeC             -3.54e-01   6.18e-03  -57.27  &lt; 2e-16 ***
-## gradeD             -5.14e-01   7.20e-03  -71.47  &lt; 2e-16 ***
-## gradeE             -6.13e-01   9.91e-03  -61.93  &lt; 2e-16 ***
-## gradeF             -7.10e-01   1.61e-02  -44.08  &lt; 2e-16 ***
-## gradeG             -7.10e-01   3.31e-02  -21.43  &lt; 2e-16 ***
-## term60             -6.09e-04   1.30e-04   -4.68  2.9e-06 ***
-## dti                 5.76e-05   7.06e-06    8.15  3.7e-16 ***
-## issue_d            -1.44e-05   2.93e-07  -49.17  &lt; 2e-16 ***
-## `loan_amnt:gradeB` -1.56e-07   2.12e-08   -7.34  2.2e-13 ***
-## `loan_amnt:gradeC` -3.24e-07   2.28e-08  -14.18  &lt; 2e-16 ***
-## `loan_amnt:gradeD` -1.78e-07   2.43e-08   -7.32  2.5e-13 ***
-## `loan_amnt:gradeE` -1.72e-07   2.66e-08   -6.49  8.8e-11 ***
-## `loan_amnt:gradeF` -1.86e-07   3.68e-08   -5.06  4.1e-07 ***
-## `loan_amnt:gradeG` -2.96e-07   6.44e-08   -4.60  4.2e-06 ***
-## `gradeB:issue_d`    1.79e-05   3.90e-07   45.86  &lt; 2e-16 ***
-## `gradeC:issue_d`    2.81e-05   4.17e-07   67.36  &lt; 2e-16 ***
-## `gradeD:issue_d`    4.02e-05   4.85e-07   82.85  &lt; 2e-16 ***
-## `gradeE:issue_d`    4.80e-05   6.68e-07   71.84  &lt; 2e-16 ***
-## `gradeF:issue_d`    5.57e-05   1.09e-06   51.35  &lt; 2e-16 ***
-## `gradeG:issue_d`    5.70e-05   2.23e-06   25.54  &lt; 2e-16 ***
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 0.00905 on 37846 degrees of freedom
-## Multiple R-squared:  0.941,  Adjusted R-squared:  0.941 
-## F-statistic: 2.75e+04 on 22 and 37846 DF,  p-value: &lt;2e-16</code></pre>
-<pre class="r blue"><code>#Change the time trend to a quarter dummy variables.
+<pre class="r blue"><code>#summary(time2)
+
+#Change the time trend to a quarter dummy variables.
 #zoo::as.yearqrt() creates quarter dummies 
 lc_clean_quarter&lt;-lc_clean %&gt;%
   mutate(yq = as.factor(as.yearqtr(lc_clean$issue_d, format = &quot;%Y-%m-%d&quot;)))
@@ -1010,58 +941,9 @@ time3&lt;-train(
 ## - Fold10: intercept=TRUE 
 ## Aggregating results
 ## Fitting final model on full training set</code></pre>
-<pre class="r blue"><code>summary(time3)</code></pre>
-<pre class="whiteb"><code>## 
-## Call:
-## lm(formula = .outcome ~ ., data = dat)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -0.11593 -0.00541 -0.00025  0.00579  0.03760 
-## 
-## Coefficients:
-##                     Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)         3.83e-02   9.08e-03    4.22  2.5e-05 ***
-## loan_amnt           1.04e-07   1.75e-08    5.96  2.5e-09 ***
-## gradeB              3.66e-02   2.36e-04  155.13  &lt; 2e-16 ***
-## gradeC              6.25e-02   2.58e-04  241.95  &lt; 2e-16 ***
-## gradeD              8.10e-02   3.01e-04  269.10  &lt; 2e-16 ***
-## gradeE              9.70e-02   4.00e-04  242.54  &lt; 2e-16 ***
-## gradeF              1.15e-01   6.68e-04  172.74  &lt; 2e-16 ***
-## gradeG              1.34e-01   1.34e-03  100.00  &lt; 2e-16 ***
-## term60              4.58e-03   1.31e-04   35.03  &lt; 2e-16 ***
-## dti                 5.89e-06   7.07e-06    0.83  0.40459    
-## `yq2007 Q3`         1.91e-02   9.14e-03    2.09  0.03642 *  
-## `yq2007 Q4`         1.47e-02   9.10e-03    1.61  0.10648    
-## `yq2008 Q1`         2.11e-02   9.08e-03    2.33  0.01993 *  
-## `yq2008 Q2`         2.28e-02   9.09e-03    2.50  0.01232 *  
-## `yq2008 Q3`         2.39e-02   9.10e-03    2.63  0.00861 ** 
-## `yq2008 Q4`         3.18e-02   9.08e-03    3.50  0.00046 ***
-## `yq2009 Q1`         3.60e-02   9.08e-03    3.97  7.3e-05 ***
-## `yq2009 Q2`         3.79e-02   9.08e-03    4.17  3.0e-05 ***
-## `yq2009 Q3`         3.94e-02   9.08e-03    4.34  1.4e-05 ***
-## `yq2009 Q4`         3.97e-02   9.08e-03    4.37  1.3e-05 ***
-## `yq2010 Q1`         3.46e-02   9.08e-03    3.82  0.00014 ***
-## `yq2010 Q2`         3.34e-02   9.08e-03    3.68  0.00024 ***
-## `yq2010 Q3`         3.45e-02   9.07e-03    3.80  0.00015 ***
-## `yq2010 Q4`         2.57e-02   9.07e-03    2.84  0.00455 ** 
-## `yq2011 Q1`         2.79e-02   9.07e-03    3.07  0.00213 ** 
-## `yq2011 Q2`         3.30e-02   9.07e-03    3.64  0.00027 ***
-## `yq2011 Q3`         3.54e-02   9.07e-03    3.91  9.4e-05 ***
-## `yq2011 Q4`         4.17e-02   9.07e-03    4.59  4.4e-06 ***
-## `loan_amnt:gradeB` -1.08e-07   2.12e-08   -5.10  3.4e-07 ***
-## `loan_amnt:gradeC` -2.14e-07   2.27e-08   -9.45  &lt; 2e-16 ***
-## `loan_amnt:gradeD`  5.84e-08   2.42e-08    2.41  0.01590 *  
-## `loan_amnt:gradeE`  1.82e-07   2.61e-08    6.96  3.4e-12 ***
-## `loan_amnt:gradeF`  2.27e-07   3.57e-08    6.34  2.3e-10 ***
-## `loan_amnt:gradeG`  1.12e-07   6.26e-08    1.80  0.07260 .  
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 0.00907 on 37835 degrees of freedom
-## Multiple R-squared:  0.941,  Adjusted R-squared:  0.941 
-## F-statistic: 1.82e+04 on 33 and 37835 DF,  p-value: &lt;2e-16</code></pre>
-<pre class="r blue"><code>#specify one quarter dummy variable for each grade. This is going to be a large model as there are 19 quarters x 7 grades = 133 quarter-grade dummies.
+<pre class="r blue"><code>#summary(time3)
+
+#specify one quarter dummy variable for each grade. This is going to be a large model as there are 19 quarters x 7 grades = 133 quarter-grade dummies.
 time4&lt;-train(
     int_rate ~loan_amnt*grade+ term+ dti + yq*grade ,#fill your variables here 
     lc_clean_quarter,
@@ -1090,166 +972,9 @@ time4&lt;-train(
 ## - Fold10: intercept=TRUE 
 ## Aggregating results
 ## Fitting final model on full training set</code></pre>
-<pre class="r blue"><code>summary(time4)</code></pre>
-<pre class="whiteb"><code>## 
-## Call:
-## lm(formula = .outcome ~ ., data = dat)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -0.12043 -0.00493  0.00031  0.00467  0.03422 
-## 
-## Coefficients: (11 not defined because of singularities)
-##                     Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)         1.86e-02   7.58e-03    2.45  0.01412 *  
-## loan_amnt           2.97e-07   1.49e-08   19.98  &lt; 2e-16 ***
-## gradeB              4.31e-02   3.19e-04  134.93  &lt; 2e-16 ***
-## gradeC              6.97e-02   3.62e-04  192.59  &lt; 2e-16 ***
-## gradeD              9.70e-02   4.19e-04  231.67  &lt; 2e-16 ***
-## gradeE              1.18e-01   5.38e-04  218.71  &lt; 2e-16 ***
-## gradeF              1.39e-01   8.64e-04  160.91  &lt; 2e-16 ***
-## gradeG              1.60e-01   1.80e-03   89.03  &lt; 2e-16 ***
-## term60              1.73e-03   1.13e-04   15.32  &lt; 2e-16 ***
-## dti                 4.83e-05   5.92e-06    8.16  3.5e-16 ***
-## `yq2007 Q3`         5.48e-02   7.72e-03    7.09  1.3e-12 ***
-## `yq2007 Q4`         5.58e-02   7.71e-03    7.24  4.7e-13 ***
-## `yq2008 Q1`         5.95e-02   7.62e-03    7.81  6.0e-15 ***
-## `yq2008 Q2`         6.09e-02   7.65e-03    7.96  1.8e-15 ***
-## `yq2008 Q3`         6.03e-02   7.69e-03    7.84  4.7e-15 ***
-## `yq2008 Q4`         6.66e-02   7.62e-03    8.75  &lt; 2e-16 ***
-## `yq2009 Q1`         6.83e-02   7.60e-03    8.99  &lt; 2e-16 ***
-## `yq2009 Q2`         6.78e-02   7.59e-03    8.93  &lt; 2e-16 ***
-## `yq2009 Q3`         6.60e-02   7.59e-03    8.69  &lt; 2e-16 ***
-## `yq2009 Q4`         6.40e-02   7.59e-03    8.43  &lt; 2e-16 ***
-## `yq2010 Q1`         5.70e-02   7.59e-03    7.51  6.1e-14 ***
-## `yq2010 Q2`         5.49e-02   7.58e-03    7.24  4.7e-13 ***
-## `yq2010 Q3`         5.48e-02   7.58e-03    7.23  4.8e-13 ***
-## `yq2010 Q4`         4.38e-02   7.58e-03    5.78  7.7e-09 ***
-## `yq2011 Q1`         4.57e-02   7.58e-03    6.02  1.7e-09 ***
-## `yq2011 Q2`         4.66e-02   7.58e-03    6.14  8.3e-10 ***
-## `yq2011 Q3`         4.67e-02   7.58e-03    6.17  7.1e-10 ***
-## `yq2011 Q4`         5.37e-02   7.57e-03    7.09  1.3e-12 ***
-## `loan_amnt:gradeB` -2.45e-07   1.79e-08  -13.68  &lt; 2e-16 ***
-## `loan_amnt:gradeC` -3.71e-07   1.93e-08  -19.24  &lt; 2e-16 ***
-## `loan_amnt:gradeD` -2.12e-07   2.06e-08  -10.33  &lt; 2e-16 ***
-## `loan_amnt:gradeE` -2.25e-07   2.26e-08   -9.97  &lt; 2e-16 ***
-## `loan_amnt:gradeF` -2.49e-07   3.15e-08   -7.90  2.9e-15 ***
-## `loan_amnt:gradeG` -3.43e-07   5.65e-08   -6.07  1.3e-09 ***
-## `gradeB:yq2007 Q3` -2.31e-02   2.30e-03  -10.03  &lt; 2e-16 ***
-## `gradeC:yq2007 Q3` -3.55e-02   2.42e-03  -14.67  &lt; 2e-16 ***
-## `gradeD:yq2007 Q3` -5.15e-02   3.71e-03  -13.87  &lt; 2e-16 ***
-## `gradeE:yq2007 Q3` -5.69e-02   5.57e-03  -10.22  &lt; 2e-16 ***
-## `gradeF:yq2007 Q3` -6.13e-02   3.76e-03  -16.31  &lt; 2e-16 ***
-## `gradeG:yq2007 Q3`        NA         NA      NA       NA    
-## `gradeB:yq2007 Q4` -2.40e-02   1.95e-03  -12.34  &lt; 2e-16 ***
-## `gradeC:yq2007 Q4` -3.57e-02   1.80e-03  -19.82  &lt; 2e-16 ***
-## `gradeD:yq2007 Q4` -5.00e-02   2.07e-03  -24.18  &lt; 2e-16 ***
-## `gradeE:yq2007 Q4` -5.08e-02   2.72e-03  -18.68  &lt; 2e-16 ***
-## `gradeF:yq2007 Q4` -5.44e-02   7.72e-03   -7.05  1.9e-12 ***
-## `gradeG:yq2007 Q4`        NA         NA      NA       NA    
-## `gradeB:yq2008 Q1` -2.29e-02   9.84e-04  -23.32  &lt; 2e-16 ***
-## `gradeC:yq2008 Q1` -3.34e-02   1.05e-03  -31.84  &lt; 2e-16 ***
-## `gradeD:yq2008 Q1` -4.56e-02   1.18e-03  -38.68  &lt; 2e-16 ***
-## `gradeE:yq2008 Q1` -5.33e-02   1.65e-03  -32.21  &lt; 2e-16 ***
-## `gradeF:yq2008 Q1` -5.64e-02   2.84e-03  -19.83  &lt; 2e-16 ***
-## `gradeG:yq2008 Q1` -6.32e-02   5.52e-03  -11.45  &lt; 2e-16 ***
-## `gradeB:yq2008 Q2` -2.28e-02   1.36e-03  -16.70  &lt; 2e-16 ***
-## `gradeC:yq2008 Q2` -3.38e-02   1.39e-03  -24.24  &lt; 2e-16 ***
-## `gradeD:yq2008 Q2` -4.73e-02   1.65e-03  -28.72  &lt; 2e-16 ***
-## `gradeE:yq2008 Q2` -5.15e-02   2.91e-03  -17.69  &lt; 2e-16 ***
-## `gradeF:yq2008 Q2` -5.83e-02   3.59e-03  -16.22  &lt; 2e-16 ***
-## `gradeG:yq2008 Q2`        NA         NA      NA       NA    
-## `gradeB:yq2008 Q3` -2.03e-02   1.74e-03  -11.64  &lt; 2e-16 ***
-## `gradeC:yq2008 Q3` -3.12e-02   1.67e-03  -18.67  &lt; 2e-16 ***
-## `gradeD:yq2008 Q3` -4.50e-02   2.10e-03  -21.41  &lt; 2e-16 ***
-## `gradeE:yq2008 Q3` -4.67e-02   3.01e-03  -15.54  &lt; 2e-16 ***
-## `gradeF:yq2008 Q3` -5.67e-02   4.07e-03  -13.92  &lt; 2e-16 ***
-## `gradeG:yq2008 Q3`        NA         NA      NA       NA    
-## `gradeB:yq2008 Q4` -1.85e-02   1.02e-03  -18.13  &lt; 2e-16 ***
-## `gradeC:yq2008 Q4` -3.05e-02   1.05e-03  -28.96  &lt; 2e-16 ***
-## `gradeD:yq2008 Q4` -4.38e-02   1.29e-03  -34.02  &lt; 2e-16 ***
-## `gradeE:yq2008 Q4` -4.91e-02   1.68e-03  -29.30  &lt; 2e-16 ***
-## `gradeF:yq2008 Q4` -5.31e-02   3.91e-03  -13.59  &lt; 2e-16 ***
-## `gradeG:yq2008 Q4` -5.53e-02   5.54e-03   -9.99  &lt; 2e-16 ***
-## `gradeB:yq2009 Q1` -1.31e-02   9.32e-04  -14.04  &lt; 2e-16 ***
-## `gradeC:yq2009 Q1` -2.48e-02   8.18e-04  -30.24  &lt; 2e-16 ***
-## `gradeD:yq2009 Q1` -4.05e-02   9.19e-04  -44.06  &lt; 2e-16 ***
-## `gradeE:yq2009 Q1` -4.42e-02   1.25e-03  -35.36  &lt; 2e-16 ***
-## `gradeF:yq2009 Q1` -4.82e-02   2.81e-03  -17.16  &lt; 2e-16 ***
-## `gradeG:yq2009 Q1`        NA         NA      NA       NA    
-## `gradeB:yq2009 Q2` -1.35e-02   7.24e-04  -18.63  &lt; 2e-16 ***
-## `gradeC:yq2009 Q2` -2.42e-02   7.53e-04  -32.16  &lt; 2e-16 ***
-## `gradeD:yq2009 Q2` -4.05e-02   9.25e-04  -43.72  &lt; 2e-16 ***
-## `gradeE:yq2009 Q2` -4.48e-02   1.31e-03  -34.14  &lt; 2e-16 ***
-## `gradeF:yq2009 Q2` -5.32e-02   2.41e-03  -22.07  &lt; 2e-16 ***
-## `gradeG:yq2009 Q2` -5.70e-02   4.10e-03  -13.90  &lt; 2e-16 ***
-## `gradeB:yq2009 Q3` -1.14e-02   6.34e-04  -18.03  &lt; 2e-16 ***
-## `gradeC:yq2009 Q3` -2.04e-02   6.93e-04  -29.44  &lt; 2e-16 ***
-## `gradeD:yq2009 Q3` -3.29e-02   8.75e-04  -37.60  &lt; 2e-16 ***
-## `gradeE:yq2009 Q3` -3.72e-02   1.13e-03  -32.88  &lt; 2e-16 ***
-## `gradeF:yq2009 Q3` -4.27e-02   1.86e-03  -22.95  &lt; 2e-16 ***
-## `gradeG:yq2009 Q3` -4.76e-02   3.16e-03  -15.04  &lt; 2e-16 ***
-## `gradeB:yq2009 Q4` -8.48e-03   5.66e-04  -14.99  &lt; 2e-16 ***
-## `gradeC:yq2009 Q4` -1.67e-02   6.16e-04  -27.16  &lt; 2e-16 ***
-## `gradeD:yq2009 Q4` -2.82e-02   7.05e-04  -40.03  &lt; 2e-16 ***
-## `gradeE:yq2009 Q4` -3.37e-02   1.11e-03  -30.40  &lt; 2e-16 ***
-## `gradeF:yq2009 Q4` -3.64e-02   1.72e-03  -21.18  &lt; 2e-16 ***
-## `gradeG:yq2009 Q4` -3.77e-02   2.56e-03  -14.74  &lt; 2e-16 ***
-## `gradeB:yq2010 Q1` -1.07e-02   5.40e-04  -19.79  &lt; 2e-16 ***
-## `gradeC:yq2010 Q1` -1.15e-02   6.01e-04  -19.18  &lt; 2e-16 ***
-## `gradeD:yq2010 Q1` -2.16e-02   6.84e-04  -31.60  &lt; 2e-16 ***
-## `gradeE:yq2010 Q1` -2.50e-02   1.02e-03  -24.57  &lt; 2e-16 ***
-## `gradeF:yq2010 Q1` -3.07e-02   1.79e-03  -17.11  &lt; 2e-16 ***
-## `gradeG:yq2010 Q1` -2.98e-02   3.11e-03   -9.58  &lt; 2e-16 ***
-## `gradeB:yq2010 Q2` -9.92e-03   4.80e-04  -20.66  &lt; 2e-16 ***
-## `gradeC:yq2010 Q2` -8.57e-03   5.27e-04  -16.26  &lt; 2e-16 ***
-## `gradeD:yq2010 Q2` -1.87e-02   5.94e-04  -31.45  &lt; 2e-16 ***
-## `gradeE:yq2010 Q2` -2.30e-02   7.79e-04  -29.48  &lt; 2e-16 ***
-## `gradeF:yq2010 Q2` -2.84e-02   1.31e-03  -21.61  &lt; 2e-16 ***
-## `gradeG:yq2010 Q2` -2.82e-02   2.66e-03  -10.60  &lt; 2e-16 ***
-## `gradeB:yq2010 Q3` -7.45e-03   4.61e-04  -16.16  &lt; 2e-16 ***
-## `gradeC:yq2010 Q3` -5.01e-03   5.06e-04   -9.91  &lt; 2e-16 ***
-## `gradeD:yq2010 Q3` -1.70e-02   5.67e-04  -30.07  &lt; 2e-16 ***
-## `gradeE:yq2010 Q3` -2.37e-02   6.80e-04  -34.90  &lt; 2e-16 ***
-## `gradeF:yq2010 Q3` -2.74e-02   1.09e-03  -25.01  &lt; 2e-16 ***
-## `gradeG:yq2010 Q3` -2.54e-02   1.88e-03  -13.50  &lt; 2e-16 ***
-## `gradeB:yq2010 Q4` -7.63e-03   4.27e-04  -17.88  &lt; 2e-16 ***
-## `gradeC:yq2010 Q4` -9.65e-04   4.81e-04   -2.01  0.04495 *  
-## `gradeD:yq2010 Q4` -1.26e-02   5.56e-04  -22.75  &lt; 2e-16 ***
-## `gradeE:yq2010 Q4` -1.65e-02   6.72e-04  -24.59  &lt; 2e-16 ***
-## `gradeF:yq2010 Q4` -1.94e-02   1.05e-03  -18.43  &lt; 2e-16 ***
-## `gradeG:yq2010 Q4` -1.93e-02   1.69e-03  -11.42  &lt; 2e-16 ***
-## `gradeB:yq2011 Q1` -5.83e-03   4.11e-04  -14.18  &lt; 2e-16 ***
-## `gradeC:yq2011 Q1` -2.39e-03   4.73e-04   -5.05  4.4e-07 ***
-## `gradeD:yq2011 Q1` -1.07e-02   5.27e-04  -20.32  &lt; 2e-16 ***
-## `gradeE:yq2011 Q1` -1.57e-02   6.06e-04  -25.96  &lt; 2e-16 ***
-## `gradeF:yq2011 Q1` -1.82e-02   8.54e-04  -21.28  &lt; 2e-16 ***
-## `gradeG:yq2011 Q1` -2.12e-02   1.56e-03  -13.66  &lt; 2e-16 ***
-## `gradeB:yq2011 Q2` -1.32e-03   3.91e-04   -3.38  0.00071 ***
-## `gradeC:yq2011 Q2`  3.94e-04   4.42e-04    0.89  0.37291    
-## `gradeD:yq2011 Q2` -4.20e-03   4.94e-04   -8.50  &lt; 2e-16 ***
-## `gradeE:yq2011 Q2` -5.54e-03   5.85e-04   -9.48  &lt; 2e-16 ***
-## `gradeF:yq2011 Q2` -5.15e-03   8.43e-04   -6.12  9.6e-10 ***
-## `gradeG:yq2011 Q2` -1.10e-02   1.59e-03   -6.89  5.6e-12 ***
-## `gradeB:yq2011 Q3`  1.31e-03   3.65e-04    3.60  0.00032 ***
-## `gradeC:yq2011 Q3`  2.39e-03   4.22e-04    5.66  1.5e-08 ***
-## `gradeD:yq2011 Q3` -3.51e-04   4.75e-04   -0.74  0.45961    
-## `gradeE:yq2011 Q3`  1.61e-03   5.76e-04    2.79  0.00532 ** 
-## `gradeF:yq2011 Q3`  9.30e-04   8.59e-04    1.08  0.27871    
-## `gradeG:yq2011 Q3` -1.69e-03   1.64e-03   -1.03  0.30231    
-## `gradeB:yq2011 Q4`        NA         NA      NA       NA    
-## `gradeC:yq2011 Q4`        NA         NA      NA       NA    
-## `gradeD:yq2011 Q4`        NA         NA      NA       NA    
-## `gradeE:yq2011 Q4`        NA         NA      NA       NA    
-## `gradeF:yq2011 Q4`        NA         NA      NA       NA    
-## `gradeG:yq2011 Q4`        NA         NA      NA       NA    
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 0.00756 on 37738 degrees of freedom
-## Multiple R-squared:  0.959,  Adjusted R-squared:  0.959 
-## F-statistic: 6.78e+03 on 130 and 37738 DF,  p-value: &lt;2e-16</code></pre>
-<pre class="r blue"><code>data.frame(
+<pre class="r blue"><code>#summary(time4)
+
+data.frame(
   time1$results$RMSE,
   time2$results$RMSE,
   time3$results$RMSE,
@@ -1402,61 +1127,9 @@ model_wild_west &lt;- train(
 ## - Fold10: intercept=TRUE 
 ## Aggregating results
 ## Fitting final model on full training set</code></pre>
-<pre class="r blue"><code>summary(model_wild_west)</code></pre>
-<pre class="whiteb"><code>## 
-## Call:
-## lm(formula = .outcome ~ ., data = dat)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -0.11490 -0.00611  0.00008  0.00634  0.04152 
-## 
-## Coefficients:
-##                           Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)               7.17e-02   2.06e-04  347.71  &lt; 2e-16 ***
-## loan_amnt                 1.77e-07   1.84e-08    9.64  &lt; 2e-16 ***
-## gradeB                    3.69e-02   2.47e-04  149.48  &lt; 2e-16 ***
-## gradeC                    6.34e-02   2.71e-04  233.59  &lt; 2e-16 ***
-## gradeD                    8.28e-02   3.16e-04  262.05  &lt; 2e-16 ***
-## gradeE                    9.98e-02   4.24e-04  235.13  &lt; 2e-16 ***
-## gradeF                    1.19e-01   7.10e-04  167.76  &lt; 2e-16 ***
-## gradeG                    1.40e-01   1.44e-03   97.07  &lt; 2e-16 ***
-## term60                    1.68e-03   1.32e-04   12.70  &lt; 2e-16 ***
-## dti                       2.67e-05   7.36e-06    3.62  0.00029 ***
-## `poly(Price, 3)1`         1.64e-01   1.90e-02    8.61  &lt; 2e-16 ***
-## `poly(Price, 3)2`         3.28e-01   1.89e-02   17.37  &lt; 2e-16 ***
-## `poly(Price, 3)3`        -5.33e-02   1.80e-02   -2.97  0.00298 ** 
-## `loan_amnt:gradeB`       -1.06e-07   2.22e-08   -4.76  1.9e-06 ***
-## `loan_amnt:gradeC`       -2.27e-07   2.39e-08   -9.54  &lt; 2e-16 ***
-## `loan_amnt:gradeD`       -2.77e-08   2.55e-08   -1.09  0.27665    
-## `loan_amnt:gradeE`        3.50e-08   2.77e-08    1.27  0.20554    
-## `loan_amnt:gradeF`        4.85e-08   3.82e-08    1.27  0.20426    
-## `loan_amnt:gradeG`       -1.69e-07   6.74e-08   -2.50  0.01227 *  
-## `gradeB:poly(Price, 3)1` -6.95e-01   2.55e-02  -27.22  &lt; 2e-16 ***
-## `gradeC:poly(Price, 3)1` -9.35e-01   2.85e-02  -32.78  &lt; 2e-16 ***
-## `gradeD:poly(Price, 3)1` -1.54e+00   3.28e-02  -46.93  &lt; 2e-16 ***
-## `gradeE:poly(Price, 3)1` -1.83e+00   4.30e-02  -42.66  &lt; 2e-16 ***
-## `gradeF:poly(Price, 3)1` -1.97e+00   6.32e-02  -31.09  &lt; 2e-16 ***
-## `gradeG:poly(Price, 3)1` -2.21e+00   1.33e-01  -16.53  &lt; 2e-16 ***
-## `gradeB:poly(Price, 3)2` -1.28e-01   2.58e-02   -4.97  6.6e-07 ***
-## `gradeC:poly(Price, 3)2` -4.49e-01   2.74e-02  -16.38  &lt; 2e-16 ***
-## `gradeD:poly(Price, 3)2` -2.99e-01   3.26e-02   -9.15  &lt; 2e-16 ***
-## `gradeE:poly(Price, 3)2` -2.61e-01   4.50e-02   -5.81  6.4e-09 ***
-## `gradeF:poly(Price, 3)2` -3.54e-01   6.09e-02   -5.80  6.6e-09 ***
-## `gradeG:poly(Price, 3)2`  5.94e-02   1.74e-01    0.34  0.73290    
-## `gradeB:poly(Price, 3)3` -8.69e-02   2.55e-02   -3.41  0.00066 ***
-## `gradeC:poly(Price, 3)3` -1.70e-01   2.66e-02   -6.39  1.7e-10 ***
-## `gradeD:poly(Price, 3)3` -3.55e-01   3.38e-02  -10.50  &lt; 2e-16 ***
-## `gradeE:poly(Price, 3)3` -3.43e-01   4.44e-02   -7.73  1.1e-14 ***
-## `gradeF:poly(Price, 3)3` -2.34e-01   5.34e-02   -4.39  1.1e-05 ***
-## `gradeG:poly(Price, 3)3` -4.18e-01   1.82e-01   -2.29  0.02213 *  
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 0.00945 on 37831 degrees of freedom
-## Multiple R-squared:  0.936,  Adjusted R-squared:  0.936 
-## F-statistic: 1.53e+04 on 36 and 37831 DF,  p-value: &lt;2e-16</code></pre>
-<pre class="r blue"><code>0.009452*1.96</code></pre>
+<pre class="r blue"><code>#summary(model_wild_west)
+
+0.009452*1.96</code></pre>
 <pre class="whiteb"><code>## [1] 0.0185</code></pre>
 <div id="use-of-additional-sources" class="section level3">
 <h3>Use of additional sources</h3>
@@ -1531,68 +1204,7 @@ glimpse(lc_with_CPI)</code></pre>
 ## - Fold10: intercept=TRUE 
 ## Aggregating results
 ## Fitting final model on full training set</code></pre>
-<pre class="r blue"><code>summary(model_wild_west2)</code></pre>
-<pre class="whiteb"><code>## 
-## Call:
-## lm(formula = .outcome ~ ., data = dat)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -0.11468 -0.00596  0.00022  0.00618  0.03999 
-## 
-## Coefficients:
-##                           Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)               7.30e-02   2.10e-04  347.86  &lt; 2e-16 ***
-## loan_amnt                 1.76e-07   1.81e-08    9.72  &lt; 2e-16 ***
-## gradeB                    3.64e-02   2.53e-04  143.79  &lt; 2e-16 ***
-## gradeC                    6.22e-02   2.76e-04  225.17  &lt; 2e-16 ***
-## gradeD                    8.15e-02   3.22e-04  253.11  &lt; 2e-16 ***
-## gradeE                    9.83e-02   4.29e-04  228.85  &lt; 2e-16 ***
-## gradeF                    1.18e-01   7.19e-04  164.23  &lt; 2e-16 ***
-## gradeG                    1.39e-01   1.46e-03   95.54  &lt; 2e-16 ***
-## term60                    1.95e-03   1.32e-04   14.82  &lt; 2e-16 ***
-## dti                       2.94e-05   7.26e-06    4.05  5.1e-05 ***
-## `poly(Price, 3)1`         4.06e-01   2.10e-02   19.29  &lt; 2e-16 ***
-## `poly(Price, 3)2`         3.06e-01   1.87e-02   16.42  &lt; 2e-16 ***
-## `poly(Price, 3)3`        -1.34e-01   1.80e-02   -7.45  9.6e-14 ***
-## cpaltt01usm657n          -8.30e-03   3.25e-04  -25.52  &lt; 2e-16 ***
-## `loan_amnt:gradeB`       -1.15e-07   2.19e-08   -5.26  1.4e-07 ***
-## `loan_amnt:gradeC`       -2.32e-07   2.35e-08   -9.85  &lt; 2e-16 ***
-## `loan_amnt:gradeD`       -3.01e-08   2.51e-08   -1.20  0.23104    
-## `loan_amnt:gradeE`        3.32e-08   2.73e-08    1.21  0.22467    
-## `loan_amnt:gradeF`        5.77e-08   3.78e-08    1.53  0.12701    
-## `loan_amnt:gradeG`       -1.68e-07   6.65e-08   -2.53  0.01130 *  
-## `gradeB:poly(Price, 3)1` -7.78e-01   2.81e-02  -27.68  &lt; 2e-16 ***
-## `gradeC:poly(Price, 3)1` -1.13e+00   3.12e-02  -36.17  &lt; 2e-16 ***
-## `gradeD:poly(Price, 3)1` -1.75e+00   3.59e-02  -48.68  &lt; 2e-16 ***
-## `gradeE:poly(Price, 3)1` -2.07e+00   4.87e-02  -42.39  &lt; 2e-16 ***
-## `gradeF:poly(Price, 3)1` -2.05e+00   7.63e-02  -26.84  &lt; 2e-16 ***
-## `gradeG:poly(Price, 3)1` -2.30e+00   1.44e-01  -15.96  &lt; 2e-16 ***
-## `gradeB:poly(Price, 3)2` -1.28e-01   2.55e-02   -5.03  4.9e-07 ***
-## `gradeC:poly(Price, 3)2` -4.33e-01   2.71e-02  -15.98  &lt; 2e-16 ***
-## `gradeD:poly(Price, 3)2` -2.78e-01   3.23e-02   -8.61  &lt; 2e-16 ***
-## `gradeE:poly(Price, 3)2` -2.34e-01   4.45e-02   -5.27  1.4e-07 ***
-## `gradeF:poly(Price, 3)2` -3.47e-01   6.04e-02   -5.75  9.2e-09 ***
-## `gradeG:poly(Price, 3)2`  8.95e-02   1.72e-01    0.52  0.60201    
-## `gradeB:poly(Price, 3)3` -6.12e-02   2.55e-02   -2.40  0.01655 *  
-## `gradeC:poly(Price, 3)3` -1.01e-01   2.66e-02   -3.81  0.00014 ***
-## `gradeD:poly(Price, 3)3` -2.80e-01   3.37e-02   -8.31  &lt; 2e-16 ***
-## `gradeE:poly(Price, 3)3` -2.61e-01   4.44e-02   -5.87  4.3e-09 ***
-## `gradeF:poly(Price, 3)3` -1.88e-01   5.37e-02   -3.51  0.00045 ***
-## `gradeG:poly(Price, 3)3` -3.84e-01   1.82e-01   -2.11  0.03460 *  
-## `gradeB:cpaltt01usm657n`  2.91e-03   4.29e-04    6.79  1.1e-11 ***
-## `gradeC:cpaltt01usm657n`  6.80e-03   4.65e-04   14.61  &lt; 2e-16 ***
-## `gradeD:cpaltt01usm657n`  7.51e-03   5.37e-04   14.00  &lt; 2e-16 ***
-## `gradeE:cpaltt01usm657n`  8.29e-03   6.71e-04   12.36  &lt; 2e-16 ***
-## `gradeF:cpaltt01usm657n`  4.54e-03   1.11e-03    4.08  4.4e-05 ***
-## `gradeG:cpaltt01usm657n`  4.67e-03   1.66e-03    2.82  0.00486 ** 
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 0.00932 on 37824 degrees of freedom
-## Multiple R-squared:  0.937,  Adjusted R-squared:  0.937 
-## F-statistic: 1.32e+04 on 43 and 37824 DF,  p-value: &lt;2e-16</code></pre>
-</div>
+<pre class="r blue"><code>#summary(model_wild_west2)</code></pre>
 </div>
 </div>
 

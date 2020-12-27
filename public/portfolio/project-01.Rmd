@@ -187,7 +187,7 @@ ggplot(lc_clean, aes(x=emp_length, y = int_rate))+
 
 ```
 
-# Estimatimation of simple linear regression models
+### Estimatimation of simple linear regression models
 
 I start with a simple but quite powerful model.
 
@@ -477,7 +477,7 @@ time1<-train(
   method = "lm",
   trControl = control)
 
-summary(time1) # seems like dti is corrolated with issue_d (maybe lots of people defaulted because of the crisis)
+#summary(time1) # seems like dti is corrolated with issue_d (maybe lots of people defaulted because of the crisis)
 
 #The second model has a different linear time trend for each grade class
 time2<-train(
@@ -488,7 +488,7 @@ time2<-train(
    )
   
 
-summary(time2)
+#summary(time2)
 
 #Change the time trend to a quarter dummy variables.
 #zoo::as.yearqrt() creates quarter dummies 
@@ -504,7 +504,7 @@ time3<-train(
     trControl = control
    )
   
-summary(time3)
+#summary(time3)
 
 #specify one quarter dummy variable for each grade. This is going to be a large model as there are 19 quarters x 7 grades = 133 quarter-grade dummies.
 time4<-train(
@@ -514,7 +514,7 @@ time4<-train(
     trControl = control
    )
 
-summary(time4)
+#summary(time4)
 
 data.frame(
   time1$results$RMSE,
@@ -592,7 +592,7 @@ model_wild_west <- train(
    method = "lm",
     trControl = control
    )
-summary(model_wild_west)
+#summary(model_wild_west)
 
 0.009452*1.96
 ```
@@ -618,7 +618,7 @@ model_wild_west2 <- train(
    method = "lm",
     trControl = control
    )
-summary(model_wild_west2)
+#summary(model_wild_west2)
 
 
 ```
