@@ -230,8 +230,3 @@ ggplot(df3, aes(x=age_range,
 
 ```
 
-```{r, include=FALSE}
-knitr::knit_exit()
-```
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
