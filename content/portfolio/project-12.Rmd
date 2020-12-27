@@ -52,8 +52,10 @@ knitr::opts_chunk$set(class.output = "whitep")
 ```
 
 Hello, I am going to visualise three data visualisations basing on the Stop & Search dataset. You can find more on the topic here:
-https://www.met.police.uk/stopandsearch/ (Links to an external site.) 
-https://www.theguardian.com/law/2019/jan/26/met-police-disproportionately-use-stop-and-search-powers-on-black-people
+
+[link1](https://www.met.police.uk/stopandsearch/)
+
+[link2](https://www.theguardian.com/law/2019/jan/26/met-police-disproportionately-use-stop-and-search-powers-on-black-people)
 
 ```{r huxtable-stuff, include=FALSE}
 library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
