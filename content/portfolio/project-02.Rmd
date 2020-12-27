@@ -70,11 +70,11 @@ The data frame `omega` contains the salaries for the sample of 50 executives in 
 Can we conclude that there is a significant difference between the salaries of the male and female executives?
 
 To check it, I will perform different types of analyses, and check whether they all lead to the same conclusion 
-
-> Confidence intervals
-> Hypothesis testing
-> Correlation analysis
-> Regression
+'
+'Confidence intervals'<br/>
+'Hypothesis testing'<br/>
+'Correlation analysis'<br/>
+'Regression'
 
 
 I will alculate summary statistics on salary by gender. 

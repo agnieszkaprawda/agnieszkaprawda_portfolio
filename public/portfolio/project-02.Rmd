@@ -7,6 +7,22 @@ project_images:
 title: Gender Pay Discrimination - Statistical Hypothesis Testing
 type: portfolio
 ---
+
+```{css echo=FALSE}
+
+.pink { background-color:#fae6e6 ; 
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+    
+    
+.white { background-color:#fffafa ;
+    border: 3px gray;
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+
+    
+```
+
 ```{r, setup, include=FALSE}
 knitr::opts_chunk$set(
   message = FALSE, 
@@ -21,7 +37,13 @@ knitr::opts_chunk$set(
   fig.height=6.75,
   fig.align = "center"
 )
+
+knitr::opts_chunk$set(class.source = "pink")
+
+
+knitr::opts_chunk$set(class.output = "white")
 ```
+
 
 
 ```{r, load_libraries, include = FALSE}
@@ -55,13 +77,18 @@ At the last board meeting of Omega Group Plc., the headquarters of a large multi
 
 In this project I will carry out the analysis with the objective to find out whether there is indeed a significant difference between the salaries of men and women, and whether the difference is due to discrimination or whether it is based on another, possibly valid, determining factor.
 
+
 ```{r load_omega_data}
 omega <- omega <- read_csv("~/Documents/Applied Statistics in R/homeworks/data/omega.csv")
 ```
 
+
+
 ```{r}
 glimpse(omega) # examine the data frame
 ```
+
+
 
 ### Relationship Salary - Gender ?
 
@@ -71,15 +98,15 @@ Can we conclude that there is a significant difference between the salaries of t
 
 To check it, I will perform different types of analyses, and check whether they all lead to the same conclusion 
 
-> Confidence intervals
-> Hypothesis testing
-> Correlation analysis
-> Regression
+`Confidence intervals`<br/>
+`Hypothesis testing`<br/>
+`Correlation analysis`<br/>
+`Regression`
 
 
-I will alculate summary statistics on salary by gender. 
+I will calculate summary statistics on salary by gender. 
 
-Also, I will create and print a dataframe where, for each gender, I show the mean, SD, sample size, the t-critical, the SE, the margin of error, and the low/high endpoints of a 95% condifence interval
+Also, I will create and print a dataframe where, for each gender, I show **the mean, SD, sample size, the t-critical, the SE, the margin of error, and the low/high endpoints of a 95% condifence interval.**
 
 ```{r, confint_single_valiables}
 # Summary Statistics of salary by gender
@@ -98,6 +125,8 @@ df_by_gender2
 
 #I will draw a scatterplot to visually inspect relationship between salary and experience
 ```
+
+
 
 ```{r }
 ggplot(omega,aes(x=experience,y=salary, colour= gender,fill=gender)) +
@@ -121,9 +150,13 @@ ggplot(omega,aes(x=experience,y=salary, colour= gender,fill=gender)) +
 
 ```
 
+
+
 I can observe a strong relationship between salary and experience. Increase in salary comes quickly at the beginning and throughout the first ~15 years, however the gains in salary become slower later over time, displaying diminishing marginal returns.
 
 I will further investigate the difference between salaries by gender through hypothesis testing, utilizing both t.test() and the simulation method from the infer package.
+
+
 
 ```{r, hypothesis_testing}
 # hypothesis testing using t.test() 
