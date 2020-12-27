@@ -1,5 +1,5 @@
 # Site settings
-baseURL       = "https://agnieszkaprawdaportfolio.netlify.app/"
+baseURL       = "https://agnieszkaprawdawebsite.netlify.app/"
 languageCode  = "en-us"
 title         = "Agnieszka Prawda - Portfolio"
 theme = "roxo-hugo"
