@@ -183,7 +183,7 @@ df_by_gender2</code></pre>
         legend.title=element_text(family=&quot;Montserrat&quot;, size=8, face=&quot;bold&quot;))</code></pre>
 <p><img src="/portfolio/project-02_files/figure-html/unnamed-chunk-3-1.png" width="648" style="display: block; margin: auto;" /></p>
 <p>I can observe a strong relationship between <code>salary and experience</code>. Increase in salary comes quickly at the beginning and throughout the first ~15 years, however the gains in salary become slower later over time, displaying diminishing marginal returns.</p>
-<p>I will further investigate the difference between salaries by gender through hypothesis testing, utilizing both t.test() and the simulation method from the infer package.</p>
+<p>I will further investigate the difference between <strong>salaries by gender</strong> through <strong>hypothesis testing</strong>, utilizing both t.test() and the simulation method from the infer package.</p>
 <pre class="r pink"><code># hypothesis testing using t.test() 
 t.test(salary~gender, data=omega)</code></pre>
 <pre class="whitep"><code>## 
@@ -233,11 +233,11 @@ p_value_by_gender</code></pre>
 ##     &lt;dbl&gt;
 ## 1       0</code></pre>
 <pre class="r pink"><code>#p_value is tiny, so the null hypothesis can be rejected</code></pre>
-<p>Looking at the graph the x axis ends at 10,000 dollars. The difference in the mean values of the gender salaries is 8,696 dollars. I can see that this results in a p-value close enough to zero, so I can conclude that at a 5% significance level there is a meaningful difference between the mean salaries of men and women.</p>
+<p>Looking at the graph the x axis ends at 10,000 dollars. The difference in the mean values of the gender salaries is 8,696 dollars. I can see that this results in a p-value close enough to zero, so I can conclude that at a 5% significance level <code>there is a meaningful difference between the mean salaries of men and women.</code></p>
 </div>
 <div id="relationship-experience---gender" class="section level3">
 <h3>Relationship Experience - Gender?</h3>
-<p>At the board meeting, someone raised the issue that there was indeed a substantial difference between male and female salaries, but that this was attributable to other reasons such as <code>differences in experience</code>. A questionnaire send out to the 50 executives in the sample reveals that the average experience of the men is approximately 21 years, whereas the women only have about 7 years experience on average (see table below).</p>
+<p>At the board meeting, someone raised the issue that there was indeed a substantial <strong>difference between male and female salaries</strong>, but that this was attributable to other reasons such as <code>differences in experience</code>. A questionnaire send out to the 50 executives in the sample reveals that the average experience of the <strong>men is approximately 21 years, whereas the women only have about 7 years experience on average</strong> (see table below).</p>
 <pre class="r pink"><code># Summary Statistics of salary by gender
 stats_exp_gender &lt;- favstats (experience ~ gender, data=omega)
 
@@ -314,11 +314,11 @@ p_value_exp_gender</code></pre>
 ##   p_value
 ##     &lt;dbl&gt;
 ## 1       0</code></pre>
-<p>The person who raised the issue at the board meeting was correct in assuming that there is a statistically significant difference between the mean levels of experience for males and females in the company.</p>
+<p>The person who raised the issue at the board meeting <strong>was correct</strong> in assuming that there is a statistically significant difference between the mean levels of experience for males and females in the company.</p>
 </div>
 <div id="relationship-salary---experience" class="section level3">
 <h3>Relationship Salary - Experience ?</h3>
-<p>Someone at the meeting argues that clearly, a more thorough analysis of the relationship between salary and experience is required before any conclusion can be drawn about whether there is any gender-based salary discrimination in the company.</p>
+<p>Someone at the meeting argues that clearly, a more thorough analysis of the relationship between <code>salary and experience</code> is required before any conclusion can be drawn about whether there is any gender-based salary discrimination in the company.</p>
 <p>I will now analyse the relationship between salary and experience &amp; draw a scatterplot to visually inspect the data.</p>
 <pre class="r pink"><code>#We will draw a scatterplot to visually inspect relationship between salary and experience
 
@@ -342,7 +342,7 @@ p_value_exp_gender</code></pre>
   scale_y_continuous(labels= scales::dollar)</code></pre>
 <p><img src="/portfolio/project-02_files/figure-html/salary_exp_scatter-1.png" width="648" style="display: block; margin: auto;" /></p>
 <pre class="r pink"><code>#We can observe a strong relationship between salary and experience. Increase in salary comes quickly at the beginning throughout first ~15 years, however the gains in salary become slower later over time.</code></pre>
-<p>As my analysis above shows, there is a significant positive relationship between years of experience and salary. I can also see what was confirmed in the previous section, that women have significantly less experience than men, with a cut off point displayed above at around 30 years. This gives an alternative reasoning besides discrimination regarding the pay gap, as more years of experience are a valuable asset that is accordingly financially rewarded with a greater salary.</p>
+<p>As my analysis above shows, there is a <strong>significant positive relationship between years of experience and salary</strong>. I can also see what was confirmed in the previous section, that women have significantly less experience than men, with a cut off point displayed above at around 30 years. This gives an alternative reasoning besides discrimination regarding the pay gap, as more years of experience are a valuable asset that is accordingly financially rewarded with a greater salary.</p>
 </div>
 <div id="check-correlations-between-the-data" class="section level3">
 <h3>Check correlations between the data</h3>
@@ -365,7 +365,7 @@ p_value_exp_gender</code></pre>
         legend.text=element_text(family=&quot;Montserrat&quot;, size=7),
         legend.title=element_text(family=&quot;Montserrat&quot;, size=8, face=&quot;bold&quot;))</code></pre>
 <p><img src="/portfolio/project-02_files/figure-html/ggpairs-1.png" width="648" style="display: block; margin: auto;" /></p>
-<p>From the scatterplot we can see that the majority of women in the sample have a comparable salary to men with the same experience level.</p>
+<p><strong>From the scatterplot we can see that the majority of women in the sample have a comparable salary to men with the same experience level.</strong></p>
 <p>The majority of women in the sample have experience between 0 and 20 years, whereas the approximate range of experience for most men is between 10 and 35 years. I also saw above that there is a statistically significant difference between the levels of experience for both genders, which confirms what we are seeing. Women seem to end their careers earlier, at least within the given sample.</p>
 <p>Thank you!</p>
 </div>
