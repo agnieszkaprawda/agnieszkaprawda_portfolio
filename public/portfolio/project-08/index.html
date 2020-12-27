@@ -101,22 +101,53 @@
             
 
 
-<pre class="r"><code>#install.packages(&quot;remotes&quot;)
-#remotes::install_github(&quot;vqv/ggbiplot&quot;, force = TRUE)
-library(ggplot2)  
-library(ggbiplot)
-#remotes::install_github(&quot;kassambara/factoextra&quot;)
-library(factoextra)
-library(tidyverse)
-library(ggbiplot) 
-library(reshape2)
-library(MASS)
-library(rsample)
-library(dplyr)
-library(stats)</code></pre>
-<div id="question-1-principal-component-analysis" class="section level1">
-<h1><strong>QUESTION 1: PRINCIPAL COMPONENT ANALYSIS</strong></h1>
-<p>You are going to analyse a D = 11 data set called ‘mtcars’ which comes with R distribution.
+<style type="text/css">
+
+.pink { background-color:#fae6e6 ; 
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+
+.blue { background-color:#DFF5F6 ; 
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+    
+.whitep { background-color:#fffafa ;
+    border: 3px gray;
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+    
+.whiteb { background-color:#f7ffff ;
+    border: 3px gray;
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+
+    
+</style>
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$','$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+  };
+
+  window.addEventListener('load', (event) => {
+      document.querySelectorAll("mjx-container").forEach(function(x){
+        x.parentElement.classList += 'has-jax'})
+    });
+
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<div id="part-1-principal-component-analysis" class="section level3">
+<h3>PART 1: PRINCIPAL COMPONENT ANALYSIS</h3>
+<p>I am going to analyse a D = 11 data set called ‘mtcars’ which comes with R distribution.
 The data was extracted from the 1974 Motor Trend US magazine, and comprises fuel consumption and 10 aspects of automobile design and performance for 32 automobiles (1973–74 models).</p>
 <p>The features of this data set are:</p>
 <ul>
@@ -132,19 +163,20 @@ The data was extracted from the 1974 Motor Trend US magazine, and comprises fuel
 <li>gear Number of forward gears</li>
 <li>carb Number of carburetors</li>
 </ul>
-<div id="a-data-loading-and-initial-analysis" class="section level4">
-<h4>a) Data loading and initial analysis</h4>
+<div id="data-loading-and-initial-analysis" class="section level4">
+<h4>Data loading and initial analysis</h4>
+<p>In this point I will:</p>
 <ul>
-<li>Load and attach the “mtcars” data to the current session.</li>
-<li>Display the dataset and observe the inputs.</li>
+<li><p><strong>Load and attach the “mtcars” data to the current session.</strong></p></li>
+<li><p><strong>Display the dataset and observe the inputs.</strong></p></li>
 </ul>
-<pre class="r"><code>#Load data
+<pre class="r pink"><code>#Load data
 data(mtcars)
 attach(mtcars)
 
 #View the dataframe
 print(mtcars)</code></pre>
-<pre><code>##                      mpg cyl  disp  hp drat   wt qsec vs am gear carb
+<pre class="whitep"><code>##                      mpg cyl  disp  hp drat   wt qsec vs am gear carb
 ## Mazda RX4           21.0   6 160.0 110 3.90 2.62 16.5  0  1    4    4
 ## Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.88 17.0  0  1    4    4
 ## Datsun 710          22.8   4 108.0  93 3.85 2.32 18.6  1  1    4    1
@@ -178,45 +210,36 @@ print(mtcars)</code></pre>
 ## Maserati Bora       15.0   8 301.0 335 3.54 3.57 14.6  0  1    5    8
 ## Volvo 142E          21.4   4 121.0 109 4.11 2.78 18.6  1  1    4    2</code></pre>
 <ul>
-<li>State which variables are binary in the mtcars dataset.</li>
+<li><strong>Which variables are binary in the mtcars dataset&gt;</strong></li>
 </ul>
-<blockquote>
-<p>ANSWER: Variables ‘vs’ and ‘am’ are binary. “vs” stand for type of engine (0 = V-shaped, 1 = straight) while ‘am’ stands for transmission type (0 = automatic, 1 = manual). I will delete them later from my dataframe as the PCA works best for variables that are numeric.</p>
-</blockquote>
+<p><code>ANSWER</code>: Variables ‘vs’ and ‘am’ are binary. “vs” stand for type of engine (0 = V-shaped, 1 = straight) while ‘am’ stands for transmission type (0 = automatic, 1 = manual). I will delete them later from my dataframe as the PCA works best for variables that are numeric.</p>
 <ul>
-<li>State the Dataset Requirements for PCA</li>
+<li><strong>What are the Dataset Requirements for PCA?</strong></li>
 </ul>
-<blockquote>
-<p>ANSWER: The Principle Component Analysis works best on the data that is as follows:
+<p><code>ANSWER</code>: The Principle Component Analysis works best on the data that is as follows:
 - numeric data (non binary one),
 - correlated data
 - standardised:
 - centered in order to avoid instability
 - scaled ( if variables are in deifferent units)</p>
-</blockquote>
 </div>
-<div id="b-data-pre-processing" class="section level4">
-<h4>b) Data pre-processing</h4>
-<ul>
-<li>Carefully consider which variables should form inputs into the PCA model, given the numerical data requirements such that PCA works best. Create a data frame called <span class="math inline">\(\mathbb{X}\)</span> which will contain all columns except the binary ones.</li>
-<li>Find the dimensionality of <span class="math inline">\(\mathbb{X}\)</span> and assign it to variable dims.</li>
-<li>How many features will you be working on which are relevant for the purposes of dimensionality reduction?</li>
-<li>Assign number of observations to variable N and number of features to variable D</li>
-<li>Perform necessary analysis in order to establish whether the data needs centering and/or scaling.
-<ul>
-<li>To help with visual examination of variance, extract the diagonal from the covariance matrix.</li>
-<li>Using information you obtained explain your decision.</li>
-</ul></li>
-</ul>
-<pre class="r"><code>#PCA works best for variables that are numeric. Therefore I will delete from the dataset the binary varaibles - &#39;vs&#39; and &#39;am&#39;
+<div id="data-pre-processing" class="section level4">
+<h4>Data pre-processing</h4>
+<p>Now I will carefully consider which variables should form inputs into the PCA model, given the numerical data requirements such that PCA works best. I will create a data frame called <span class="math inline">\(\mathbb{X}\)</span> which will contain all columns except the binary ones.</p>
+<p>I will also:
+- Find the dimensionality of <span class="math inline">\(\mathbb{X}\)</span> and assign it to variable dims.
+- Find how many features should I be working on which are relevant for the purposes of dimensionality reduction.
+- Assign number of observations to variable N and number of features to variable D
+- Perform necessary analysis in order to establish whether the data needs centering and/or scaling.</p>
+<pre class="r pink"><code>#PCA works best for variables that are numeric. Therefore I will delete from the dataset the binary varaibles - &#39;vs&#39; and &#39;am&#39;
 X &lt;- data.frame()
 X=mtcars %&gt;% dplyr::select(-c(vs,am))
 
 #Obtain dims
 dims &lt;- dim(X)
 dims</code></pre>
-<pre><code>## [1] 32  9</code></pre>
-<pre class="r"><code>#[1] 32  9
+<pre class="whitep"><code>## [1] 32  9</code></pre>
+<pre class="r pink"><code>#[1] 32  9
 
 N &lt;- dims[[1]]  # number of observations
 D &lt;- dims[[2]]  # number of features 
@@ -224,7 +247,7 @@ D &lt;- dims[[2]]  # number of features
 # Correlation matrix dimensionality to determine if the data needs to be standardised
 cov_data &lt;- cov(X)
 print(cov_data)</code></pre>
-<pre><code>##          mpg     cyl    disp      hp     drat      wt     qsec    gear    carb
+<pre class="whitep"><code>##          mpg     cyl    disp      hp     drat      wt     qsec    gear    carb
 ## mpg    36.32  -9.172  -633.1 -320.73   2.1951  -5.117   4.5091   2.136 -5.3631
 ## cyl    -9.17   3.190   199.7  101.93  -0.6684   1.367  -1.8869  -0.649  1.5202
 ## disp -633.10 199.660 15360.8 6721.16 -47.0640 107.684 -96.0517 -50.803 79.0687
@@ -234,9 +257,9 @@ print(cov_data)</code></pre>
 ## qsec    4.51  -1.887   -96.1  -86.77   0.0871  -0.305   3.1932  -0.280 -1.8941
 ## gear    2.14  -0.649   -50.8   -6.36   0.2760  -0.421  -0.2804   0.544  0.3266
 ## carb   -5.36   1.520    79.1   83.04  -0.0784   0.676  -1.8941   0.327  2.6089</code></pre>
-<pre class="r"><code>cor_data &lt;- cor(X)
+<pre class="r pink"><code>cor_data &lt;- cor(X)
 print(cor_data)</code></pre>
-<pre><code>##         mpg    cyl   disp     hp    drat     wt    qsec   gear    carb
+<pre class="whitep"><code>##         mpg    cyl   disp     hp    drat     wt    qsec   gear    carb
 ## mpg   1.000 -0.852 -0.848 -0.776  0.6812 -0.868  0.4187  0.480 -0.5509
 ## cyl  -0.852  1.000  0.902  0.832 -0.6999  0.782 -0.5912 -0.493  0.5270
 ## disp -0.848  0.902  1.000  0.791 -0.7102  0.888 -0.4337 -0.556  0.3950
@@ -246,34 +269,29 @@ print(cor_data)</code></pre>
 ## qsec  0.419 -0.591 -0.434 -0.708  0.0912 -0.175  1.0000 -0.213 -0.6562
 ## gear  0.480 -0.493 -0.556 -0.126  0.6996 -0.583 -0.2127  1.000  0.2741
 ## carb -0.551  0.527  0.395  0.750 -0.0908  0.428 -0.6562  0.274  1.0000</code></pre>
-<blockquote>
-<p>SUMMARY</p>
-</blockquote>
+<div id="summary" class="section level5">
+<h5>SUMMARY</h5>
 <p>The data usually needs centering to ensure the numerical stability of the PCA algorithm. Therefore I will set later the “center=True” parameter when scaling.</p>
 <p>The Variances of variables (the ones on the diagonal) are very different in scale. That suggests that the data has different units.
 Therefore it is necessary to scale mtcars data in such a situation. Also, we can notice directly from the data frame that the variables are delivered in different units such as miles/gallon, weight in 1000lbsl qsec (time) .</p>
 </div>
-<div id="c-pca-analysis" class="section level4">
-<h4>c) PCA Analysis</h4>
-<p>PCA Analysis - Theoretical Questions.</p>
+</div>
+<div id="pca-analysis" class="section level4">
+<h4>PCA Analysis</h4>
+<div id="pca-analysis---theoretical-part" class="section level5">
+<h5>PCA Analysis - Theoretical Part</h5>
 <ul>
-<li>Give definition of what Principal Component Analysis is and whether it is a supervised or unsupervised technique. Explain what supervised and unsupervised means in the context of Machine Learning.</li>
+<li><strong>I will now give a definition of what Principal Component Analysis is and whether it is a supervised or unsupervised technique &amp; explain what supervised and unsupervised means in the context of Machine Learning.</strong></li>
 </ul>
-<blockquote>
-<p>ANSWER: The Principal Component Analysis is a method of dimension reduction by linear transformation of variables, with the final outcome of smaller dataset, that still containts the majority (aim 60-80%) of information from the orginal large dataset. PCA is an unsupervised technique. It means that the method has no teacher signal and does not use an algorithm with any labels. Instead due to the dimension reduction it uses the principle components to come up with the final solution.</p>
-</blockquote>
+<p><code>ANSWER</code>: The Principal Component Analysis is a method of dimension reduction by linear transformation of variables, with the final outcome of smaller dataset, that still containts the majority (aim 60-80%) of information from the orginal large dataset. PCA is an unsupervised technique. It means that the method has no teacher signal and does not use an algorithm with any labels. Instead due to the dimension reduction it uses the principle components to come up with the final solution.</p>
 <ul>
-<li>Explain what orthogonality means when it comes to random variables being interpreted geometrically.</li>
+<li><strong>What orthogonality means when it comes to random variables being interpreted geometrically.</strong></li>
 </ul>
-<blockquote>
-<p>ANSWER: Ortogonality in this context means that the variables are not correlated with each other. It guarantees that they retain the maximum amount of variance of the dataset, which translates to explaining more variables (particularly more than 1, explained below).These orthogonal variables create na new space with less dimensions where the original, yet now uncorrelated, dataset will be represented.</p>
-</blockquote>
+<p><code>ANSWER</code>: Ortogonality in this context means that the variables are not correlated with each other. It guarantees that they retain the maximum amount of variance of the dataset, which translates to explaining more variables (particularly more than 1, explained below).These orthogonal variables create na new space with less dimensions where the original, yet now uncorrelated, dataset will be represented.</p>
 <ul>
-<li>State the key formula (using linear algebra notation) which allows you to find the projection of vector <span class="math inline">\(\mathbb{x}_n \in R^{D}\)</span> onto M-dimensional sub-space U.</li>
+<li><strong>I will now provide the key formula (using linear algebra notation) which allows to find the projection of vector <span class="math inline">\(\mathbb{x}_n \in R^{D}\)</span> onto M-dimensional sub-space U.</strong></li>
 </ul>
-<blockquote>
-<p>ANSWER:</p>
-</blockquote>
+<p><code>ANSWER</code>:</p>
 <p><span class="math inline">\(\tilde {\mathbb{x}}_n = \sum\limits_{i=1}^\mathbb{M}\mathbb{b}_iz_{ni} = \mathbb{B}\mathbb{z} =\mathbb{B}\mathbb{B}^T\mathbb{x}_n\)</span></p>
 <p>Where:
 <span class="math inline">\(\tilde {\mathbb{x}}_n\)</span> - projected vector in <span class="math inline">\(R^{D}\)</span> space</p>
@@ -281,59 +299,45 @@ Therefore it is necessary to scale mtcars data in such a situation. Also, we can
 / Basis Vector / Eigenvector” <span class="math inline">\(\in R^{D}\)</span></p>
 <p><span class="math inline">\(z_{ni}\)</span> - “Principal Component Score / Coordinates” <span class="math inline">\(\in R^{M}\)</span> (scalar)</p>
 <ul>
-<li>Is it correct to say that covariance matrix plays key part in PCA? If so, state in which mathematical expression is it used such that it forms a crucial part of the PCA?</li>
+<li><strong>Is it correct to say that covariance matrix plays key part in PCA?</strong></li>
 </ul>
-<blockquote>
-<p>ANSWER: The covariance matrix S indeed plays the crucial role in the Principal Component Analysis. It is because we aim to minimise the average squared reconstruction error. The optimisation leads to an eigenvalues problem, the solution of which we can find as follows:
+<p><code>ANSWER</code>: The covariance matrix S indeed plays the crucial role in the Principal Component Analysis. It is because we aim to minimise the average squared reconstruction error. The optimisation leads to an eigenvalues problem, the solution of which we can find as follows:
 The eigenvectors of the covariance matrix S determine the directions of the new feature space (i.e. eigenvectors form the axes in the sub-space).
 The eigenvalues of the covariance matrix S explain the variance of data along the new feature
 axes (i.e. represent the projections of variance of data).</p>
-</blockquote>
-<p>The crucial expression that forms a crucial part of the PCA is as follows:
-<span class="math inline">\(𝓙=\frac1{N}\sum\limits_{n=1}^\mathbb{N}||\mathbb{x}_n-\tilde {\mathbb{x}}_n||=\sum\limits_{j=M+1}^\mathbb{D}\mathbb{b}^T_j(\frac1{N}\sum\limits_{n=1}^\mathbb{N}\mathbb{x}_n\mathbb{x}_n^T)\mathbb{b}_j\)</span></p>
+<p>The crucial expression that forms a crucial part of the PCA is as follows:</p>
+<p><span class="math inline">\(𝓙=\frac1{N}\sum\limits_{n=1}^\mathbb{N}||\mathbb{x}_n-\tilde {\mathbb{x}}_n||=\sum\limits_{j=M+1}^\mathbb{D}\mathbb{b}^T_j(\frac1{N}\sum\limits_{n=1}^\mathbb{N}\mathbb{x}_n\mathbb{x}_n^T)\mathbb{b}_j\)</span></p>
 <p>Where <span class="math inline">\(\frac1{N}\sum\limits_{n=1}^\mathbb{N}\mathbb{x}_n\mathbb{x}_n^T\)</span> is the Data Covariance Martix S</p>
 <ul>
-<li>State how the directions of the first and second principal components (basis vectors) are chosen?</li>
+<li><strong>How the directions of the first and second principal components (basis vectors) are chosen?</strong></li>
 </ul>
-<blockquote>
-<p>ANSWER: The directions of the first and second principal components are chosen using the Data Covariance Matrix S that returns the eigenvectors (called Principal Component Loadings or PCs). They are ordered by the amount variance their correspoing eigenvalues explain in an descending order. The PCs are stored in the PCA model. They give directions of the new axes (the rotation). These are chosen by the most respective varianance of data.</p>
-</blockquote>
+<p><code>ANSWER</code>: The directions of the first and second principal components are chosen using the Data Covariance Matrix S that returns the eigenvectors (called Principal Component Loadings or PCs). They are ordered by the amount variance their correspoing eigenvalues explain in an descending order. The PCs are stored in the PCA model. They give directions of the new axes (the rotation). These are chosen by the most respective varianance of data.</p>
 <ul>
-<li>List 4 purposes for which PCA can be used on data? Provide an explanation of what each one means.</li>
+<li><strong>i will list 4 purposes for which PCA can be used on data? Provide an explanation of what each one means.</strong></li>
 </ul>
-<blockquote>
-<p>ANSWER: The PCA can be used for the following purposes:
-a) data visualition - PCA enables plotting data in a 2dimensional space (called principle compenent space) through dimension reduction. The visualisation with fewer dimension becomes much more meaningful.</p>
-</blockquote>
-<blockquote>
+<p><code>ANSWER</code>: The PCA can be used for the following purposes:
+a) <strong>data visualition</strong> - PCA enables plotting data in a 2dimensional space (called principle compenent space) through dimension reduction. The visualisation with fewer dimension becomes much more meaningful.</p>
 <ol start="2" style="list-style-type: lower-alpha">
-<li>data compression - PCA helps in reduction of storage requirements of data what speeds up the learning algorithms substantially. It is especially useful in the era of big Data that is sometimes impossible to be processed in a reasonable amount of time.</li>
+<li><p><strong>data compression</strong> - PCA helps in reduction of storage requirements of data what speeds up the learning algorithms substantially. It is especially useful in the era of big Data that is sometimes impossible to be processed in a reasonable amount of time.</p></li>
+<li><p><strong>feature extraction</strong> - PCA keeps only the important ones in order to approximate data to the desired level and removes the rest that is less meaninful. Instead of choosing features for regression or clustering, we can run PCA on our data and and obtain points projected in the new space and use the obtained result as an input to these algorithms.</p></li>
+<li><p><strong>noise filtering</strong> - PCA can help reduce noice in the data e.g. in speach de-noising or image de-noising.</p></li>
 </ol>
-</blockquote>
-<blockquote>
-<ol start="3" style="list-style-type: lower-alpha">
-<li>feature extraction - PCA keeps only the important ones in order to approximate data to the desired level and removes the rest that is less meaninful. Instead of choosing features for regression or clustering, we can run PCA on our data and and obtain points projected in the new space and use the obtained result as an input to these algorithms.</li>
-</ol>
-</blockquote>
-<blockquote>
-<ol start="4" style="list-style-type: lower-alpha">
-<li>noise filtering - PCA can help reduce noice in the data e.g. in speach de-noising or image de-noising.</li>
-</ol>
-</blockquote>
-<p>PCA Analysis - Practical Questions.</p>
+</div>
+<div id="pca-analysis---practical-part." class="section level5">
+<h5>PCA Analysis - Practical Part.</h5>
 <ul>
-<li>Perform PCA analysis on the data we called <span class="math inline">\(\mathbb{X}\)</span> above and store result into variable <span class="math inline">\(\texttt{pca}\)</span>. If you decided the data required centering and/or scaling, please do this using optional arguments of the <span class="math inline">\(\texttt{prcomp()}\)</span> function.</li>
+<li><strong>I will perform a PCA analysis on the data I called <span class="math inline">\(\mathbb{X}\)</span> above and store result into variable <span class="math inline">\(\texttt{pca}\)</span>. As the data required centering and/or scaling, I will do so using optional arguments of the <span class="math inline">\(\texttt{prcomp()}\)</span> function.</strong></li>
 </ul>
-<pre class="r"><code>#Standardise the data using prcomp
+<pre class="r pink"><code>#Standardise the data using prcomp
 pca &lt;- prcomp(X, center = TRUE, scale. = TRUE) 
 typeof(pca) # resulting object is a list (containing 5 elements) </code></pre>
-<pre><code>## [1] &quot;list&quot;</code></pre>
+<pre class="whitep"><code>## [1] &quot;list&quot;</code></pre>
 <ul>
-<li>Use function structure, <span class="math inline">\(\texttt{str()}\)</span>, to look inside your object. You should already have a good understanding of what each variable belonging to <span class="math inline">\(\texttt{pca}\)</span> object describes.</li>
+<li><strong>I use function structure, <span class="math inline">\(\texttt{str()}\)</span>, to look inside my object.</strong></li>
 </ul>
-<pre class="r"><code>#Looking inside the data
+<pre class="r pink"><code>#Looking inside the data
 str(pca)</code></pre>
-<pre><code>## List of 5
+<pre class="whitep"><code>## List of 5
 ##  $ sdev    : num [1:9] 2.378 1.443 0.71 0.515 0.428 ...
 ##  $ rotation: num [1:9, 1:9] -0.393 0.403 0.397 0.367 -0.312 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
@@ -349,14 +353,14 @@ str(pca)</code></pre>
 ##   .. ..$ : chr [1:9] &quot;PC1&quot; &quot;PC2&quot; &quot;PC3&quot; &quot;PC4&quot; ...
 ##  - attr(*, &quot;class&quot;)= chr &quot;prcomp&quot;</code></pre>
 <ul>
-<li>State which <span class="math inline">\(\texttt{pca}\)</span> object’s variables are the loadings and which are the scores. Create 2 variables: loadings and scores, into which you store -loadings and -scores (i.e. the basis vectors and z pointing in the positive direction). Give at least one alternative name you know loadings and scores.</li>
+<li><strong>I will create 2 variables: loadings and scores, into which I store -loadings and -scores (i.e. the basis vectors and z pointing in the positive direction).</strong></li>
 </ul>
-<pre class="r"><code>#Create load
+<pre class="r pink"><code>#Create load
 #Loadings are the basis vectors / eigenvectors / PCs (matrix DxD) - they take name &quot;rotation&quot; in our data set
 #I will use minus in order to provide more intuitive position direction pointing vectors
 loadings&lt;- - pca$rotation
 loadings</code></pre>
-<pre><code>##         PC1     PC2     PC3      PC4    PC5     PC6     PC7     PC8     PC9
+<pre class="whitep"><code>##         PC1     PC2     PC3      PC4    PC5     PC6     PC7     PC8     PC9
 ## mpg   0.393 -0.0275  0.2212  0.00613  0.321 -0.7202  0.3814  0.1247 -0.1149
 ## cyl  -0.403 -0.0157  0.2523 -0.04070 -0.117 -0.2243  0.1589 -0.8103 -0.1627
 ## disp -0.397  0.0889  0.0783 -0.33949  0.487  0.0197  0.1823  0.0642  0.6619
@@ -366,11 +370,11 @@ loadings</code></pre>
 ## qsec  0.224  0.4840 -0.6281  0.03033  0.148 -0.2575 -0.2762 -0.3561  0.1687
 ## gear  0.209 -0.5508 -0.2066  0.28238  0.562  0.3230  0.0856 -0.3164 -0.0472
 ## carb -0.245 -0.4843 -0.4641  0.21449 -0.400 -0.3571  0.2060  0.1083  0.3205</code></pre>
-<pre class="r"><code>#Create scores
+<pre class="r pink"><code>#Create scores
 #Scores are the rotated data coordinates (again I need to reverse the sign)
 scores &lt;- - pca$x 
 scores</code></pre>
-<pre><code>##                         PC1    PC2     PC3     PC4     PC5     PC6     PC7
+<pre class="whitep"><code>##                         PC1    PC2     PC3     PC4     PC5     PC6     PC7
 ## Mazda RX4            0.6642 -1.173  0.2043  0.1260 -0.7520  0.1251  0.4236
 ## Mazda RX4 Wag        0.6372 -0.977 -0.1108  0.0857 -0.6567  0.0662  0.4485
 ## Datsun 710           2.2997  0.327  0.2101  0.1086  0.0762  0.5669 -0.3861
@@ -437,44 +441,47 @@ scores</code></pre>
 ## Maserati Bora        0.08233  0.05311
 ## Volvo 142E           0.31515 -0.16579</code></pre>
 <ul>
-<li>Examine the center and scale variables stored inside object <span class="math inline">\(\texttt{pca}\)</span>. What do these provide?</li>
+<li><strong>I will examine the center and scale variables stored inside object <span class="math inline">\(\texttt{pca}\)</span>.</strong></li>
 </ul>
-<pre class="r"><code>#Examine center and scale variables in &#39;pca&#39;
+<pre class="r pink"><code>#Examine center and scale variables in &#39;pca&#39;
 
 #The &#39;center&#39; provides centering information extracted from X attributes data  (mu that was used for each variable to center it)
 pca$center # previous centering info stored, mu used)</code></pre>
-<pre><code>##    mpg    cyl   disp     hp   drat     wt   qsec   gear   carb 
+<pre class="whitep"><code>##    mpg    cyl   disp     hp   drat     wt   qsec   gear   carb 
 ##  20.09   6.19 230.72 146.69   3.60   3.22  17.85   3.69   2.81</code></pre>
-<pre class="r"><code>#      mpg        cyl       disp         hp       drat         wt       qsec       gear       carb 
+<pre class="r pink"><code>#      mpg        cyl       disp         hp       drat         wt       qsec       gear       carb 
 # 20.090625   6.187500 230.721875 146.687500   3.596563   3.217250  17.848750   3.687500   2.812500 
 
 #The scale&#39; provides scaling inforomation extracted from X attributes data  (the sigma that was used for each variable to scale it)
 pca$scale </code></pre>
-<pre><code>##     mpg     cyl    disp      hp    drat      wt    qsec    gear    carb 
+<pre class="whitep"><code>##     mpg     cyl    disp      hp    drat      wt    qsec    gear    carb 
 ##   6.027   1.786 123.939  68.563   0.535   0.978   1.787   0.738   1.615</code></pre>
-<pre class="r"><code>#        mpg         cyl        disp          hp        drat          wt        qsec        gear        carb 
+<pre class="r pink"><code>#        mpg         cyl        disp          hp        drat          wt        qsec        gear        carb 
 #  6.0269481   1.7859216 123.9386938  68.5628685   0.5346787   0.9784574   1.7869432   0.7378041   1.6152000 </code></pre>
-<p>PCA Analysis - Theory in Practice Question.</p>
-<p>You have seen that a coordinate / score located along PC1 (or any other PC for that matter), can be calculated using Equation 10.2 p376 of ISLR book or as shown in Lecture 4 at bottom of slide 24 for z_n_i example.
-You are required to find the projection of the 5th x point (<span class="math inline">\({x}_{5,*}\)</span>) along PC1 i.e. all of the data in the 5th row of X should be used.
+</div>
+<div id="pca-analysis---theory-in-practice" class="section level5">
+<h5>PCA Analysis - Theory in Practice</h5>
+<p>We have seen that a coordinate / score located along PC1 (or any other PC for that matter), can be calculated using Equation 10.2 p376 of ISLR book or as shown in Lecture 4 at bottom of slide 24 for z_n_i example.
+Now, I will find the projection of the 5th x point (<span class="math inline">\({x}_{5,*}\)</span>) along PC1 i.e. all of the data in the 5th row of X should be used.
 This 5th z point value is given by pca$x[5,1] and equals 1.586974.
-You are required to use the linear algebra approach: <span class="math inline">\(\mathbf{x}_n^T b\)</span> equation.</p>
-<pre class="r"><code>X_scaled&lt;- scale(X, center = TRUE, scale = TRUE) # standardise the X
+I will do it using the linear algebra approach: <span class="math inline">\(\mathbf{x}_n^T b\)</span> equation.</p>
+<pre class="r pink"><code>X_scaled&lt;- scale(X, center = TRUE, scale = TRUE) # standardise the X
 
 b1&lt;- loadings[,1]  #finding b1
 X5&lt;-X_scaled[5,] #finding X5
 
 Z51&lt;- b1 %*% X5
 Z51</code></pre>
-<pre><code>##       [,1]
+<pre class="whitep"><code>##       [,1]
 ## [1,] -1.59</code></pre>
 </div>
-<div id="d-data-visualisation." class="section level4">
-<h4>d) Data Visualisation.</h4>
+</div>
+<div id="data-visualisation." class="section level4">
+<h4>Data Visualisation.</h4>
 <ul>
-<li>Create a biplot displaying the projected data points (written as row names) and the loadings vectos showing contribution of each feature to the PC1 and PC2.</li>
+<li><strong>I create a biplot displaying the projected data points (written as row names) and the loadings vectos showing contribution of each feature to the PC1 and PC2.</strong></li>
 </ul>
-<pre class="r"><code>loadings_negative &lt;- - pca$rotation
+<pre class="r pink"><code>loadings_negative &lt;- - pca$rotation
 scores_negative &lt;- - pca$x
 
 # using 1st and 2nd column of scores_negative (the coordinates) - PC1 &amp; PC2
@@ -482,8 +489,8 @@ par(pty=&quot;s&quot;)
 plot(scores_negative[, 1], scores_negative[, 2], pch = 16, col = &quot;green&quot;, 
      ylim = c(-3, 3), xlim = c(-3, 3),
      xlab = &quot;PC1&quot;, ylab = &quot;PC2&quot;, main = &quot;Coordinates in 2D Principal Sub-Space&quot;)</code></pre>
-<p><img src="/portfolio/project-08_files/figure-html/unnamed-chunk-7-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code># The plot shows the coordinates (scores) obtained along the 1st and 2nd PC. 
+<p><img src="/portfolio/project-08_files/figure-html/unnamed-chunk-9-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r pink"><code># The plot shows the coordinates (scores) obtained along the 1st and 2nd PC. 
 
 # Create a new object which we will plot, such that this object contains x and 
 # rotation variables oriented in the positive direction
@@ -492,38 +499,27 @@ pca_posDir$x &lt;- scores
 pca_posDir$rotation &lt;- loadings
 
 ggbiplot::ggbiplot(pca_posDir, labels = rownames(mtcars))  </code></pre>
-<p><img src="/portfolio/project-08_files/figure-html/unnamed-chunk-7-2.png" width="648" style="display: block; margin: auto;" />
-- When cars group together / are near each other in the biplot, what does it mean?</p>
-<blockquote>
-<p>ANSWER: When cars group together, it indicates that they have similar features. In such a way we can identify our direct competitors in the market.</p>
-</blockquote>
+<p><img src="/portfolio/project-08_files/figure-html/unnamed-chunk-9-2.png" width="648" style="display: block; margin: auto;" />
+- <strong>When cars group together / are near each other in the biplot, what does it mean?</strong></p>
+<p><code>ANSWER</code>: When cars group together, it indicates that they have similar features. In such a way we can identify our direct competitors in the market.</p>
 <ul>
-<li>What can you say about the cars Ferrari, Ford Pantera L and Masserati?</li>
+<li><strong>What can we say about the cars Ferrari, Ford Pantera L and Masserati?</strong></li>
 </ul>
-<blockquote>
-<p>ANSWER: These cars are quite similr to each other, mostly in terms of PC2.
+<p><code>ANSWER</code>: These cars are quite similr to each other, mostly in terms of PC2.
 What is mostly similar about them is the fact that they are bascially very fast cars (what we can deduct from PC2 - [qsec + {-gear}])
 Additionally, Maserati Bora is a high quality car with best features and effiency (PC1), where For Pantera L and Ferreri Dino tend to be also high quality cars, however not this efficient and featured.</p>
-</blockquote>
-<p>Let’s improve the ggbiplot by using:
-<a href="https://www.rdocumentation.org/packages/ggbiplot/versions/0.55" class="uri">https://www.rdocumentation.org/packages/ggbiplot/versions/0.55</a> and here: <a href="https://www.rdocumentation.org/packages/ggbiplot/versions/0.55/topics/ggbiplot" class="uri">https://www.rdocumentation.org/packages/ggbiplot/versions/0.55/topics/ggbiplot</a>.
-- Given country labels plot a new ggbiplot function, such that your labels are formed using row names, and the groups are formed using the countries provided.
-Alter the ggbiplot by removing the arrows from variable axes all together, such that the clusters are better revealed.</p>
+<p>Let’s improve the ggbiplot. I will do it using the ggbilot duntion, such that my labels are formed using row names, and the groups are formed using the countries provided. Also, I will alter the ggbiplot by removing the arrows from variable axes all together, such that the clusters are better revealed.</p>
 <ul>
-<li><p>What can you say about the 3 potential clusters and their separation?
-&gt;ANSWER: Japanese and US cars are clearly different from each other, where European cars tends to be quite centrly located but also difer between each other a lot.</p></li>
-<li><p>What are American cars characterised by?</p></li>
+<li><p><strong>What can we say about the 3 potential clusters and their separation?</strong>
+<code>ANSWER</code>: Japanese and US cars are clearly different from each other, where European cars tends to be quite centrly located but also difer between each other a lot.</p></li>
+<li><p><strong>What are American cars characterised by?</strong></p></li>
 </ul>
-<blockquote>
-<p>ANSWER: American cars tend to have a good technology (right side of PC1) - strong engines (ho, disp, cyl), however they are quite heavy because of it. Therefore, they tend to have a tail in the group, that is not this fast (qsec). However, thanks to technology provided, they use less miles/ (US) gallon.</p>
-</blockquote>
+<p><code>ANSWER</code>: American cars tend to have a good technology (right side of PC1) - strong engines (ho, disp, cyl), however they are quite heavy because of it. Therefore, they tend to have a tail in the group, that is not this fast (qsec). However, thanks to technology provided, they use less miles/ (US) gallon.</p>
 <ul>
-<li>What are Japanese cars characterised by?</li>
+<li><strong>What are Japanese cars characterised by?</strong></li>
 </ul>
-<blockquote>
-<p>ANSWER: Japanese cars are not this petrol efficient, they use much more miles’(US) gallon (left side of PC1), however, they are much lighter. Thanks to it they tends to be in general a bit faster than American ones (more centered on PC2 than the oponents.</p>
-</blockquote>
-<pre class="r"><code>country &lt;- c(rep(&quot;Japan&quot;, 3), rep(&quot;US&quot;,4), rep(&quot;Europe&quot;, 7),rep(&quot;US&quot;,3), &quot;Europe&quot;, rep(&quot;Japan&quot;, 3), rep(&quot;US&quot;,4), rep(&quot;Europe&quot;, 3), &quot;US&quot;, rep(&quot;Europe&quot;, 3))
+<p><code>ANSWER</code>: Japanese cars are not this petrol efficient, they use much more miles’(US) gallon (left side of PC1), however, they are much lighter. Thanks to it they tends to be in general a bit faster than American ones (more centered on PC2 than the oponents.</p>
+<pre class="r pink"><code>country &lt;- c(rep(&quot;Japan&quot;, 3), rep(&quot;US&quot;,4), rep(&quot;Europe&quot;, 7),rep(&quot;US&quot;,3), &quot;Europe&quot;, rep(&quot;Japan&quot;, 3), rep(&quot;US&quot;,4), rep(&quot;Europe&quot;, 3), &quot;US&quot;, rep(&quot;Europe&quot;, 3))
 
 #Biplot with variable axes
 ggbiplot(pca, obs.scale = 1, var.scale = 1,
@@ -531,14 +527,14 @@ ggbiplot(pca, obs.scale = 1, var.scale = 1,
   scale_color_discrete(name = &#39;&#39;) +
   theme(legend.direction = &#39;horizontal&#39;, legend.position = &#39;top&#39;)</code></pre>
 <p><img src="/portfolio/project-08_files/figure-html/Biplot-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#Biplot without variable axes
+<pre class="r pink"><code>#Biplot without variable axes
 ggbiplot(pca, obs.scale = 1, var.scale = 1,var.axes=FALSE,
   groups = country, labels=rownames(mtcars) ,ellipse = TRUE, circle = TRUE) +
   scale_color_discrete(name = &#39;&#39;) +
   theme(legend.direction = &#39;horizontal&#39;, legend.position = &#39;top&#39;)</code></pre>
 <p><img src="/portfolio/project-08_files/figure-html/Biplot-2.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>mtcars</code></pre>
-<pre><code>##                      mpg cyl  disp  hp drat   wt qsec vs am gear carb
+<pre class="r pink"><code>mtcars</code></pre>
+<pre class="whitep"><code>##                      mpg cyl  disp  hp drat   wt qsec vs am gear carb
 ## Mazda RX4           21.0   6 160.0 110 3.90 2.62 16.5  0  1    4    4
 ## Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.88 17.0  0  1    4    4
 ## Datsun 710          22.8   4 108.0  93 3.85 2.32 18.6  1  1    4    1
@@ -572,17 +568,17 @@ ggbiplot(pca, obs.scale = 1, var.scale = 1,var.axes=FALSE,
 ## Maserati Bora       15.0   8 301.0 335 3.54 3.57 14.6  0  1    5    8
 ## Volvo 142E          21.4   4 121.0 109 4.11 2.78 18.6  1  1    4    2</code></pre>
 </div>
-<div id="e-variance-analysis" class="section level4">
-<h4>e) Variance Analysis</h4>
-<p>Perform variance analysis.</p>
+<div id="variance-analysis" class="section level4">
+<h4>Variance Analysis</h4>
+<p>I will perform variance analysis.</p>
 <ul>
-<li><p>To recap: how many PCs do we have in total?
-&gt;ANSWER: We have 9 PCs in total.</p></li>
-<li><p>Check the amount of variance explained by each PC</p></li>
+<li><p><strong>To recap: how many PCs do we have in total?</strong>
+<code>ANSWER</code>: We have 9 PCs in total.</p></li>
+<li><p><strong>I will check the amount of variance explained by each PC</strong></p></li>
 </ul>
-<pre class="r"><code># Proportion of Variance explained by each PC:
+<pre class="r pink"><code># Proportion of Variance explained by each PC:
 summary(pca)$importance </code></pre>
-<pre><code>##                          PC1   PC2   PC3    PC4    PC5    PC6    PC7    PC8
+<pre class="whitep"><code>##                          PC1   PC2   PC3    PC4    PC5    PC6    PC7    PC8
 ## Standard deviation     2.378 1.443 0.710 0.5148 0.4280 0.3518 0.3241 0.2419
 ## Proportion of Variance 0.628 0.231 0.056 0.0295 0.0204 0.0138 0.0117 0.0065
 ## Cumulative Proportion  0.628 0.860 0.916 0.9453 0.9656 0.9794 0.9910 0.9975
@@ -590,150 +586,108 @@ summary(pca)$importance </code></pre>
 ## Standard deviation     0.14896
 ## Proportion of Variance 0.00247
 ## Cumulative Proportion  1.00000</code></pre>
-<pre class="r"><code>#                            PC1      PC2       PC3       PC4       PC5       PC6       PC7       PC8       PC9
+<pre class="r pink"><code>#                            PC1      PC2       PC3       PC4       PC5       PC6       PC7       PC8       PC9
 #Standard deviation     2.378222 1.442948 0.7100809 0.5148082 0.4279704 0.3518426 0.3241326 0.2418962 0.1489644
 #Proportion of Variance 0.628440 0.231340 0.0560200 0.0294500 0.0203500 0.0137500 0.0116700 0.0065000 0.0024700
 #Cumulative Proportion  0.628440 0.859780 0.9158100 0.9452500 0.9656000 0.9793600 0.9910300 0.9975300 1.0000000</code></pre>
 <ul>
-<li>Obtain the total variance</li>
+<li><strong>I obtain the total variance</strong></li>
 </ul>
-<pre class="r"><code>X_scaled &lt;- scale(mtcars, center = TRUE, scale = TRUE)
+<pre class="r pink"><code>X_scaled &lt;- scale(mtcars, center = TRUE, scale = TRUE)
 covX &lt;- cov(X_scaled)
 VT &lt;- sum(diag(covX))
 VT</code></pre>
-<pre><code>## [1] 11</code></pre>
+<pre class="whitep"><code>## [1] 11</code></pre>
+<p><code>Summary</code>: All the PCs except PC1 &amp; PC2 show the standard deviation (variation) of less than 1. It means that there is no sense in using them as they explain less than 1 variable. In such a case we are better of using the original variable itself.</p>
 <ul>
-<li><p>Comment on which PCs show variance of &lt;1? i.e. what do you know about such PCs? Justify your answer.
-&gt;ANSWER: All the PCs except PC1 &amp; PC2 show the standard deviation (variation) of less than 1. It means that there is no sense in using them as they explain less than 1 variable. In such a case we are better of using the original variable itself.</p></li>
-<li><p>Obtain the scree plot and establish where the ‘elbow’ occurs using fviz_screeplot() function such that labels showing percentages of variance explaiend are also shown on the plot.</p></li>
+<li><strong>I will obtain the scree plot and establish where the ‘elbow’ occurs using fviz_screeplot() function such that labels showing percentages of variance explaiend are also shown on the plot.</strong></li>
 </ul>
-<pre class="r"><code>fviz_screeplot(pca, addlabels = TRUE, ylim = c(0,100))</code></pre>
-<p><img src="/portfolio/project-08_files/figure-html/unnamed-chunk-10-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r pink"><code>fviz_screeplot(pca, addlabels = TRUE, ylim = c(0,100))</code></pre>
+<p><img src="/portfolio/project-08_files/figure-html/unnamed-chunk-12-1.png" width="648" style="display: block; margin: auto;" /></p>
 <ul>
-<li>Argue how many PCs you should keep
-&gt; We should use only PC1 and PC2 as they are the only ones that explain more than 10% of the data and whose variance is greater than 1.</li>
+<li><strong>How many PCs should be kept?</strong></li>
 </ul>
+<p><code>ANSWER</code>: We should use only PC1 and PC2 as they are the only ones that explain more than 10% of the data and whose variance is greater than 1.</p>
+<hr />
 </div>
 </div>
-<div id="section" class="section level1">
-<h1>—————————————————————————————</h1>
-</div>
-<div id="question-2-linear-discriminant-analysis" class="section level1">
-<h1><strong>QUESTION 2: LINEAR DISCRIMINANT ANALYSIS</strong></h1>
-<div id="a-theoretical-questions" class="section level4">
-<h4>a) Theoretical Questions</h4>
+<div id="part-2-linear-discriminant-analysis" class="section level3">
+<h3>PART 2: LINEAR DISCRIMINANT ANALYSIS</h3>
+<div id="theoretical-part" class="section level4">
+<h4>Theoretical Part</h4>
 <ul>
-<li>Provide a definition of what is a discriminant?</li>
+<li><strong>A definition of what is a discriminant.</strong></li>
 </ul>
-<blockquote>
-<p>ANSWER:
-A discriminant is a function that takes input vector</p>
-</blockquote>
-<p><span class="math inline">\(\mathbf{x}\)</span></p>
-<blockquote>
-<p>and assigns it to one and only one class</p>
-</blockquote>
-<p><span class="math inline">\(C_k\)</span> out of <span class="math inline">\(k\)</span> classes.</p>
+<p><code>ANSWER</code>:
+A discriminant is a function that takes input vector <span class="math inline">\(\mathbf{x}\)</span> and assigns it to one and only one class <span class="math inline">\(C_k\)</span> out of <span class="math inline">\(k\)</span> classes.</p>
 <ul>
-<li>What are the 2 assumptions for data such that LDA can be applied?
-&gt;ANSWER:</li>
+<li><strong>What are the 2 assumptions for data such that LDA can be applied?</strong></li>
 </ul>
-<ol style="list-style-type: decimal">
-<li>The data should be composed of classes that are normally distributed and have equal covariances</li>
-<li>No constant variables should be in the dataset.</li>
-</ol>
+<p><code>ANSWER</code>:
+1) The data should be composed of classes that are normally distributed and have equal covariances
+2) No constant variables should be in the dataset.</p>
 <ul>
-<li>Does data need to be normalised?</li>
+<li><strong>Does data need to be normalised?</strong></li>
 </ul>
-<blockquote>
-<p>ANSWER: No, the data does not need to be neither centered nor scaled.</p>
-</blockquote>
+<p><code>ANSWER</code>: No, the data does not need to be neither centered nor scaled.</p>
 <ul>
-<li>Is LDA a supervised or an unsupervised learning algorithm?</li>
+<li><strong>Is LDA a supervised or an unsupervised learning algorithm?</strong></li>
 </ul>
-<blockquote>
-<p>ANSWER: It is a supervised learning algorithm. It means that the LDA takes labels into account.</p>
-</blockquote>
+<p><code>ANSWER</code>: It is a supervised learning algorithm. It means that the LDA takes labels into account.</p>
 <ul>
-<li>Explain the effect the desired decision boundary should have on the projected data?</li>
+<li><strong>I will explain the effect the desired decision boundary should have on the projected data?</strong></li>
 </ul>
-<blockquote>
-<p>ANSWER: The decision boundary should be constructed in such a way that is easily assigns each point to one of the classes:</p>
-</blockquote>
-<blockquote>
+<p><code>ANSWER</code>: The decision boundary should be constructed in such a way that is easily assigns each point to one of the classes:</p>
 <ol style="list-style-type: decimal">
 <li>in case of 2 classes : the decision boundary is a line. It is defined by the equasion:</li>
 </ol>
-</blockquote>
 <p><span class="math inline">\(𝑦(𝕩) = 𝕨^T𝕩 +w_0= 0\)</span>.</p>
-<blockquote>
 <p>If the value of the point is &gt;0, assign to class 1, otherwise, to class 2.</p>
-</blockquote>
-<blockquote>
 <ol start="2" style="list-style-type: decimal">
 <li>in case of K classes: Assign point 𝕩 to class:</li>
 </ol>
-</blockquote>
 <p><span class="math inline">\(𝐶_k\)</span> if <span class="math inline">\(y_k(𝕩)&gt;𝑦_j(𝕩)\)</span></p>
-<blockquote>
 <p>The decision boundary should not only not only separate well classes, but also maximise marigin between them.</p>
-</blockquote>
 <ul>
-<li>What is the key performance criterion for LDA as opposed to PCA?</li>
+<li><strong>What is the key performance criterion for LDA as opposed to PCA?</strong></li>
 </ul>
-<blockquote>
-<p>ANSWER: PCA aims to maximise variance, where LDA’s amin objective is to create groups (axes) that maximise class separation.</p>
-</blockquote>
+<p><code>ANSWER</code>: PCA aims to maximise variance, where LDA’s amin objective is to create groups (axes) that maximise class separation.</p>
 <ul>
-<li>State the ‘Difference of Class Means’ criterion of LDA? What is its limitation?</li>
+<li><strong>What is the ‘Difference of Class Means’ criterion of LDA? What is its limitation?</strong></li>
 </ul>
-<blockquote>
-<p>ANSWER: Maximise separation between projected class means:</p>
-</blockquote>
+<p><code>ANSWER</code>: Maximise separation between projected class means:</p>
 <p><span class="math inline">\(𝕨 ∝ (𝐦_2 −𝐦_1)\)</span>.</p>
-<blockquote>
 <p>The problem with such an approach is that the points in to different classes may intermix and overlap.</p>
-</blockquote>
 <ul>
-<li>State the Fisher criterion.</li>
+<li><strong>the Fisher criterion.</strong></li>
 </ul>
-<blockquote>
-<p>ANSWER: States the same as “Difference of Class Means” criterion but at the same time it aims to minimize the variance of each class:</p>
-</blockquote>
+<p><code>ANSWER</code>: States the same as “Difference of Class Means” criterion but at the same time it aims to minimize the variance of each class:</p>
 <p><span class="math inline">\(𝕨 ∝ 𝕊_{W}^{-1}(𝐦_2 −𝐦_1)\)</span>.</p>
-<blockquote>
 <p>Where</p>
-</blockquote>
 <p><span class="math inline">\(𝕊_{W}\)</span> is the Total within-class covariance matrix</p>
-<blockquote>
 <p>Fisher cirterion’s goal is to also maximise the variance between classes. Such an appoach allows to create classes that are well separated.</p>
-</blockquote>
 <ul>
-<li>Explain how minimisation of within class variance of each class helps with classification of the projected points?</li>
+<li><strong>Explain how minimisation of within class variance of each class helps with classification of the projected points?</strong></li>
 </ul>
-<blockquote>
-<p>ANSWER: As explained above, thanks to minimalisation of the variances within each class, we also maximise the variance between classes - it helps us to better separate the classes and prevent overlapping of data points and class intermixing. Such an apporach comes from differentiating the cost function</p>
-</blockquote>
+<p><code>ANSWER</code>: As explained above, thanks to minimalisation of the variances within each class, we also maximise the variance between classes - it helps us to better separate the classes and prevent overlapping of data points and class intermixing. Such an apporach comes from differentiating the cost function</p>
 <p><span class="math inline">\(J(\mathbb{w})\)</span> to <span class="math inline">\(𝕨 ∝ 𝕊_{W}^{-1}(𝐦_2 −𝐦_1)\)</span>.</p>
 </div>
-<div id="b-create-country-labels" class="section level4">
-<h4>b) Create Country Labels</h4>
-<p>We are going to continue working with the mtcars data set from above and utilise LDA for the classification purposes, such that we attempt to create K = 3 classes based on country of origin for each car.</p>
+<div id="create-country-labels" class="section level4">
+<h4>Create Country Labels</h4>
+<p>I am going to continue working with the mtcars data set from above and utilise LDA for the classification purposes, such that I attempt to create K = 3 classes based on country of origin for each car.</p>
 <p>The code below uses the variable you have created above, <span class="math inline">\(\mathbb{X}\)</span>, stores the variable <span class="math inline">\({country}\)</span> in the first column of <span class="math inline">\(\mathbb{X}\)</span> and calls that column <span class="math inline">\({label}\)</span>.</p>
-<pre class="r"><code>class(X) # X is a data frame</code></pre>
-<pre><code>## [1] &quot;data.frame&quot;</code></pre>
-<pre class="r"><code>country &lt;- c(rep(&quot;Japan&quot;, 3), rep(&quot;US&quot;,4), rep(&quot;Europe&quot;, 7),rep(&quot;US&quot;,3), &quot;Europe&quot;, 
+<pre class="r pink"><code>class(X) # X is a data frame</code></pre>
+<pre class="whitep"><code>## [1] &quot;data.frame&quot;</code></pre>
+<pre class="r pink"><code>country &lt;- c(rep(&quot;Japan&quot;, 3), rep(&quot;US&quot;,4), rep(&quot;Europe&quot;, 7),rep(&quot;US&quot;,3), &quot;Europe&quot;, 
              rep(&quot;Japan&quot;, 3), rep(&quot;US&quot;,4), rep(&quot;Europe&quot;, 3), &quot;US&quot;, rep(&quot;Europe&quot;, 3))
 
 X &lt;- data.frame(cbind(label = country, X)) # (1 pt) data.frame; (1 pt) cbind</code></pre>
 </div>
-<div id="c-pre-process-data-and-fit-model" class="section level4">
-<h4>c) Pre-Process Data and Fit Model</h4>
-<ul>
-<li>Randomly shuffle the data, ensuring to keep the labels attached to correct observations. This will ensure that when you split the data into train/test sets next, you don’t by accident end up with all data of the same label in one set.</li>
-<li>Fit LDA model to the training data set</li>
-</ul>
-<pre class="r"><code># randomly shuffle the data
+<div id="pre-process-data-and-fit-model" class="section level4">
+<h4>Pre-Process Data and Fit Model</h4>
+<p>I will now randomly shuffle the data, ensuring to keep the labels attached to correct observations. This will ensure that when I split the data into train/test sets next, I don’t by accident end up with all data of the same label in one set.</p>
+<p>Then, I will fit LDA model to the training data set.</p>
+<pre class="r pink"><code># randomly shuffle the data
 set.seed(1234)
 X_shuffled&lt;- sample(nrow(X))
 X_shuffled&lt;- X[X_shuffled,]
@@ -751,7 +705,7 @@ fit_LDA &lt;- lda(formula= label ~ ., data = train_data)
 
 # print()
 print(fit_LDA)</code></pre>
-<pre><code>## Call:
+<pre class="whitep"><code>## Call:
 ## lda(label ~ ., data = train_data)
 ## 
 ## Prior probabilities of groups:
@@ -780,81 +734,77 @@ print(fit_LDA)</code></pre>
 ##   LD1   LD2 
 ## 0.831 0.169</code></pre>
 <ul>
-<li>Print out the fitted model and from the display, report what is the percentage of amount of between-group variance explained by each linear discriminant.</li>
+<li><strong>I will now print out the fitted model and from the display, report what is the percentage of amount of between-group variance explained by each linear discriminant.</strong></li>
 </ul>
-<blockquote>
-<p>ANSWER: The amount of between-group variance explained by each LD is as follows:
+<p><code>ANSWER</code>: The amount of between-group variance explained by each LD is as follows:
 Proportion of trace:
 LD1 LD2
 0.8308 0.1692
 It can be understood as the pertentage of separation achieved by each discriminant function.</p>
-</blockquote>
 <ul>
-<li>Is this a quantity that LDA aims to maximise?
-&gt;ANSWER: Yes, this is indeed the number that LDA aims to maximise - the between-group variance.</li>
+<li><strong>Is this a quantity that LDA aims to maximise?</strong></li>
 </ul>
+<p><code>ANSWER</code>: Yes, this is indeed the number that LDA aims to maximise - the between-group variance.</p>
 </div>
-<div id="d-model-accuracy-on-unseen-data" class="section level4">
-<h4>d) Model Accuracy On Unseen Data</h4>
-<p>Next use the testing data set to investigate the accuracy of your model on unseen data (i.e. data not used during training).</p>
+<div id="model-accuracy-on-unseen-data" class="section level4">
+<h4>Model Accuracy On Unseen Data</h4>
+<p>Next I will use the testing data set to investigate the accuracy of your model on unseen data (i.e. data not used during training).</p>
 <ul>
-<li>Obtain predictions for train and test data sets.</li>
+<li><strong>Obtain predictions for train and test data sets.</strong></li>
 </ul>
-<pre class="r"><code>#Predictions using stats library
+<pre class="r pink"><code>#Predictions using stats library
 predict_train &lt;- predict(fit_LDA, newdata = train_data) # for the train dataset
 predict_test &lt;- predict(fit_LDA, newdata = test_data) # for the test dataset</code></pre>
 <ul>
-<li>Produce 2 tables (one for each of the above) showing classification accuracy. Explain the general meaning of values on the diagonal.</li>
+<li><strong>I will produce 2 tables (one for each of the above) showing classification accuracy and explain the general meaning of values on the diagonal.</strong></li>
 </ul>
-<pre class="r"><code># Classification accuracy on training data
+<pre class="r pink"><code># Classification accuracy on training data
 classTbl_train &lt;- table(train_data$label, predict_train$class)
 print(classTbl_train)</code></pre>
-<pre><code>##         
+<pre class="whitep"><code>##         
 ##          Europe Japan US
 ##   Europe     10     0  0
 ##   Japan       2     4  0
 ##   US          0     0  8</code></pre>
-<pre class="r"><code># 2 errors occured - two actual Japanese cars predicted to belong to &#39;Europe&#39; class
+<pre class="r pink"><code># 2 errors occured - two actual Japanese cars predicted to belong to &#39;Europe&#39; class
 
 # Classification accuracy on testing data
 classTbl_test &lt;- table(test_data$label, predict_test$class)
 print(classTbl_test)</code></pre>
-<pre><code>##         
+<pre class="whitep"><code>##         
 ##          Europe Japan US
 ##   Europe      3     1  0
 ##   US          0     0  4</code></pre>
-<pre class="r"><code># 1 error occured - one actual European car predicted to belong to &#39;Japan&#39; class</code></pre>
+<pre class="r pink"><code># 1 error occured - one actual European car predicted to belong to &#39;Japan&#39; class</code></pre>
 <ul>
-<li>Obtain the same tables containing entries in a fraction format.</li>
+<li><strong>I obtain the same tables containing entries in a fraction format.</strong></li>
 </ul>
-<pre class="r"><code># Classification accuracy on training data in percent
+<pre class="r pink"><code># Classification accuracy on training data in percent
 prop.table(classTbl_train, 1)</code></pre>
-<pre><code>##         
+<pre class="whitep"><code>##         
 ##          Europe Japan    US
 ##   Europe  1.000 0.000 0.000
 ##   Japan   0.333 0.667 0.000
 ##   US      0.000 0.000 1.000</code></pre>
-<pre class="r"><code># Classification accuracy on testing data in percent
+<pre class="r pink"><code># Classification accuracy on testing data in percent
 prop_test&lt;-prop.table(classTbl_test,1)
 prop_test</code></pre>
-<pre><code>##         
+<pre class="whitep"><code>##         
 ##          Europe Japan   US
 ##   Europe   0.75  0.25 0.00
 ##   US       0.00  0.00 1.00</code></pre>
 <ul>
-<li>Obtain and comment the total percent correct classification for training and testing data sets.</li>
+<li><strong>I will now obtain and comment the total percent correct classification for training and testing data sets.</strong></li>
 </ul>
-<pre class="r"><code>sum(diag(prop.table(classTbl_train))) #0.9166667</code></pre>
-<pre><code>## [1] 0.917</code></pre>
-<pre class="r"><code>#As for test set there are no predictions for the actual Japanese cars in seed 1234, I will count the acurracy manually
+<pre class="r pink"><code>sum(diag(prop.table(classTbl_train))) #0.9166667</code></pre>
+<pre class="whitep"><code>## [1] 0.917</code></pre>
+<pre class="r pink"><code>#As for test set there are no predictions for the actual Japanese cars in seed 1234, I will count the acurracy manually
 (prop_test[1,1]+prop_test[2,3])/2 #0.875</code></pre>
-<pre><code>## [1] 0.875</code></pre>
+<pre class="whitep"><code>## [1] 0.875</code></pre>
 <ul>
-<li>Do you expect to obtain higher classification accuracy on a training or testing data and why?</li>
+<li><strong>Should we expect to obtain higher classification accuracy on a training or testing data?</strong></li>
 </ul>
-<blockquote>
-<p>ANSWER: I would expect the acurracy to be higher in the training set for two reasons - first of all, this is the data for which the model was trained. Second of all - the training data contains more rows than the testing data, so the mistake cost is automatically lower what we can see from the analysis above (2 errors in train_data, 1 error in test_data, however classification accuracy higher for training dataset. )</p>
-</blockquote>
+<p><code>ANSWER</code>: I would expect the acurracy to be higher in the training set for two reasons - first of all, this is the data for which the model was trained. Second of all - the training data contains more rows than the testing data, so the mistake cost is automatically lower what we can see from the analysis above (2 errors in train_data, 1 error in test_data, however classification accuracy higher for training dataset. )</p>
 </div>
 </div>
 
