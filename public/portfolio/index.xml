@@ -26,8 +26,7 @@
       <pubDate>Sun, 13 Dec 2020 15:44:46 +0600</pubDate>
       
       <guid>/portfolio/project-09/</guid>
-      <description>IMPORT LIBRARIES import numpy as np import pandas as pd import matplotlib.pyplot as plt import random
-from sklearn.preprocessing import LabelEncoder from sklearn.neural_network import MLPClassifier # Multilayer Perceptron from sklearn.</description>
+      <description>In this project, I am going to design a Machine Learning algorithm for predicting the survival of the titanic passengers using Python programming language basing on the Titanic data set.</description>
     </item>
     
     <item>
@@ -55,8 +54,7 @@ library(ggplot2) library(janitor) library(tidyverse) library(caret) library(lubr
       <pubDate>Wed, 02 Dec 2020 15:58:10 +0600</pubDate>
       
       <guid>/portfolio/project-07/</guid>
-      <description>body { text-align: justify}   img { border-radius: 15px; }
- div.grey { background-color:#808080; border-radius: 5px; padding: 20px; border-style: groove;}   div.</description>
+      <description>.pink { background-color:#fae6e6 ; border-radius: 5px; padding: 20px; color: #000000;} .blue { background-color:#DFF5F6 ; border-radius: 5px; padding: 20px; color: #000000;} .whitep { background-color:#fffafa ; border: 3px gray; border-radius: 5px; padding: 20px; color: #000000;} .</description>
     </item>
     
     <item>
@@ -74,8 +72,7 @@ library(ggplot2) library(janitor) library(tidyverse) library(caret) library(lubr
       <pubDate>Sun, 15 Nov 2020 15:58:10 +0600</pubDate>
       
       <guid>/portfolio/project-06/</guid>
-      <description>body { text-align: justify}   img { border-radius: 15px; }
- div.grey { background-color:#808080; border-radius: 5px; padding: 20px; border-style: groove;}   div.</description>
+      <description>.pink { background-color:#fae6e6 ; border-radius: 5px; padding: 20px; color: #000000;} .blue { background-color:#DFF5F6 ; border-radius: 5px; padding: 20px; color: #000000;} .whitep { background-color:#fffafa ; border: 3px gray; border-radius: 5px; padding: 20px; color: #000000;} .</description>
     </item>
     
     <item>

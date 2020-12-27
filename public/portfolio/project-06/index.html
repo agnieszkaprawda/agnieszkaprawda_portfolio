@@ -101,6 +101,28 @@
             
 
 
+<style type="text/css">
+
+.pink { background-color:#fae6e6 ; 
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+
+.blue { background-color:#DFF5F6 ; 
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+    
+.whitep { background-color:#fffafa ;
+    border: 3px gray;
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+    
+.whiteb { background-color:#f7ffff ;
+    border: 3px gray;
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+
+    
+</style>
 <!--begin html code: I will mark the html code in my markdown files, these are not directly related to the course material-->
 </style>
 <style>
@@ -247,10 +269,10 @@ Sharing your findings from a technical analysis.
 <h1>Cleaned Data</h1>
 <p>I have already processed and cleaned the original view data. In this step you will first generate a user-based database which we will use to train clustering algorithms to identify meaningful clusters in the data.</p>
 <p>Let’s load the cleaned data and investigate what’s in the data. See below for column descriptions.</p>
-<pre class="r"><code>cleaned_BBC_Data &lt;- read_csv(&quot;~/Documents/LBS/Data Science/Session 07/WORKSHOP materials/Results_Step1.csv&quot;,col_names=TRUE)
+<pre class="r blue"><code>cleaned_BBC_Data &lt;- read_csv(&quot;~/Documents/LBS/Data Science/Session 07/WORKSHOP materials/Results_Step1.csv&quot;,col_names=TRUE)
 library(dplyr)
 glimpse(cleaned_BBC_Data) </code></pre>
-<pre><code>## Rows: 313,256
+<pre class="whiteb"><code>## Rows: 313,256
 ## Columns: 17
 ## $ user_id                   &lt;chr&gt; &quot;cd2006&quot;, &quot;cd2006&quot;, &quot;cd2006&quot;, &quot;cd2006&quot;, &quot;cd…
 ## $ program_id                &lt;chr&gt; &quot;b8fbf2&quot;, &quot;e2f113&quot;, &quot;0e0916&quot;, &quot;ca03b9&quot;, &quot;cf…
@@ -288,7 +310,7 @@ glimpse(cleaned_BBC_Data) </code></pre>
 </ol>
 </div>
 <p>Before we proceed let’s consider the usage in January only.</p>
-<pre class="r"><code>cleaned_BBC_Data&lt;-filter(cleaned_BBC_Data,month==1)</code></pre>
+<pre class="r blue"><code>cleaned_BBC_Data&lt;-filter(cleaned_BBC_Data,month==1)</code></pre>
 </div>
 <div id="user-based-data" class="section level1">
 <h1>User based data</h1>
@@ -304,11 +326,11 @@ glimpse(cleaned_BBC_Data) </code></pre>
 <ol style="list-style-type: lower-roman">
 <li>Total number of shows watched and ii. Total time spent watching shows on iPlayer by each user in the data</li>
 </ol>
-<pre class="r"><code>userData&lt;-cleaned_BBC_Data %&gt;% group_by(user_id) %&gt;% summarise(noShows=n(), total_Time=sum(time_viewed_min)) </code></pre>
+<pre class="r blue"><code>userData&lt;-cleaned_BBC_Data %&gt;% group_by(user_id) %&gt;% summarise(noShows=n(), total_Time=sum(time_viewed_min)) </code></pre>
 <ol start="3" style="list-style-type: lower-roman">
 <li>Proportion of shows watched during the weekend for each user.</li>
 </ol>
-<pre class="r"><code>#Let&#39;s find the number of shows on weekend and weekdays
+<pre class="r blue"><code>#Let&#39;s find the number of shows on weekend and weekdays
 userData2&lt;-cleaned_BBC_Data %&gt;% group_by(user_id,weekend) %&gt;% summarise(noShows=n())
 
 #Let&#39;s find percentage in weekend and weekday
@@ -322,7 +344,7 @@ userdatall&lt;-left_join(userData,userData3,by=&quot;user_id&quot;)</code></pre>
 <ol start="4" style="list-style-type: lower-roman">
 <li>Proportion of shows watched during different times of day for each user.</li>
 </ol>
-<pre class="r"><code>#Code in this block follows the same steps above.
+<pre class="r blue"><code>#Code in this block follows the same steps above.
 userData2&lt;-cleaned_BBC_Data %&gt;% group_by(user_id,time_of_day) %&gt;% summarise(noShows=n()) %&gt;% mutate(weight_pct = noShows / sum(noShows))
 
 userData4&lt;-select (userData2,-c(noShows))
@@ -332,7 +354,7 @@ userdatall&lt;-left_join(userdatall,userData4,by=&quot;user_id&quot;)</code></pr
 <blockquote>
 <p>Question 1. Find the proportion of shows watched in each genre by each user. Your code below.</p>
 </blockquote>
-<pre class="r"><code>#Your code here
+<pre class="r blue"><code>#Your code here
 userData5&lt;- cleaned_BBC_Data %&gt;% group_by(user_id, genre) %&gt;% summarise(noShows=n())%&gt;% mutate(prop_genre = noShows / sum(noShows)) %&gt;% select(prop_genre, user_id,genre) 
 #add your results to the data frame userdatall
 userData7&lt;-spread(userData5,genre,prop_genre,fill=0)
@@ -342,7 +364,7 @@ userdatall&lt;-left_join(userdatall,userData7,by=&quot;user_id&quot;)</code></pr
 <blockquote>
 <p>Question 2. Add one more variable of your own. Describe why this might be useful for differentating viewers in 1 or 2 lines. Your code below.</p>
 </blockquote>
-<pre class="r"><code>#Your code here
+<pre class="r blue"><code>#Your code here
 userData6 &lt;- cleaned_BBC_Data %&gt;% group_by(user_id) %&gt;% summarise(avg_prop_view=sum(time_viewed_min)/sum(prog_duration_min))
 #add your results to the data frame userdatall
 userdatall&lt;-left_join(userdatall,userData6,by=&quot;user_id&quot;)
@@ -354,7 +376,7 @@ userdatall&lt;-left_join(userdatall,userData6,by=&quot;user_id&quot;)
 <div id="visualizing-user-based-data" class="section level1">
 <h1>Visualizing user-based data</h1>
 <p>Next visualize the information captured in the user based data. Let’s start with the correlations.</p>
-<pre class="r"><code>library(&quot;GGally&quot;)
+<pre class="r blue"><code>library(&quot;GGally&quot;)
 userdatall %&gt;% 
   select(-user_id) %&gt;% #keep Y variable last
   ggcorr(method = c(&quot;pairwise&quot;, &quot;pearson&quot;), layout.exp = 3,label_round=2, label = TRUE,label_size = 2,hjust = 1)</code></pre>
@@ -368,27 +390,27 @@ noShows and total_time, day and evening, &amp; weekday and weekend.</p>
 <blockquote>
 <p>Question 4. Investigate the distribution of noShows and total_Time using box-whisker plots and histograms. Explain what you observe in 1-2 sentences. Are you worried about outliers?</p>
 </blockquote>
-<pre class="r"><code>#Insert your code here:
+<pre class="r blue"><code>#Insert your code here:
 ggplot(userdatall, aes(y=noShows)) +geom_boxplot()</code></pre>
-<p><img src="/portfolio/project-06_files/figure-html/unnamed-chunk-2-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>ggplot(userdatall, aes(y=total_Time)) +geom_boxplot()#+scale_y_log10()</code></pre>
-<p><img src="/portfolio/project-06_files/figure-html/unnamed-chunk-2-2.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>ggplot(userdatall, aes( x=noShows)) +
+<p><img src="/portfolio/project-06_files/figure-html/unnamed-chunk-3-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r blue"><code>ggplot(userdatall, aes(y=total_Time)) +geom_boxplot()#+scale_y_log10()</code></pre>
+<p><img src="/portfolio/project-06_files/figure-html/unnamed-chunk-3-2.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r blue"><code>ggplot(userdatall, aes( x=noShows)) +
   geom_histogram(binwidth = 5)+xlim(0,200) </code></pre>
-<p><img src="/portfolio/project-06_files/figure-html/unnamed-chunk-2-3.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>ggplot(userdatall, aes( x=total_Time)) +geom_histogram(binwidth = 2.5)+xlim(0,180)</code></pre>
-<p><img src="/portfolio/project-06_files/figure-html/unnamed-chunk-2-4.png" width="648" style="display: block; margin: auto;" />
+<p><img src="/portfolio/project-06_files/figure-html/unnamed-chunk-3-3.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r blue"><code>ggplot(userdatall, aes( x=total_Time)) +geom_histogram(binwidth = 2.5)+xlim(0,180)</code></pre>
+<p><img src="/portfolio/project-06_files/figure-html/unnamed-chunk-3-4.png" width="648" style="display: block; margin: auto;" />
 We can observe a number of outliers in the number of shows watched and the total time variable.
 Regarding the histograms, we can observe that they are heavily right-skewed. The vast majority of users watches less than 10 minutes in terms of total time, and 10 or less shows. Due to this heavy skew in our data, we are indeed worried about it.</p>
 <div id="delete-infrequent-users" class="section level4">
 <h4>Delete infrequent users</h4>
 <p>Delete the records for users whose total view time is less than 5 minutes and who views 5 or fewer programs. These users are not very likely to be informative for clustering purposes. Or we can view these users as a ``low-engagement’’ cluster.</p>
-<pre class="r"><code>userdata_red&lt;-userdatall%&gt;%filter(total_Time&gt;=5)%&gt;%filter(noShows&gt;=5)
+<pre class="r blue"><code>userdata_red&lt;-userdatall%&gt;%filter(total_Time&gt;=5)%&gt;%filter(noShows&gt;=5)
 
 ggplot(userdata_red, aes(x=total_Time)) +geom_histogram(binwidth=25)+labs(x=&quot;Total Time Watched (mins)&quot;, y= &quot;Count&quot;)+ xlim(0,3000)</code></pre>
 <p><img src="/portfolio/project-06_files/figure-html/delete-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>glimpse(userdata_red)</code></pre>
-<pre><code>## Rows: 3,625
+<pre class="r blue"><code>glimpse(userdata_red)</code></pre>
+<pre class="whiteb"><code>## Rows: 3,625
 ## Columns: 22
 ## $ user_id       &lt;chr&gt; &quot;002b2e&quot;, &quot;0059d9&quot;, &quot;00aad3&quot;, &quot;00c6e6&quot;, &quot;00caa7&quot;, &quot;00e3…
 ## $ noShows       &lt;int&gt; 31, 20, 8, 16, 16, 5, 6, 7, 5, 7, 36, 5, 8, 5, 11, 6, 8…
@@ -422,14 +444,14 @@ ggplot(userdata_red, aes(x=total_Time)) +geom_histogram(binwidth=25)+labs(x=&quo
 <p>Train a K-Means model. Start with 2 clusters and make sure you de-select <code>user_id</code> variable. Also don’t forget to scale the data. Use 50 random starts. Should we use more starts?</p>
 <p>Also display the cluster sizes. See the RMarkdown file from the last session to identify the R functions you need for this and the tasks below.</p>
 <p>Use <code>summary("kmeans Object")</code> to examine the components of the results of the clustering algorithm. How many points are in each cluster?</p>
-<pre class="r"><code>k=2
+<pre class="r blue"><code>k=2
 
 #Create new columns of prop_genres
 userdatall %&gt;% 
   select(-user_id) %&gt;% #keep Y variable last
   ggcorr(method = c(&quot;pairwise&quot;, &quot;pearson&quot;), layout.exp = 3,label_round=2, label = TRUE,label_size = 2,hjust = 1)</code></pre>
 <p><img src="/portfolio/project-06_files/figure-html/fit%20kmean%20k2-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code># Get rid of variables that you might not need. Do not include no shows as well because it is highly correlated with total time
+<pre class="r blue"><code># Get rid of variables that you might not need. Do not include no shows as well because it is highly correlated with total time
 userdata_red_select&lt;-userdata_red %&gt;% 
   select(-c(user_id, noShows, weekday))
 
@@ -443,7 +465,7 @@ userdata_red_select&lt;-data.frame(scale(userdata_red_select))
 #train kmeans clustering
 model_kmeans_2clusters&lt;-eclust(userdata_red_select, &quot;kmeans&quot;, k = 2,nstart = 50, graph = FALSE)
 summary(model_kmeans_2clusters)</code></pre>
-<pre><code>##              Length Class      Mode   
+<pre class="whiteb"><code>##              Length Class      Mode   
 ## cluster      3625   -none-     numeric
 ## centers        38   -none-     numeric
 ## totss           1   -none-     numeric
@@ -456,10 +478,10 @@ summary(model_kmeans_2clusters)</code></pre>
 ## silinfo         3   -none-     list   
 ## nbclust         1   -none-     numeric
 ## data           19   data.frame list</code></pre>
-<pre class="r"><code>model_kmeans_2clusters&lt;-eclust(userdata_red_select, &quot;kmeans&quot;, k = 2,nstart = 70, graph = FALSE)
+<pre class="r blue"><code>model_kmeans_2clusters&lt;-eclust(userdata_red_select, &quot;kmeans&quot;, k = 2,nstart = 70, graph = FALSE)
 
 summary(model_kmeans_2clusters)</code></pre>
-<pre><code>##              Length Class      Mode   
+<pre class="whiteb"><code>##              Length Class      Mode   
 ## cluster      3625   -none-     numeric
 ## centers        38   -none-     numeric
 ## totss           1   -none-     numeric
@@ -472,12 +494,12 @@ summary(model_kmeans_2clusters)</code></pre>
 ## silinfo         3   -none-     list   
 ## nbclust         1   -none-     numeric
 ## data           19   data.frame list</code></pre>
-<pre class="r"><code>#add clusters to the data frame
+<pre class="r blue"><code>#add clusters to the data frame
 
 model_kmeans_2clusters_size&lt;-data.frame(cluster=as.factor(c(1:2)),model_kmeans_2clusters$center, model_kmeans_2clusters$size)
 
 model_kmeans_2clusters_size</code></pre>
-<pre><code>##   cluster total_Time weekend Afternoon    Day Evening  Night Children  Comedy
+<pre class="whiteb"><code>##   cluster total_Time weekend Afternoon    Day Evening  Night Children  Comedy
 ## 1       1     -0.384 -0.1007     0.566  0.927  -0.831 -0.424    0.396 -0.1947
 ## 2       2      0.192  0.0503    -0.282 -0.463   0.415  0.212   -0.198  0.0972
 ##    Drama Entertainment Factual Learning   Music    News NoGenre RelEthics
@@ -493,7 +515,7 @@ model_kmeans_2clusters_size</code></pre>
 <div id="cluster-centers" class="section level5">
 <h5>Cluster centers</h5>
 <p>Plot the normalized cluster centers. Try to describe the clusters that the algorithm suggests.</p>
-<pre class="r"><code>#First generate a new data frame with cluster centers and cluster numbers
+<pre class="r blue"><code>#First generate a new data frame with cluster centers and cluster numbers
 model_kmeans_2clusters_center&lt;-data.frame(cluster=as.factor(c(1:2)),model_kmeans_2clusters$centers)
 
 #transpose this data frame
@@ -511,7 +533,7 @@ graph_2means</code></pre>
 <div id="clusters-vs-variables" class="section level5">
 <h5>Clusters vs variables</h5>
 <p>Plot a scatter plot for the viewers with respect to total_Time and weekend variables with color set to the cluster number of the user. What do you observe? Which variable seems to play a more prominent role in determining the clusters of users?</p>
-<pre class="r"><code># add it to the original data frame
+<pre class="r blue"><code># add it to the original data frame
 userDataclustered&lt;-mutate(userdata_red_select, cluster = as.factor(model_kmeans_2clusters$cluster))
 
 #total_Time and weekend
@@ -534,7 +556,7 @@ grid.arrange(a, b, nrow = 2)</code></pre>
 <div id="clusters-vs-pca-components" class="section level5">
 <h5>Clusters vs PCA components</h5>
 <p>Repeat the previous step and use the first two principle components using <code>fviz_cluster</code> function.</p>
-<pre class="r"><code>#Cluster plot when k=2
+<pre class="r blue"><code>#Cluster plot when k=2
 
 fviz_cluster(model_kmeans_2clusters, userDataclustered, palette = &quot;Set2&quot;, alpha = 0.5, ggtheme = theme_minimal())+ ggtitle(&quot;Cluster plot with log when k=2&quot;)</code></pre>
 <p><img src="/portfolio/project-06_files/figure-html/cluster%20centers%202-1.png" width="648" style="display: block; margin: auto;" /></p>
@@ -542,7 +564,7 @@ fviz_cluster(model_kmeans_2clusters, userDataclustered, palette = &quot;Set2&quo
 <div id="clusters-vs-pca-components-without-log-transform" class="section level5">
 <h5>Clusters vs PCA components without log transform</h5>
 <p>As a “side exercise”, use K-means method again but this time do not log transform <code>total time</code> and include <code>no_shows</code> as well. Compare your results to the case when you use log transformation. Then visualize the first two principle components using <code>fviz_cluster</code> function.</p>
-<pre class="r"><code>#select the data without log
+<pre class="r blue"><code>#select the data without log
 userdata_red_select_nolog&lt;-userdata_red %&gt;% 
   select(-c(user_id, weekday))
 
@@ -552,7 +574,7 @@ userdata_red_select_nolog&lt;-data.frame(scale(userdata_red_select_nolog))
 #train kmeans clustering
 model_kmeans_2clusters_nolog&lt;-eclust(userdata_red_select_nolog, &quot;kmeans&quot;, k = 2,nstart = 50, graph = FALSE)
 summary(model_kmeans_2clusters_nolog)</code></pre>
-<pre><code>##              Length Class      Mode   
+<pre class="whiteb"><code>##              Length Class      Mode   
 ## cluster      3625   -none-     numeric
 ## centers        40   -none-     numeric
 ## totss           1   -none-     numeric
@@ -565,10 +587,10 @@ summary(model_kmeans_2clusters_nolog)</code></pre>
 ## silinfo         3   -none-     list   
 ## nbclust         1   -none-     numeric
 ## data           20   data.frame list</code></pre>
-<pre class="r"><code>#size of the cluster withoulog
+<pre class="r blue"><code>#size of the cluster withoulog
 model_kmeans_2clusters_nolog_size&lt;-data.frame(cluster=as.factor(c(1:2)), model_kmeans_2clusters_nolog$center, model_kmeans_2clusters_nolog$size)
 model_kmeans_2clusters_nolog_size</code></pre>
-<pre><code>##   cluster noShows total_Time weekend Afternoon    Day Evening  Night Children
+<pre class="whiteb"><code>##   cluster noShows total_Time weekend Afternoon    Day Evening  Night Children
 ## 1       1 -0.1030    -0.1541 -0.0851     0.559  0.935  -0.822 -0.440    0.344
 ## 2       2  0.0553     0.0827  0.0456    -0.300 -0.502   0.441  0.236   -0.185
 ##   Comedy  Drama Entertainment Factual Learning   Music    News NoGenre
@@ -577,7 +599,7 @@ model_kmeans_2clusters_nolog_size</code></pre>
 ##   RelEthics   Sport Weather avg_prop_view model_kmeans_2clusters_nolog.size
 ## 1    0.1070  0.0646  0.0284        -0.242                              1266
 ## 2   -0.0574 -0.0347 -0.0152         0.130                              2359</code></pre>
-<pre class="r"><code>#visualise
+<pre class="r blue"><code>#visualise
 fviz_cluster(model_kmeans_2clusters_nolog, userDataclustered_nolog, palette = &quot;Set2&quot;, alpha = 0.02, ggtheme = theme_minimal())+ggtitle(&quot;Cluster plot without log when k=2&quot;)</code></pre>
 <p><img src="/portfolio/project-06_files/figure-html/cluster%20centers%20without%20log%20transform-1.png" width="648" style="display: block; margin: auto;" /></p>
 <p>There are still outliers (eg. very notable 1484 in the upper left corner), as the overall point of the log-transform is to help to alleviate the problem of outliers. We can see the change as opposed to the first log PCA graph above, in the fact that now the data is concentrated on the right hand side and the outliers towards the left are very visible.</p>
@@ -586,7 +608,7 @@ fviz_cluster(model_kmeans_2clusters_nolog, userDataclustered_nolog, palette = &q
 <div id="elbow-chart" class="section level4">
 <h4>Elbow Chart</h4>
 <p>Produce an elbow chart and identify a reasonable range for the number of clusters.</p>
-<pre class="r"><code># Elbow Chart
+<pre class="r blue"><code># Elbow Chart
 # Use map_dbl to run K-Means models with varying value of k 
 tot_withinss &lt;- map_dbl(1:15,  function(k){
   model &lt;- kmeans(x = userdata_red_select, centers = k,iter.max = 100, nstart = 10)
@@ -604,7 +626,7 @@ ggplot(elbow_df, aes(x = k, y = tot_withinss)) +
   geom_line() +
   scale_x_continuous(breaks = 1:15)</code></pre>
 <p><img src="/portfolio/project-06_files/figure-html/elbow-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#Looking for the elbow
+<pre class="r blue"><code>#Looking for the elbow
 fviz_nbclust(userdata_red_select,kmeans, method = &quot;wss&quot;,k.max=15)+
   labs(subtitle = &quot;Elbow method&quot;)</code></pre>
 <p><img src="/portfolio/project-06_files/figure-html/elbow-2.png" width="648" style="display: block; margin: auto;" />
@@ -613,7 +635,7 @@ It is not entirely clear what the exact number of k clusters is optimally. We wa
 <div id="silhouette-method" class="section level4">
 <h4>Silhouette method</h4>
 <p>Repeat the previous step for Silhouette analysis.</p>
-<pre class="r"><code>#Silhouette analysis
+<pre class="r blue"><code>#Silhouette analysis
 fviz_nbclust(userdata_red_select, kmeans, method = &quot;silhouette&quot;,k.max = 15)+labs(subtitle = &quot;Silhouette method&quot;)</code></pre>
 <p><img src="/portfolio/project-06_files/figure-html/Silhouette-1.png" width="648" style="display: block; margin: auto;" />
 We can see from the peaks of the plotted line that the optimal number of clusters k would be 2, 4, or 13. For simplicity reasons, we should investigate 3 to 5 k clusters.</p>
@@ -629,26 +651,26 @@ We can see from the peaks of the plotted line that the optimal number of cluster
 <p>Question 6: For simplicity let’s focus on lower values. Now find the clusters using kmeans for k=3, 4 and 5. Plot the centers and check the number of observations in each cluster. Based on these graphs which one seems to be more plausible? Which clusters are observable in each case? Don’t forget to check the cluster sizes.</p>
 </blockquote>
 <p>Your code here.</p>
-<pre class="r"><code>#Fit kmeans models
+<pre class="r blue"><code>#Fit kmeans models
 #your code here
 model_km3 &lt;- eclust(userdata_red_select, &quot;kmeans&quot;, k = 3,nstart = 50, graph = FALSE)
 model_km3$size</code></pre>
-<pre><code>## [1] 2110 1336  179</code></pre>
-<pre class="r"><code>model_km4 &lt;- eclust(userdata_red_select, &quot;kmeans&quot;, k = 4,nstart = 50, graph = FALSE)
+<pre class="whiteb"><code>## [1] 2110 1336  179</code></pre>
+<pre class="r blue"><code>model_km4 &lt;- eclust(userdata_red_select, &quot;kmeans&quot;, k = 4,nstart = 50, graph = FALSE)
 model_km4$size</code></pre>
-<pre><code>## [1] 1146  823 1476  180</code></pre>
-<pre class="r"><code>model_km5 &lt;- eclust(userdata_red_select, &quot;kmeans&quot;, k = 5,nstart = 50, graph = FALSE)
+<pre class="whiteb"><code>## [1] 1146  823 1476  180</code></pre>
+<pre class="r blue"><code>model_km5 &lt;- eclust(userdata_red_select, &quot;kmeans&quot;, k = 5,nstart = 50, graph = FALSE)
 model_km5$size</code></pre>
-<pre><code>## [1]  182  704  805 1072  862</code></pre>
-<pre class="r"><code>#PCA visualizations
+<pre class="whiteb"><code>## [1]  182  704  805 1072  862</code></pre>
+<pre class="r blue"><code>#PCA visualizations
 p3 &lt;- fviz_cluster(model_km3, geom = &quot;point&quot;,  data = userdata_red_select, alpha=0.03, ggtheme = theme_minimal()) + ggtitle(&quot;k = 3&quot;)
 p4 &lt;- fviz_cluster(model_km4, geom = &quot;point&quot;,  data = userdata_red_select, alpha=0.03, ggtheme = theme_minimal()) + ggtitle(&quot;kmeans, k = 4&quot;)
 p5 &lt;- fviz_cluster(model_km5, geom = &quot;point&quot;,  data = userdata_red_select, alpha=0.03, ggtheme = theme_minimal()) + ggtitle(&quot;k = 5&quot;)
 library(gridExtra)
 grid.arrange(p3,p4,p5, nrow = 2)</code></pre>
-<p><img src="/portfolio/project-06_files/figure-html/unnamed-chunk-4-1.png" width="648" style="display: block; margin: auto;" />
+<p><img src="/portfolio/project-06_files/figure-html/unnamed-chunk-5-1.png" width="648" style="display: block; margin: auto;" />
 Notes: 4 looks good, judging by the size of cluster it divides the group in k=3 into 2 subgroups, 5 has too much overlap</p>
-<pre class="r"><code>#Plot centers for k =3
+<pre class="r blue"><code>#Plot centers for k =3
 
 #your code here
 cluster_centers&lt;-data.frame(cluster=as.factor(c(1:3)),model_km3$centers)
@@ -683,7 +705,7 @@ graphkmeans_5clusters&lt;-ggplot(cluster_centers_t, aes(x = variable, y = value)
 
 
 grid.arrange(graphkmeans_3clusters,graphkmeans_4clusters,graphkmeans_5clusters, nrow = 2)</code></pre>
-<p><img src="/portfolio/project-06_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-06_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>We confirm that we choose k = 4 clusters.</p>
 </div>
 </div>
@@ -692,31 +714,31 @@ grid.arrange(graphkmeans_3clusters,graphkmeans_4clusters,graphkmeans_5clusters, 
 <div id="pam" class="section level4">
 <h4>PAM</h4>
 <p>Fit a PAM model for the k value you chose above for k-means. Determine how many points each cluster has. Plot the centers of the clusters and produce PCA visualization.</p>
-<pre class="r"><code>#PAM model with k 3-5
+<pre class="r blue"><code>#PAM model with k 3-5
 k3_pam &lt;-eclust(userdata_red_select, &quot;pam&quot;, k = 3, graph = FALSE)
 k4_pam &lt;-eclust(userdata_red_select, &quot;pam&quot;, k = 4, graph = FALSE)
 k5_pam &lt;-eclust(userdata_red_select, &quot;pam&quot;, k = 5, graph = FALSE)
 
 #Let&#39;s see the cluster sizes
 k3_pam$clusinfo</code></pre>
-<pre><code>##      size max_diss av_diss diameter separation
+<pre class="whiteb"><code>##      size max_diss av_diss diameter separation
 ## [1,] 1551     17.8    3.81     25.3      0.497
 ## [2,]  835     15.9    4.39     21.8      0.609
 ## [3,] 1239     34.5    3.42     37.6      0.497</code></pre>
-<pre class="r"><code>k4_pam$clusinfo</code></pre>
-<pre><code>##      size max_diss av_diss diameter separation
+<pre class="r blue"><code>k4_pam$clusinfo</code></pre>
+<pre class="whiteb"><code>##      size max_diss av_diss diameter separation
 ## [1,] 1447     17.8    3.57     25.3      0.497
 ## [2,]  810     15.9    4.31     21.8      1.040
 ## [3,] 1201     34.5    3.30     36.5      0.497
 ## [4,]  167     16.5    4.72     18.9      1.638</code></pre>
-<pre class="r"><code>k5_pam$clusinfo</code></pre>
-<pre><code>##      size max_diss av_diss diameter separation
+<pre class="r blue"><code>k5_pam$clusinfo</code></pre>
+<pre class="whiteb"><code>##      size max_diss av_diss diameter separation
 ## [1,]  747     17.8    2.90     20.0      0.626
 ## [2,]  468     14.2    3.68     18.2      1.162
 ## [3,] 1062     17.6    4.14     23.7      0.283
 ## [4,] 1181     34.5    3.38     36.5      0.283
 ## [5,]  167     16.5    4.73     18.9      1.638</code></pre>
-<pre class="r"><code>#center of the clusters
+<pre class="r blue"><code>#center of the clusters
 
   #Plot for k =3
 #First generate a new data frame with cluster medoids and cluster numbers
@@ -752,20 +774,20 @@ graphkmeans_5Pam&lt;-ggplot(cluster_medoids_t, aes(x = variable, y = value))+  g
         axis.text.x = element_text(angle=45, hjust=1),)+ggtitle(&quot;Pam Medoids k=5&quot;)
 
 grid.arrange(graphkmeans_3Pam,graphkmeans_4Pam,graphkmeans_5Pam, nrow = 2)</code></pre>
-<p><img src="/portfolio/project-06_files/figure-html/unnamed-chunk-7-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#PCA plot of PAM
+<p><img src="/portfolio/project-06_files/figure-html/unnamed-chunk-8-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r blue"><code>#PCA plot of PAM
 pam3 &lt;- fviz_cluster(k3_pam, geom = &quot;point&quot;,  data = userdata_red_select, alpha=0.3, ggtheme = theme_minimal()) + ggtitle(&quot;k = 3&quot;)
 pam4 &lt;- fviz_cluster(k4_pam, geom = &quot;point&quot;,  data = userdata_red_select, alpha=0.3, ggtheme = theme_minimal()) + ggtitle(&quot;PAM, k = 4&quot;)
 pam5 &lt;- fviz_cluster(k5_pam, geom = &quot;point&quot;,  data = userdata_red_select, alpha=0.3, ggtheme = theme_minimal()) + ggtitle(&quot;k = 5&quot;)
 library(gridExtra)
 grid.arrange(pam3,pam4,pam5, nrow = 2)</code></pre>
-<p><img src="/portfolio/project-06_files/figure-html/unnamed-chunk-8-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-06_files/figure-html/unnamed-chunk-9-1.png" width="648" style="display: block; margin: auto;" /></p>
 <p>Comparing kmeans and PAM, k = 4/5 has better consistency in regards to cluster distribution. The result is less influenced by outliers compared to k=3. Looking at the other charts, we would choose k=4.</p>
 </div>
 <div id="h-clustering" class="section level4">
 <h4>H-Clustering</h4>
 <p>Use Hierarchical clustering with the same k you chose above. Set hc_method equal to <code>average</code> and then <code>ward.D</code>. What differences do you observe between the results of these two methods? Visualize the results using dendrograms. How many points does each cluster have? Plot the centers of the clusters and produce PCA visualization.</p>
-<pre class="r"><code>#H-Clustering, k=4
+<pre class="r blue"><code>#H-Clustering, k=4
 res.dist &lt;- dist(userdata_red_select, method = &quot;euclidean&quot;)
 
 #Let&#39;s fit a H-Clustering methods. k is the number of clusters
@@ -775,7 +797,7 @@ res.dist &lt;- dist(userdata_red_select, method = &quot;euclidean&quot;)
 res.hc_avg &lt;-  hcut(res.dist, hc_method = &quot;average&quot;,k=4)
 res.hc_war &lt;-  hcut(res.dist, hc_method = &quot;ward.D&quot;,k=4)
 summary(res.hc_avg)</code></pre>
-<pre><code>##             Length  Class  Mode     
+<pre class="whiteb"><code>##             Length  Class  Mode     
 ## merge          7248 -none- numeric  
 ## height         3624 -none- numeric  
 ## order          3625 -none- numeric  
@@ -788,8 +810,8 @@ summary(res.hc_avg)</code></pre>
 ## silinfo           3 -none- list     
 ## size              4 -none- numeric  
 ## data        6568500 dist   numeric</code></pre>
-<pre class="r"><code>summary(res.hc_war)</code></pre>
-<pre><code>##             Length  Class  Mode     
+<pre class="r blue"><code>summary(res.hc_war)</code></pre>
+<pre class="whiteb"><code>##             Length  Class  Mode     
 ## merge          7248 -none- numeric  
 ## height         3624 -none- numeric  
 ## order          3625 -none- numeric  
@@ -802,21 +824,21 @@ summary(res.hc_avg)</code></pre>
 ## silinfo           3 -none- list     
 ## size              4 -none- numeric  
 ## data        6568500 dist   numeric</code></pre>
-<pre class="r"><code>#size of the clusters
+<pre class="r blue"><code>#size of the clusters
 res.hc_avg$size</code></pre>
-<pre><code>## [1] 3622    1    1    1</code></pre>
-<pre class="r"><code>res.hc_war$size</code></pre>
-<pre><code>## [1] 1770  900  787  168</code></pre>
-<pre class="r"><code>#visulize the result with dendrograms
+<pre class="whiteb"><code>## [1] 3622    1    1    1</code></pre>
+<pre class="r blue"><code>res.hc_war$size</code></pre>
+<pre class="whiteb"><code>## [1] 1770  900  787  168</code></pre>
+<pre class="r blue"><code>#visulize the result with dendrograms
 plot(res.hc_avg,hang = -1, cex = 0.5)</code></pre>
 <p><img src="/portfolio/project-06_files/figure-html/h-cluster-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>plot(res.hc_war,hang = -1, cex = 0.5)</code></pre>
+<pre class="r blue"><code>plot(res.hc_war,hang = -1, cex = 0.5)</code></pre>
 <p><img src="/portfolio/project-06_files/figure-html/h-cluster-2.png" width="648" style="display: block; margin: auto;" />
 We find that Ward is the better method because the sizes of clusters are more even / constant.
 The 4 clusters in the average method plot are shown to have sizes of 3622, 1, 1, and 1. It does not do well in finding segments or clusters, grouping almost all into one large cluster.</p>
 <p>The 4 clusters in the Ward method plot are shown to have sizes of 1770, 900, 787, and 168.</p>
 <p>Plot the centers of H-clusters and compare the results with K-Means and PAM.</p>
-<pre class="r"><code>#center of the clusters
+<pre class="r blue"><code>#center of the clusters
 
   #Plot centers for res.hc_avg
 #First let&#39;s find the averages of the variables by cluster
@@ -845,14 +867,14 @@ xa2&lt;- gather(center_locations, key = &quot;variable&quot;, value = &quot;valu
 hclust_ward_center&lt;-ggplot(xa2, aes(x = variable, y = value,order=cluster))+  geom_line(aes(color = cluster,group = cluster), linetype = &quot;dashed&quot;,size=1)+ geom_point(size=2,shape=4)+geom_hline(yintercept=0)+ggtitle(&quot;H-clust ward&quot;)+labs(fill = &quot;Cluster&quot;)+scale_colour_manual(values = c(&quot;darkgreen&quot;, &quot;orange&quot;, &quot;red&quot;,&quot;blue&quot;)) 
 
 grid.arrange(hclust_avg_center,hclust_ward_center, nrow = 2)</code></pre>
-<p><img src="/portfolio/project-06_files/figure-html/unnamed-chunk-9-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#PCA plot
+<p><img src="/portfolio/project-06_files/figure-html/unnamed-chunk-10-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r blue"><code>#PCA plot
 Hward_4 &lt;- fviz_cluster(res.hc_war, geom = &quot;point&quot;,  data = userdata_red_select, alpha=0.3, ggtheme = theme_minimal()) + ggtitle(&quot;H-clustering with ward method, k=4&quot;)
 
 #comparing kmeans, PAM, H-clustering
 
 grid.arrange(p4, pam4 ,Hward_4, nrow = 3)</code></pre>
-<p><img src="/portfolio/project-06_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-06_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
 <blockquote>
 <p>Question 7: Based on the results of these three methods, what can you conclude?</p>
 </blockquote>
@@ -863,7 +885,7 @@ grid.arrange(p4, pam4 ,Hward_4, nrow = 3)</code></pre>
 <div id="subsample-check" class="section level1">
 <h1>Subsample check</h1>
 <p>At this stage you must have chosen the number of clusters. We will try to reinforce your conclusions and verify that they are not due to chance by dividing the data into two equal parts. Use K-means clustering, fixing the number of clusters to your choice, in these two data sets separately. If you get similar looking clusters, you can rest assured that you conclusions are robust. If not you might want to reconsider your decision.</p>
-<pre class="r"><code>library(rsample)
+<pre class="r blue"><code>library(rsample)
 #the following code chunk splits the data into two. Replace ... with your data frame that contains the data
 set.seed(1234)
 train_test_split &lt;- initial_split(userdata_red_select, prop = 0.5)

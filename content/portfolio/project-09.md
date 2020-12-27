@@ -8,7 +8,29 @@ title: Predicting Survival of Titanic Passengers in Python
 type: portfolio
 ---
 
-# IMPORT LIBRARIES
+
+<!--begin html code: I will mark the html code in my markdown files, these are not directly related to the course material-->
+<style>
+div.pink { background-color:#fae6e6; border-radius: 5px; padding: 20px; color: #000000;}
+
+</style>
+
+
+<style>
+div.whitep { background-color:#fffafa; border: 3px gray; border-radius: 5px; padding: 20px; color: #000000;}
+
+</style>
+<!--end html code-->
+
+In this project, I am going to design a Machine Learning algorithm for predicting the survival of the titanic passengers using Python programming language basing on the Titanic data set. I will include in here both, my code and the outcomes of all the chunks.
+
+I am going to  perform a classification the aim of which is to form a model able to predict whether a passenger survived (1) or not (0). I will base my analysis on the "titanic.csv" dataset.The ‘survived’ column is to be used as the true outcome (i.e. the label), while the rest of the variables could be used as the inputs to the model.
+
+
+### IMPORT LIBRARIES
+
+***
+```{py echo=FALSE, class = "whitep"}
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -27,16 +49,27 @@ filterwarnings('ignore')
 
 from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
+```
+***
 
 
-## LOAD AND EXAMINE DATA
 
+### LOAD AND EXAMINE DATA
+```{py echo=FALSE}
 df = pd.read_csv('titanic.csv')
+```
 
-# Explore the data
 
-# Check top 10 rows of the dataframe
+#### Explore the data
+
+##### Check top 10 rows of the dataframe
+```{py echo=FALSE}
 df.head(10) 
+```
+
+***
+
+```{py echo=FALSE}
 '''
    pclass  survived  ...    cabin embarked
 0       1         1  ...       B5        S
@@ -52,17 +85,34 @@ df.head(10)
 
 [10 rows x 11 columns]
 '''
+```
+***
 
-# Display names of the columns
+
+##### Display names of the columns
+
+```{py echo=FALSE}
 df.columns
+```
+
+***
+```{py echo=FALSE}
 '''
 Index(['pclass', 'survived', 'name', 'sex', 'age', 'sibsp', 'parch', 'ticket', 'fare', 'cabin', 'embarked'], 
       dtype='object')
 
 '''
+```
+***
 
-# Display data types of each column
+
+##### Display data types of each column
+```{py echo=FALSE}
 df.dtypes
+```
+
+***
+```{py echo=FALSE}
 '''
 pclass        int64
 survived      int64
@@ -77,11 +127,20 @@ cabin        object
 embarked     object
 dtype: object
 '''
+```
+***
 
-# Summary statistics
-# Maximum values for all the columns
+### Summary statistics
+
+
+#### Maximum values for all the columns
+```{py echo=FALSE}
 maxi = df.max()
 print('The maximum values for each column are:\n' + str(maxi))
+```
+
+***
+```{py echo=FALSE}
 '''
 The maximum values for each column are:
 pclass                                3
@@ -95,10 +154,18 @@ ticket                        WE/P 5735
 fare                            512.329
 dtype: object
 '''
+```
+***
 
-# Minimum values for all the columns
+
+#### Minimum values for all the columns
+```{py echo=FALSE}
 mini = df.min()
 print('The minimum values for each column are:\n' + str(mini))
+```
+
+***
+```{py echo=FALSE}
 '''
 The minimum values for each column are:
 pclass                        1
@@ -112,9 +179,19 @@ ticket                   110152
 fare                          0
 dtype: object
 '''
-# Search for NaN values in each column
-df.isnull().sum()
+```
+***
 
+
+
+#### Search for NaN values in each column
+```{py echo=FALSE}
+df.isnull().sum()
+```
+
+
+***
+```{py echo=FALSE}
 '''
 pclass         0
 survived       0
@@ -128,20 +205,28 @@ fare           1
 cabin       1014
 embarked       2
 dtype: int64
+'''
+```
 
 The most missing values are locaed in columns 'age' (263) and 'cabin' (1014).
 I will later take care of them using interpolation.
-'''
+
+***
 
 
-# Drop two columns that will not be useful for the model - sibsp & ticket
+#### Drop two columns that will not be useful for the model - sibsp & ticket
+```{py echo=FALSE}
 df.drop(['ticket', 'embarked'], axis = 1, inplace = True)
+```
 
-# Examine survival based on gender
-
+#### Examine survival based on gender
+```{py echo=FALSE}
 percGenderSurvived = df.groupby(['sex'])['survived'].sum().transform(lambda x: x/x.sum()).copy()  
 print("Percentage of passengers survived based on their gender is as follows:\n" + str(percGenderSurvived))
+```
 
+***
+```{py echo=FALSE}
 '''
 Percentage of passengers survived based on their gender is as follows:
 sex
@@ -149,11 +234,22 @@ female    0.678
 male      0.322
 Name: survived, dtype: float64
 '''
-# DATA PRE-PROCESSING
-# Encode 'sex' column to be female - 0, and male - 1 
+```
+***
 
-# Display top 5 rows of the column
+
+### DATA PRE-PROCESSING
+
+
+#### Encode 'sex' column to be female - 0, and male - 1 
+
+##### Display top 5 rows of the column
+```{py echo=FALSE}
 df.sex.head(5)
+```
+
+***
+```{py echo=FALSE}
 '''
 0    female
 1      male
@@ -162,11 +258,23 @@ df.sex.head(5)
 4    female
 Name: sex, dtype: object
 '''
-# Transformation to bool type
-df.sex = df.sex == "male"
+```
+***
 
- Display top 5 rows of the column for confirmation
+
+
+##### Transformation to bool type
+```{py echo=FALSE}
+df.sex = df.sex == "male"
+```
+
+##### Display top 5 rows of the column for confirmation
+```{py echo=FALSE}
 df.sex.head(5)
+```
+
+***
+```{py echo=FALSE}
 '''
 0    False
 1     True
@@ -175,31 +283,62 @@ df.sex.head(5)
 4    False
 Name: sex, dtype: bool
 '''
+```
+***
 
-# Extract only titles from names
 
-# Disply top 5 rows of the column 'name'
+#### Extract only titles from names
+
+##### Disply top 5 rows of the column 'name'
+```{py echo=FALSE}
 df.name.head(5)
+```
 
-# Extract the titles and display unique values
+##### Extract the titles and display unique values
+```{py echo=FALSE}
 titles = df.name.str.extract(pat = '([A-Za-z]+)\.').copy()
 titles = np.unique(titles)
 print(titles)
+```
+
+***
+```{py echo=FALSE}
 '''
 array(['Capt', 'Col', 'Countess', 'Don', 'Dona', 'Dr', 'Jonkheer', 'Lady',
        'Major', 'Master', 'Miss', 'Mlle', 'Mme', 'Mr', 'Mrs', 'Ms', 'Rev',
        'Sir'], dtype=object)
 '''
-# Check for titles type
+```
+***
+
+
+#### Check for titles type
+```{py echo=FALSE}
 type(titles)
+```
+
+***
+```{py echo=FALSE}
 '''
 numpy.ndarray
 '''
-# Overwrite 'name' column values
-df.name = df.name.str.extract(pat = '([A-Za-z]+)\.')
+```
+***
 
-# Disply 5 rows of the column 'name' for confirmation
+
+
+#### Overwrite 'name' column values
+```{py echo=FALSE}
+df.name = df.name.str.extract(pat = '([A-Za-z]+)\.')
+```
+
+#### Disply 5 rows of the column 'name' for confirmation
+```{py echo=FALSE}
 df.name.head(5)
+```
+
+***
+```{py echo=FALSE}
 '''
 0      Miss
 1    Master
@@ -208,8 +347,12 @@ df.name.head(5)
 4       Mrs
 Name: name, dtype: object
 '''
+```
+***
 
-# Display survival of differently titled individuals
+
+#### Display survival of differently titled individuals
+```{py echo=FALSE}
 fig = plt.figure(figsize=(12,8))
 counter = 1
 col = ['blue','orange']
@@ -223,11 +366,17 @@ for titles in df['name'].unique():
         i = s.index[0]
         s.sort_index().plot(kind = 'pie', colors = [col[i]])
     counter += 1
+```
   
-# Indepth look at the class survival
+##### Indepth look at the class survival
+```{py echo=FALSE}
 survivalTitles = s = df.groupby(['name', 'survived']).agg({'survived': 'count'})
 sirvivalinTitle = df.groupby(['name']).agg({'survived': 'count'})
 finalTitles = survivalTitles.div(sirvivalinTitle, level='name') * 100
+```
+
+***
+```{py echo=FALSE}
 '''
 
 name     survived            
@@ -259,16 +408,26 @@ Rev      0         100.000000
 Sir      1         100.000000
 
 '''
-# Interpolate missing age entries in the ‘age’ column.
+```
+***
+
+
+
+
+##### Interpolate missing age entries in the ‘age’ column.
+```{py echo=FALSE}
 gp = df.groupby('name') #Group the data by title
 val = gp.transform('median').age #Find the median value for each title
 df['age'].fillna(val, inplace = True) #Fill in missing values
+```
 
-
-
-# Check if the age missing values were fixed
+##### Check if the age missing values were fixed
+```{py echo=FALSE}
 df.isnull().sum()
+```
 
+***
+```{py echo=FALSE}
 '''
 pclass         0
 survived       0
@@ -283,11 +442,20 @@ cabin       1014
 embarked       2
 dtype: int64
 '''
+```
+***
 
-# Change titles to numbers
 
-# Check the median of age by title
+#### Change titles to numbers
+
+
+##### Check the median of age by title
+```{py echo=FALSE}
 df.groupby('name').age.median()
+```
+
+***
+```{py echo=FALSE}
 '''
 name
 Capt        70.0
@@ -310,8 +478,18 @@ Rev         41.5
 Sir         49.0
 Name: age, dtype: float64
 '''
-# Count hoe many passengers hold each title
+```
+***
+
+
+
+##### Count how many passengers hold each title
+```{py echo=FALSE}
 df.groupby(['name'])['name'].count()
+```
+
+***
+```{py echo=FALSE}
 '''
 name
 Capt          1 -----------> 0 Capitan is much older than all the rest of the crew
@@ -345,9 +523,13 @@ To sum up:
     7 - Army title
     8 - Mrs + female Dr
 '''
+```
+***
 
-# Change titles to numerical values
-    
+
+
+#### Change titles to numerical values
+```{py echo=FALSE}
 df['name'] = df['name'].replace(['Capt'],0)
 df['name'] = df['name'].replace(['Rev','Jonkheer'],1)
 df['name'] = df['name'].replace(['Miss','Mlle','Mme','Ms' ],2)
@@ -357,8 +539,16 @@ df['name'] = df['name'].replace(['Master'],5)
 df['name'] = df['name'].replace(['Sir', 'Don', 'Dr'],6)
 df['name'] = df['name'].replace(['Major','Col'],7)
 df['name'] = df['name'].replace(['Mrs'],8)
-# Checking for female Doctor
+```
+
+
+##### Checking for female Doctor
+```{py echo=FALSE}
 df.loc[df['name'] == 6, 'sex']
+```
+
+***
+```{py echo=FALSE}
 '''
 40     True
 93     True
@@ -372,23 +562,44 @@ df.loc[df['name'] == 6, 'sex']
 525    True
 Name: sex, dtype: bool
 '''
+```
+***
+
+```{py echo=FALSE}
 df['name'][181] = 8
+```
 
 
-# Check unique values for titles
+#### Check unique values for titles
+```{py echo=FALSE}
 df.name.unique()
+```
+
+***
+```{py echo=FALSE}
 '''
 array([2, 5, 4, 8, 7, 6, 0, 3, 1])
 '''
+```
+***
       
 
-## Interpolate missing ticket fare
+#### Interpolate missing ticket fare
+```{py echo=FALSE}
 gp = df.groupby('pclass') #Group the data by class
 val = gp.transform('median').fare #Find the median value for each title
 df['fare'].fillna(val, inplace = True) #Fill in missing values
+```
 
-# Check if the ticket fare missing values were fixed
+
+#### Check if the ticket fare missing values were fixed
+```{py echo=FALSE}
 df.isnull().sum()
+```
+
+
+***
+```{py echo=FALSE}
 '''
 pclass         0
 survived       0
@@ -401,54 +612,105 @@ fare           0
 cabin       1014
 dtype: int64
 '''
+```
+***
 
 
-# Replace 'cabin' identification by only one letter
+
+##### Replace 'cabin' identification by only one letter
+```{py echo=FALSE}
 df.cabin.unique()
 
 cabinClass= df.cabin.str.extract(pat = '([A-Z])').copy()
 print(cabinClass)
+```
 
-# Overwrite 'name' column values
+##### Overwrite 'name' column values
+```{py echo=FALSE}
 df.cabin = df.cabin.str.extract(pat = '([A-Z])')
+```
 
-# Check the unique values for now
+##### Check the unique values for now
+```{py echo=FALSE}
 df.cabin.unique()
+```
+
+***
+```{py echo=FALSE}
 '''
 array(['B', 'C', 'E', 'D', 'A', nan, 'T', 'F', 'G'], dtype=object)
 '''
+```
+***
 
-# Fill the missing values with 'Z'
+
+##### Fill the missing values with 'Z'
+```{py echo=FALSE}
 df.cabin = df['cabin'].fillna(value = 'Z')
+```
 
-
-# Check the unique values after filling missing values
+##### Check the unique values after filling missing values
+```{py echo=FALSE}
 df.cabin.unique()
+```
+
+***
+```{py echo=FALSE}
 '''
 array(['B', 'C', 'E', 'D', 'A', 'Z', 'T', 'F', 'G'], dtype=object)
 '''
+```
+***
 
-# Change to numeric values
+
+
+##### Change to numeric values
+```{py echo=FALSE}
 df['cabin'] = LabelEncoder().fit_transform(df['cabin'].astype(str))
+```
 
-# Check the unique values
+##### Check the unique values
+```{py echo=FALSE}
 df['cabin'].unique()
+```
+
+
+***
+```{py echo=FALSE}
 '''
 array([1, 2, 4, 3, 0, 8, 7, 5, 6])
 '''
-# Numeric values
 
-# Examine the unique values in the 'sibsp' column
+#Numeric values
+```
+
+
+##### Examine the unique values in the 'sibsp' column
+```{py echo=FALSE}
 df.sibsp.unique()
+```
+
+***
+```{py echo=FALSE}
 '''
 array([0, 1, 2, 3, 4, 5, 8])
 
 '''
-# Only numeric values
 
 
-# Make sure there are not any more missing values in the dataframe
+#Only numeric values
+```
+***
+
+
+
+##### Make sure there are not any more missing values in the dataframe
+```{py echo=FALSE}
 df.isnull().sum()
+```
+
+***
+```{py echo=FALSE}
 '''
 pclass      0
 survived    0
@@ -461,11 +723,17 @@ fare        0
 cabin       0
 dtype: int64
 '''
+```
+***
 
 
-
-# Make sure there are not any more missing values in the dataframe
+##### Make sure there are not any more missing values in the dataframe
+```{py echo=FALSE}
 df.isnull().sum()
+```
+
+***
+```{py echo=FALSE}
 '''
 pclass      0
 survived    0
@@ -478,19 +746,32 @@ fare        0
 cabin       0
 dtype: int64
 '''
-
-
 # No more missing values in the data set
+```
+***
 
-## machine learning algo training and testing
-# seed random number generator for reproducible results
+### Machine Learning algo training and testing
+
+
+
+##### Seed random number generator for reproducible results
+```{py echo=FALSE}
 random.seed(1234)
+```
 
-# Split the data into features and label (true outcome, i.e. survived)
+##### Split the data into features and label (true outcome, i.e. survived)
+```{py echo=FALSE}
 label = df['survived'] #initialise feature
 feature = df.drop(['survived'], axis=1)  #initalise feature
-# Sanity check
+```
+
+##### Sanity check
+```{py echo=FALSE}
 label
+```
+
+***
+```{py echo=FALSE}
 '''
        1
 1       1
@@ -505,50 +786,90 @@ label
 1308    0
 Name: survived, Length: 1309, dtype: int64
 '''
+```
+***
+
+##### Feature column
+```{py echo=FALSE}
 feature.columns
+```
+
+***
+```{py echo=FALSE}
 '''
 Index(['pclass', 'name', 'sex', 'age', 'sibsp', 'parch', 'fare', 'cabin'], dtype='object')
 '''
-# Split the data & make sure it is randomised (shuffle=True)
+```
+***
+
+
+##### Split the data & make sure it is randomised (shuffle=True)
+```{py echo=FALSE}
 random.seed(1234)
 X_train, X_test, y_train, y_test = train_test_split(feature, label, test_size = 0.25,shuffle = True)
+```
 
-# Scale the data
+##### Scale the data
+```{py echo=FALSE}
 X_train_scaled = preprocessing.scale(X_train, with_mean = True, with_std = True)
 scaler = preprocessing.StandardScaler().fit(X_train) #scaler to sclae the test data as well
+```
 
-# Sanity check
+##### Sanity check
+```{py echo=FALSE}
 X_train_scaled[0]
+```
+
+***
+```{py echo=FALSE}
 '''
 array([ 0.8273289 , -0.12183624,  0.73980985, -0.02862179, -0.47325356,
        -0.45944255, -0.49725754,  0.50891413])
+       
 '''
+```
+***
 
-# Standardise X_test
+
+##### Standardise X_test
+```{py echo=FALSE}
 X_test_scaled = scaler.transform(X_test)
 
 X_test_scaled[0]
+```
+***
+```{py echo=FALSE}
 '''
 array([ 0.8273289 , -1.21836239, -1.35169869, -0.55685232,  0.4247382 ,
        -0.45944255, -0.34078308,  0.50891413])
 '''
+```
+***
 
-# specify models as elements of a list
+
+
+##### Specify models as elements of a list
+```{py echo=FALSE}
 models = [MLPClassifier(), 
           KNeighborsClassifier(n_neighbors = 5), 
           SVC(kernel = 'poly', gamma = 'auto', degree = 5),
           GaussianProcessClassifier(),
           GaussianNB(),
           QuadraticDiscriminantAnalysis()]
+```
 
-
-# loop over models, train and test
+##### Loop over models, train and test
+```{py echo=FALSE}
 random.seed(1234)
 model=[]
 for model in models:
     model.fit(X_train_scaled, y_train)
     score = model.score(X_test_scaled, y_test)
     print('Test Set Score:', '%.4f' % score)
+```
+
+***
+```{py echo=FALSE}
 '''
 MLP:     Test Set Score: 0.8323
 KNN:     Test Set Score: 0.7805
@@ -557,6 +878,8 @@ GPC:     Test Set Score: 0.8262
 GNB:     Test Set Score: 0.7744
 QDA:     Test Set Score: 0.7988
 '''
+```
+***
 
 
 
