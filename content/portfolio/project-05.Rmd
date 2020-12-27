@@ -664,7 +664,7 @@ lc_assessment<- read_csv("~/Documents/LBS/Data Science/Session 05/Assessment Dat
     term = factor(term_months),     # turn 'term' into a categorical variable
     delinq_2yrs = factor(delinq_2yrs)) # turn 'delinq_2yrs' into a categorical variable
  
-  lc_assessment %>% head(10)
+#  lc_assessment %>% head(10)
   
  p_assessment<-predict(logistic_wild, lc_assessment, type = "response")
 
