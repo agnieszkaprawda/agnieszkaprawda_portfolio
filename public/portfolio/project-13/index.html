@@ -101,28 +101,29 @@
             
 
 
+<style type="text/css">
+
+.pink { background-color:#fae6e6 ; 
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+
+.blue { background-color:#DFF5F6 ; 
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+    
+.whitep { background-color:#fffafa ;
+    border: 3px gray;
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+    
+.whiteb { background-color:#f7ffff ;
+    border: 3px gray;
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+
+    
+</style>
 <p>###Loading Packages</p>
-<pre class="r"><code>library(ggplot2)
-library(janitor)
-library(tidyverse)
-library(caret)
-library(lubridate)
-library(factoextra)
-library(vroom)
-library(Hmisc)
-library(mice)
-library(readxl)
-library(skimr)
-library(data.table)
-library(grid)
-library(pBrackets)
-library(showtext)
-font_add_google(&quot;Montserrat&quot;) #downloading fonts from Google
-showtext_auto()
-library(data.table)
-library(googlesheets4)
-library(opencage)
-library(tmap)</code></pre>
 <p>###Importing the Data Set</p>
 <div id="story-time" class="section level1">
 <h1>Story Time</h1>
@@ -131,9 +132,9 @@ library(tmap)</code></pre>
 <div id="cleaning-data-set-global_hotel_chain_sizec" class="section level1">
 <h1>Cleaning Data Set global_hotel_chain_sizec</h1>
 <p>First, let’s have a look at the overall global luxury &amp; upscale hotel market.</p>
-<pre class="r"><code># let&#39;s have a look on our data set
+<pre class="r blue"><code># let&#39;s have a look on our data set
 describe(global_hotel_chain_size) </code></pre>
-<pre><code>## global_hotel_chain_size 
+<pre class="whiteb"><code>## global_hotel_chain_size 
 ## 
 ##  13  Variables      1092  Observations
 ## --------------------------------------------------------------------------------
@@ -236,10 +237,10 @@ describe(global_hotel_chain_size) </code></pre>
 ## Variables with all observations missing:
 ## 
 ## [1] x5  x12</code></pre>
-<pre class="r"><code>#Remove empty columns and rows
+<pre class="r blue"><code>#Remove empty columns and rows
 global_hotel_chain_size_clean&lt;-remove_empty(global_hotel_chain_size, which = c(&quot;rows&quot;,&quot;cols&quot;))
 describe(global_hotel_chain_size_clean) </code></pre>
-<pre><code>## global_hotel_chain_size_clean 
+<pre class="whiteb"><code>## global_hotel_chain_size_clean 
 ## 
 ##  11  Variables      1092  Observations
 ## --------------------------------------------------------------------------------
@@ -341,8 +342,8 @@ describe(global_hotel_chain_size_clean) </code></pre>
 </div>
 <div id="cleaning-data-set-hotels_raw" class="section level1">
 <h1>Cleaning Data Set hotels_raw</h1>
-<pre class="r"><code>Hmisc::describe(hotels_raw)</code></pre>
-<pre><code>## hotels_raw 
+<pre class="r blue"><code>Hmisc::describe(hotels_raw)</code></pre>
+<pre class="whiteb"><code>## hotels_raw 
 ## 
 ##  17  Variables      515738  Observations
 ## --------------------------------------------------------------------------------
@@ -494,8 +495,8 @@ describe(global_hotel_chain_size_clean) </code></pre>
 ## 
 ## For the frequency table, variable is rounded to the nearest 0.2
 ## --------------------------------------------------------------------------------</code></pre>
-<pre class="r"><code>glimpse(hotels_raw)</code></pre>
-<pre><code>## Rows: 515,738
+<pre class="r blue"><code>glimpse(hotels_raw)</code></pre>
+<pre class="whiteb"><code>## Rows: 515,738
 ## Columns: 17
 ## $ hotel_address                              &lt;chr&gt; &quot;s Gravesandestraat 55 Oos…
 ## $ additional_number_of_scoring               &lt;dbl&gt; 194, 194, 194, 194, 194, 1…
@@ -514,9 +515,9 @@ describe(global_hotel_chain_size_clean) </code></pre>
 ## $ days_since_review                          &lt;chr&gt; &quot;0 days&quot;, &quot;0 days&quot;, &quot;3 day…
 ## $ lat                                        &lt;dbl&gt; 52.4, 52.4, 52.4, 52.4, 52…
 ## $ lng                                        &lt;dbl&gt; 4.92, 4.92, 4.92, 4.92, 4.…</code></pre>
-<pre class="r"><code>hotels_date_correct&lt;-hotels_raw %&gt;% mutate(review_date=as.Date(review_date,&quot;%d/%m/%Y&quot;)) %&gt;% mutate(country=word(hotel_address,-1,sep=fixed(&quot; &quot;)))
+<pre class="r blue"><code>hotels_date_correct&lt;-hotels_raw %&gt;% mutate(review_date=as.Date(review_date,&quot;%d/%m/%Y&quot;)) %&gt;% mutate(country=word(hotel_address,-1,sep=fixed(&quot; &quot;)))
 glimpse(hotels_date_correct)</code></pre>
-<pre><code>## Rows: 515,738
+<pre class="whiteb"><code>## Rows: 515,738
 ## Columns: 18
 ## $ hotel_address                              &lt;chr&gt; &quot;s Gravesandestraat 55 Oos…
 ## $ additional_number_of_scoring               &lt;dbl&gt; 194, 194, 194, 194, 194, 1…
@@ -536,13 +537,13 @@ glimpse(hotels_date_correct)</code></pre>
 ## $ lat                                        &lt;dbl&gt; 52.4, 52.4, 52.4, 52.4, 52…
 ## $ lng                                        &lt;dbl&gt; 4.92, 4.92, 4.92, 4.92, 4.…
 ## $ country                                    &lt;chr&gt; &quot;Netherlands&quot;, &quot;Netherland…</code></pre>
-<pre class="r"><code>#Remove empty columns and rows
+<pre class="r blue"><code>#Remove empty columns and rows
 hotel1&lt;-remove_empty(hotels_date_correct, which = c(&quot;rows&quot;,&quot;cols&quot;))%&gt;%
   filter(!is.na(lat))
 #Check for duplicates (visualize bots)
 duplicates&lt;-hotel1%&gt;%get_dupes(positive_review, negative_review, hotel_name, reviewer_nationality)
 duplicates</code></pre>
-<pre><code>## # A tibble: 2,664 x 19
+<pre class="whiteb"><code>## # A tibble: 2,664 x 19
 ##    positive_review negative_review hotel_name reviewer_nation… dupe_count
 ##    &lt;chr&gt;           &lt;chr&gt;           &lt;chr&gt;      &lt;chr&gt;                 &lt;int&gt;
 ##  1 1 The room is … 1 bad air cond… Hotel Mon… China                     2
@@ -561,12 +562,12 @@ duplicates</code></pre>
 ## #   total_number_of_reviews &lt;dbl&gt;, review_total_positive_word_counts &lt;dbl&gt;,
 ## #   total_number_of_reviews_reviewer_has_given &lt;dbl&gt;, reviewer_score &lt;dbl&gt;,
 ## #   tags &lt;chr&gt;, days_since_review &lt;chr&gt;, lat &lt;dbl&gt;, lng &lt;dbl&gt;, country &lt;chr&gt;</code></pre>
-<pre class="r"><code>#delete duplicates
+<pre class="r blue"><code>#delete duplicates
 hotel2&lt;-hotel1%&gt;%
   distinct(positive_review, negative_review, hotel_name, reviewer_nationality, .keep_all = TRUE)
 md.pattern(hotel2,rotate.names = T)</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-6-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre><code>##        hotel_address additional_number_of_scoring average_score hotel_name
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-7-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="whiteb"><code>##        hotel_address additional_number_of_scoring average_score hotel_name
 ## 201588             1                            1             1          1
 ## 307726             1                            1             1          1
 ## 374                1                            1             1          1
@@ -642,27 +643,27 @@ md.pattern(hotel2,rotate.names = T)</code></pre>
 <div id="europe-vs.-different-continents---luxury-chains-upper-upscale-chains" class="section level1">
 <h1>Europe vs. different continents - Luxury Chains, Upper Upscale Chains</h1>
 <p>Now we are good to go. First analysis:</p>
-<pre class="r"><code> # distribution of all the variables chain scale
+<pre class="r blue"><code> # distribution of all the variables chain scale
 data.frame(table(global_hotel_chain_size_clean$chain_scale))</code></pre>
-<pre><code>##                    Var1 Freq
+<pre class="whiteb"><code>##                    Var1 Freq
 ## 1        Economy Chains  141
 ## 2         Luxury Chains  115
 ## 3       Midscale Chains  174
 ## 4 Upper Midscale Chains  225
 ## 5  Upper Upscale Chains  161
 ## 6        Upscale Chains  276</code></pre>
-<pre class="r"><code># changing variables to factors
+<pre class="r blue"><code># changing variables to factors
 global_hotel_chain_size_clean$chain_scale &lt;- global_hotel_chain_size_clean$chain_scale %&gt;% factor(levels= c(&quot;Economy Chains&quot;, &quot;Midscale Chains&quot;, &quot;Upper Midscale Chains&quot;,&quot;Upscale Chains&quot;, &quot;Upper Upscale Chains&quot;, &quot;Luxury Chains&quot; ))
  # checking if the data is correct
 data.frame(table(global_hotel_chain_size_clean$chain_scale))</code></pre>
-<pre><code>##                    Var1 Freq
+<pre class="whiteb"><code>##                    Var1 Freq
 ## 1        Economy Chains  141
 ## 2       Midscale Chains  174
 ## 3 Upper Midscale Chains  225
 ## 4        Upscale Chains  276
 ## 5  Upper Upscale Chains  161
 ## 6         Luxury Chains  115</code></pre>
-<pre class="r"><code># pivoting the data &amp; cleaning
+<pre class="r blue"><code># pivoting the data &amp; cleaning
 chain_size_pivot&lt;-global_hotel_chain_size_clean %&gt;% 
   pivot_longer(cols = 5:11, names_to= &quot;region&quot;, values_to= &quot;x&quot;, values_drop_na = TRUE) %&gt;% 
   mutate( region = case_when(
@@ -686,7 +687,7 @@ chain_size_pivot %&gt;%
   filter(chain_scale== &quot;Upper Upscale Chains&quot;) %&gt;% 
   group_by( region) %&gt;% 
   summarise(count=n())</code></pre>
-<pre><code>## # A tibble: 7 x 2
+<pre class="whiteb"><code>## # A tibble: 7 x 2
 ##   region                  count
 ##   &lt;chr&gt;                   &lt;int&gt;
 ## 1 Africa                     33
@@ -696,12 +697,12 @@ chain_size_pivot %&gt;%
 ## 5 Middle East                34
 ## 6 North America exlc. US     30
 ## 7 United States              57</code></pre>
-<pre class="r"><code>#Upscale Chains across countires
+<pre class="r blue"><code>#Upscale Chains across countires
 chain_size_pivot %&gt;% 
   filter(chain_scale== &quot;Upscale Chains&quot;) %&gt;% 
   group_by( region) %&gt;% 
   summarise(count=n())</code></pre>
-<pre><code>## # A tibble: 7 x 2
+<pre class="whiteb"><code>## # A tibble: 7 x 2
 ##   region                  count
 ##   &lt;chr&gt;                   &lt;int&gt;
 ## 1 Africa                     33
@@ -711,7 +712,7 @@ chain_size_pivot %&gt;%
 ## 5 Middle East                37
 ## 6 North America exlc. US     43
 ## 7 United States              56</code></pre>
-<pre class="r"><code># charts showing how big Europe is in these sectors
+<pre class="r blue"><code># charts showing how big Europe is in these sectors
 my_colours &lt;- c(&quot;grey70&quot;, &quot;#2FABE1&quot;)
 is_europe&lt;-  chain_size_pivot_relevant%&gt;% 
 mutate(
@@ -741,11 +742,11 @@ theme_minimal() +
    geom_label(aes(label=count),family = &quot;Montserrat&quot;, fontface=&quot;bold&quot;, color=&quot;grey20&quot;, )
    
 first_plot</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-7-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-8-1.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
 <div id="european-landscape-in-terms-of-chain-types" class="section level1">
 <h1>European landscape in terms of chain types</h1>
-<pre class="r"><code># data on how in Europe the chains are distributed
+<pre class="r blue"><code># data on how in Europe the chains are distributed
 chain_types_europe&lt;- chain_size_pivot %&gt;% 
   filter(region==&quot;Europe&quot;) %&gt;% 
   group_by( chain_scale) %&gt;% 
@@ -782,13 +783,13 @@ theme_minimal() +
  
  my_text &lt;- &quot;Upper Upscale + Luxury = 162&quot;
 my_grob = grid.text(my_text, x=0.82,  y=0.7,gp=gpar(fontfamily=&quot;Montserrat&quot;,fontsize=10, col=&quot;#2FABE1&quot;, fontface=&quot;bold&quot;))</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-8-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>gg + annotation_custom(my_grob)</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-8-2.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-9-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r blue"><code>gg + annotation_custom(my_grob)</code></pre>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-9-2.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
 <div id="average-rating-of-hotels-by-country" class="section level1">
 <h1>Average rating of hotels by country</h1>
-<pre class="r"><code>#7.hotels with highest ratings (possible: combined with location)
+<pre class="r blue"><code>#7.hotels with highest ratings (possible: combined with location)
 #average rating of hotels by country
 hotel3&lt;-hotel2 %&gt;%
   distinct(hotel_name,average_score,country)%&gt;%
@@ -820,11 +821,11 @@ ggplot(is_france, aes(x=average_score,y=reorder(country,average_score),fill=is_f
         legend.position = &quot;none&quot;)+
     labs(title = &quot;France has the highest median rating&quot;, subtitle= &quot;Distribution of average ratings of hotels across 6 selected countries&quot;, x=&quot;Average rating of hotels&quot;, y=&quot;Country&quot;, caption=&quot;Source: https://www.kaggle.com/ployyyywa/global-hotel-chain-presence&quot;) +
   scale_fill_manual(values = my_colours3)</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-9-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-10-1.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
 <div id="hotels-of-excellent-ratings-by-country" class="section level1">
 <h1>Hotels of excellent ratings, by country</h1>
-<pre class="r"><code>##hotels with highest ratings
+<pre class="r blue"><code>##hotels with highest ratings
 ##choose all hotels &gt; 8/8.5/9
 hotel4&lt;-hotel3%&gt;%
   filter(average_score&gt;=9)%&gt;%
@@ -852,11 +853,11 @@ ggplot(hotel4,aes(x=reorder(country,count),y=count,fill=factor(is_best)))+
     labs(title = &quot;UK &amp; France dominate hotels with &gt;9 average rating&quot;, subtitle= &quot;Number of &gt;9 rating hotels in 6 selected countries&quot;, x=&quot;Country&quot;, y=&quot;No. of hotels with rating &gt;9&quot;, caption=&quot;Source: https://www.kaggle.com/ployyyywa/global-hotel-chain-presence&quot;)+
   scale_fill_manual(values=c(&quot;grey80&quot;,&quot;#2FABE1&quot;)) +
   coord_flip()</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-10-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-11-1.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
 <div id="proportion-of-top-5-reviewer-nationalities-per-country" class="section level1">
 <h1>Proportion of Top 5 Reviewer Nationalities per Country</h1>
-<pre class="r"><code>maggiehoteldata &lt;- hotel2 %&gt;% mutate(country=recode(
+<pre class="r blue"><code>maggiehoteldata &lt;- hotel2 %&gt;% mutate(country=recode(
   country, `Kingdom`= &quot;United Kingdom&quot;)) %&gt;%  # change Kingdom to United Kingdom to allow matching
   rename(hotelcountry = country)
 # UK
@@ -973,14 +974,14 @@ panel.grid.major.y = element_line(color = &quot;gray60&quot;, size = 0.1),
         legend.text=element_text(family=&quot;Montserrat&quot;, size=7))
  
 stackedbarplot</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-11-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-12-1.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
 <div id="region-and-subregion-reviers-background" class="section level1">
 <h1>Region and subregion reviers’ background</h1>
 <div id="creating-variables" class="section level2">
 <h2>Creating variables</h2>
-<pre class="r"><code>glimpse(hotel2)</code></pre>
-<pre><code>## Rows: 510,945
+<pre class="r blue"><code>glimpse(hotel2)</code></pre>
+<pre class="whiteb"><code>## Rows: 510,945
 ## Columns: 18
 ## $ hotel_address                              &lt;chr&gt; &quot;s Gravesandestraat 55 Oos…
 ## $ additional_number_of_scoring               &lt;dbl&gt; 194, 194, 194, 194, 194, 1…
@@ -1000,7 +1001,7 @@ stackedbarplot</code></pre>
 ## $ lat                                        &lt;dbl&gt; 52.4, 52.4, 52.4, 52.4, 52…
 ## $ lng                                        &lt;dbl&gt; 4.92, 4.92, 4.92, 4.92, 4.…
 ## $ country                                    &lt;chr&gt; &quot;Netherlands&quot;, &quot;Netherland…</code></pre>
-<pre class="r"><code>hotel_review_nationality&lt;- hotel2 %&gt;%  #merging main table with countries and continents of reviwers&#39; origin
+<pre class="r blue"><code>hotel_review_nationality&lt;- hotel2 %&gt;%  #merging main table with countries and continents of reviwers&#39; origin
   left_join(country_continent, by=c(&quot;reviewer_nationality&quot;=&quot;name&quot;)) %&gt;% 
   drop_na(reviewer_nationality, region)
 reviews_by_region&lt;- hotel_review_nationality  %&gt;% #creating summary for regions
@@ -1019,7 +1020,7 @@ reviews_by_subregion&lt;- hotel_review_nationality  %&gt;%  #creating summary fo
 </div>
 <div id="reviewers-origin-by-region" class="section level1">
 <h1>Reviewers’ origin by region</h1>
-<pre class="r"><code># pivoting regions
+<pre class="r blue"><code># pivoting regions
 reviews_by_region_pivot&lt;- reviews_by_region %&gt;% 
   pivot_longer(cols = 3:4, names_to= &quot;type_review&quot;, values_to= &quot;score&quot;, values_drop_na = TRUE) # pivoted dataframe
 reviews_by_region_pivot$type_review&lt;- reviews_by_region_pivot$type_review %&gt;%  factor(levels= c(&quot;avg_no_negative&quot;, &quot;avg_no_positive&quot;)) # creating avg no of positive &amp; negative words per region + average review score per region
@@ -1040,8 +1041,8 @@ my_colours_positive&lt;- c(&quot;#45B05F&quot;, &quot;tomato&quot;,&quot;#FFBAAD
 my_grob = grid.text(my_text1r, x=0.43,  y=0.83,gp=gpar(fontfamily=&quot;Montserrat&quot;,fontsize= 11, col=&quot;tomato&quot;, fontface=&quot;bold&quot;))
 my_grob2 = grid.text(my_text2r, x=0.54,  y=0.83,gp=gpar(fontfamily=&quot;Montserrat&quot;,fontsize= 11, col=&quot;#F1FFEB&quot;, fontface=2))
 my_grob3 = grid.text(my_text3r, x=0.68,  y=0.95,gp=gpar(fontfamily=&quot;Montserrat&quot;,fontsize= 8, col=&quot;black&quot;, fontface=2))</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-13-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>quartz()
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-14-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r blue"><code>quartz()
 # negative and positive
 plot_region_reviews&lt;-reviews_by_region_pivot %&gt;%
   ggplot(aes(x = reorder(region,avg_review), fill=is_extreme))+
@@ -1074,11 +1075,11 @@ plot_region_reviews&lt;-reviews_by_region_pivot %&gt;%
                 color = &quot;#45B05F&quot;, size=0.8)
 
 plot_region_reviews +annotation_custom(my_grob) + annotation_custom(my_grob2)+annotation_custom(my_grob3) </code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-13-2.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-14-2.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
 <div id="reviewers-origin-by-subregion" class="section level1">
 <h1>Reviewers’ origin by Subregion</h1>
-<pre class="r"><code>reviews_by_subregion_pivot&lt;- reviews_by_subregion %&gt;% 
+<pre class="r blue"><code>reviews_by_subregion_pivot&lt;- reviews_by_subregion %&gt;% 
   pivot_longer(cols = 4:5, names_to= &quot;type_review&quot;, values_to= &quot;score&quot;, values_drop_na = TRUE) # pivoted dataframe
 reviews_by_subregion_pivot$type_review&lt;- reviews_by_subregion_pivot$type_review %&gt;%  factor(levels= c(&quot;avg_no_negative&quot;, &quot;avg_no_positive&quot;)) # creating avg no of positive &amp; negative words per region + average review score per subregion
 reviews_by_subregion_pivot &lt;- reviews_by_subregion_pivot%&gt;%
@@ -1125,17 +1126,17 @@ plot_subregion_reviews &lt;-reviews_by_subregion_pivot %&gt;%
 my_grobs1 = grid.text(my_text1s, x=0.425,  y=0.85,gp=gpar(fontfamily=&quot;Montserrat&quot;,fontsize= 8, col=&quot;tomato&quot;, fontface=&quot;bold&quot;))
 my_grobs2 = grid.text(my_text2s, x=0.545,  y=0.85,gp=gpar(fontfamily=&quot;Montserrat&quot;,fontsize= 8, col=&quot;#3FA259&quot;, fontface=2))
 my_grobs3 = grid.text(my_text3s, x=0.77,  y=0.94,gp=gpar(fontfamily=&quot;Montserrat&quot;,fontsize= 9, col=&quot;black&quot;, fontface=2))</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-14-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code> plot_subregion_reviews + annotation_custom(my_grobs1) + annotation_custom(my_grobs2)+annotation_custom(my_grobs3)</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-14-2.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-15-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r blue"><code> plot_subregion_reviews + annotation_custom(my_grobs1) + annotation_custom(my_grobs2)+annotation_custom(my_grobs3)</code></pre>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-15-2.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
 <div id="creating-wordclouds-with-most-popular-positive-negative-words" class="section level1">
 <h1>Creating wordclouds with most popular positive/ negative words</h1>
 <div id="preparing-dataset" class="section level2">
 <h2>Preparing dataset</h2>
-<pre class="r"><code>hotelcloud&lt;-hotel2[!is.na(hotel2$positive_review), ]
+<pre class="r blue"><code>hotelcloud&lt;-hotel2[!is.na(hotel2$positive_review), ]
 hotelcloud&lt;-hotel2[!is.na(hotel2$negative_review), ]</code></pre>
-<pre class="r"><code>hotelcloud2&lt;-hotelcloud
+<pre class="r blue"><code>hotelcloud2&lt;-hotelcloud
 #clean reviews and select only those with useful information
 hotelcloud3&lt;-hotelcloud2 %&gt;% 
   filter(sapply(strsplit(positive_review, &quot; &quot;), length)&gt;3) %&gt;% 
@@ -1159,35 +1160,35 @@ DTM_pos &lt;- DocumentTermMatrix(review_pos, control = list(
             removePunctuation = TRUE,
             stripWhitespace = TRUE))
 dim(DTM_pos) </code></pre>
-<pre><code>## [1] 6000 5699</code></pre>
-<pre class="r"><code>DTM_neg &lt;- DocumentTermMatrix(review_neg, control = list(
+<pre class="whiteb"><code>## [1] 6000 5576</code></pre>
+<pre class="r blue"><code>DTM_neg &lt;- DocumentTermMatrix(review_neg, control = list(
             tolower = TRUE,
             removeNumbers = TRUE,
             stopwords = TRUE,
             removePunctuation = TRUE,
             stripWhitespace = TRUE))
 inspect(DTM_neg) </code></pre>
-<pre><code>## &lt;&lt;DocumentTermMatrix (documents: 6000, terms: 7526)&gt;&gt;
-## Non-/sparse entries: 73535/45082465
+<pre class="whiteb"><code>## &lt;&lt;DocumentTermMatrix (documents: 6000, terms: 7415)&gt;&gt;
+## Non-/sparse entries: 72264/44417736
 ## Sparsity           : 100%
 ## Maximal term length: 16
 ## Weighting          : term frequency (tf)
 ## Sample             :
 ##       Terms
-## Docs   bathroom bed bit breakfast didn little one rooms small staff
-##   167         0   3   0         0    0      0   3     0     1     5
-##   1863        0   8   1         0    0      0   4     3     0     0
-##   1879        0   0   0         0    3      0   0     2     0     2
-##   2767        2   0   0         5    0      0   4     0     1     1
-##   3083        0   0   1         0    0      0   0     0     0     0
-##   3106        0   1   0         0    0      0   2     0     0     3
-##   3503        0   0   0         0    1      0   0     1     0     6
-##   4324        0   0   0         0    0      0   1     0     0     1
-##   4344        0   1   3         0    2      1   1     0     0     2
-##   5125        1   0   0         0    0      0   0     0     0     0</code></pre>
-<pre class="r"><code>rm(review_neg,review_pos)</code></pre>
+## Docs   bathroom bit breakfast didn like little one rooms small staff
+##   1314        0   0         6    0    0      0   1     0     0     2
+##   1808        0   0         0    0    0      0   1     4     0     1
+##   2251        0   0         0    0    1      1   2     1     0     0
+##   3063        2   0         0    4    3      0   2     1     4     0
+##   4075        0   0         0    0    0      0   0     1     0     4
+##   4102        0   0         2    1    0      0   0     0     0     0
+##   4179        2   1         1    4    1      0   1     1     1     1
+##   5329        0   0         4    1    0      0   2     0     0     0
+##   5580        0   1         0    4    0      1   2     1     1     1
+##   5893        0   0         0    1    2      0   0     1     0     0</code></pre>
+<pre class="r blue"><code>rm(review_neg,review_pos)</code></pre>
 <p>##Positive wordcloud</p>
-<pre class="r"><code>##Positive wordcloud
+<pre class="r blue"><code>##Positive wordcloud
 #convert to tibble
 m &lt;- as.matrix(DTM_pos)
 DTM_tbl &lt;- as_tibble(m)
@@ -1199,17 +1200,17 @@ wordCountDoc_pos &lt;- DTM_pos_tidy %&gt;%
         summarise(total_pos = sum(wordCount)) %&gt;% 
         arrange(desc(total_pos)) 
 print(wordCountDoc_pos %&gt;% top_n(5))</code></pre>
-<pre><code>## # A tibble: 5 x 2
+<pre class="whiteb"><code>## # A tibble: 5 x 2
 ##   word      total_pos
 ##   &lt;chr&gt;         &lt;dbl&gt;
-## 1 staff          2512
-## 2 location       2454
-## 3 good           1763
-## 4 great          1403
-## 5 breakfast      1223</code></pre>
-<pre class="r"><code>#wordcloud
+## 1 staff          2607
+## 2 location       2476
+## 3 good           1753
+## 4 great          1415
+## 5 breakfast      1259</code></pre>
+<pre class="r blue"><code>#wordcloud
 colors()</code></pre>
-<pre><code>##   [1] &quot;white&quot;                &quot;aliceblue&quot;            &quot;antiquewhite&quot;        
+<pre class="whiteb"><code>##   [1] &quot;white&quot;                &quot;aliceblue&quot;            &quot;antiquewhite&quot;        
 ##   [4] &quot;antiquewhite1&quot;        &quot;antiquewhite2&quot;        &quot;antiquewhite3&quot;       
 ##   [7] &quot;antiquewhite4&quot;        &quot;aquamarine&quot;           &quot;aquamarine1&quot;         
 ##  [10] &quot;aquamarine2&quot;          &quot;aquamarine3&quot;          &quot;aquamarine4&quot;         
@@ -1428,7 +1429,7 @@ colors()</code></pre>
 ## [649] &quot;wheat3&quot;               &quot;wheat4&quot;               &quot;whitesmoke&quot;          
 ## [652] &quot;yellow&quot;               &quot;yellow1&quot;              &quot;yellow2&quot;             
 ## [655] &quot;yellow3&quot;              &quot;yellow4&quot;              &quot;yellowgreen&quot;</code></pre>
-<pre class="r"><code>library(wordcloud)
+<pre class="r blue"><code>library(wordcloud)
 library(wordcloud2)
 wordcloud(words = wordCountDoc_pos$word, 
           freq = wordCountDoc_pos$total_pos, 
@@ -1438,10 +1439,10 @@ wordcloud(words = wordCountDoc_pos$word,
           rot.per = 0.35,
           colors = c(&quot;#ccebc5&quot;, &quot;#7bccc4&quot;, &quot;#7fbf7b&quot;,&quot;#4eb3d3&quot;,&quot;#8c6bb1&quot;,&quot;#810f7c&quot;))+
   title(main = &quot;Most Frequent Words in Positive Reviews&quot;, col.main = &quot;#810f7c&quot;, size = 8, family=&quot;Montserrat&quot;, face = &quot;bold&quot;)</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-16-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre><code>## integer(0)</code></pre>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-17-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="whiteb"><code>## integer(0)</code></pre>
 <p>##Negatvie wordcloud</p>
-<pre class="r"><code>##Negatvie wordcloud
+<pre class="r blue"><code>##Negatvie wordcloud
 #convert to tibble
 m &lt;- as.matrix(DTM_neg)
 DTM_tbl &lt;- as_tibble(m)
@@ -1453,17 +1454,17 @@ wordCountDoc_neg &lt;- DTM_neg_tidy %&gt;%
         summarise(total_neg = sum(wordCount)) %&gt;% 
         arrange(desc(total_neg)) 
 print(wordCountDoc_neg %&gt;% top_n(5))</code></pre>
-<pre><code>## # A tibble: 5 x 2
+<pre class="whiteb"><code>## # A tibble: 5 x 2
 ##   word      total_neg
 ##   &lt;chr&gt;         &lt;dbl&gt;
-## 1 breakfast      1073
-## 2 small           778
-## 3 staff           673
-## 4 rooms           588
-## 5 bit             562</code></pre>
-<pre class="r"><code>#wordcloud
+## 1 breakfast      1079
+## 2 small           853
+## 3 staff           631
+## 4 rooms           592
+## 5 one             553</code></pre>
+<pre class="r blue"><code>#wordcloud
 colors()</code></pre>
-<pre><code>##   [1] &quot;white&quot;                &quot;aliceblue&quot;            &quot;antiquewhite&quot;        
+<pre class="whiteb"><code>##   [1] &quot;white&quot;                &quot;aliceblue&quot;            &quot;antiquewhite&quot;        
 ##   [4] &quot;antiquewhite1&quot;        &quot;antiquewhite2&quot;        &quot;antiquewhite3&quot;       
 ##   [7] &quot;antiquewhite4&quot;        &quot;aquamarine&quot;           &quot;aquamarine1&quot;         
 ##  [10] &quot;aquamarine2&quot;          &quot;aquamarine3&quot;          &quot;aquamarine4&quot;         
@@ -1682,7 +1683,7 @@ colors()</code></pre>
 ## [649] &quot;wheat3&quot;               &quot;wheat4&quot;               &quot;whitesmoke&quot;          
 ## [652] &quot;yellow&quot;               &quot;yellow1&quot;              &quot;yellow2&quot;             
 ## [655] &quot;yellow3&quot;              &quot;yellow4&quot;              &quot;yellowgreen&quot;</code></pre>
-<pre class="r"><code>wordcloud(words = wordCountDoc_neg$word, 
+<pre class="r blue"><code>wordcloud(words = wordCountDoc_neg$word, 
           freq = wordCountDoc_neg$total_neg, 
           max.words = 150,
           min.freq = 140,
@@ -1691,13 +1692,13 @@ colors()</code></pre>
           rot.per = 0.35,
           colors = c(&quot;#ccebc5&quot;, &quot;#7bccc4&quot;, &quot;#7fbf7b&quot;,&quot;#4eb3d3&quot;,&quot;#8c6bb1&quot;,&quot;#810f7c&quot;))+
     title(main = &quot;Most Frequent Words in Negative Reviews&quot;, col.main = &quot;#810f7c&quot;, size = 8, family=&quot;Montserrat&quot;, face = &quot;bold&quot;)</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-17-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre><code>## integer(0)</code></pre>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-18-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="whiteb"><code>## integer(0)</code></pre>
 </div>
 </div>
 <div id="hotel-reviewed-by-highest-number-of-alleged-bots" class="section level1">
 <h1>Hotel reviewed by highest number of alleged bots</h1>
-<pre class="r"><code>bots_by_hotel&lt;-duplicates%&gt;% 
+<pre class="r blue"><code>bots_by_hotel&lt;-duplicates%&gt;% 
   group_by(hotel_name)%&gt;%
   summarise(count=n())%&gt;%
   mutate(is_culprit=ifelse(hotel_name==&quot;H tel Concorde Montparnasse&quot;,1,0))%&gt;% #for graph fill aesthetic
@@ -1726,11 +1727,11 @@ theme_minimal() + #put simple theme to emnphasise the graphs
   scale_y_continuous()+
   scale_fill_manual(values = c(&quot;grey80&quot;, &quot;#2FABE1&quot;))+ #specifying the colours
    geom_label(aes(label=count))</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-18-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-19-1.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
 <div id="meaningless-reviews-vs-meaningful-reviews" class="section level1">
 <h1>Meaningless reviews vs meaningful reviews</h1>
-<pre class="r"><code>#popularity of bots
+<pre class="r blue"><code>#popularity of bots
 bots_by_popularity&lt;-duplicates%&gt;%
   mutate(negative_review_renew=ifelse(negative_review==&quot;No Negative&quot;|negative_review==&quot;Nothing&quot;|negative_review==&quot;nothing&quot;|negative_review==&quot;Everything&quot;,&quot;Meaningless review&quot;,&quot;Meaningful review&quot;))%&gt;% #define meaningless review and meaningful review for visualisation
   group_by(negative_review_renew)%&gt;%
@@ -1763,9 +1764,9 @@ theme_minimal() +
 bots_graph
 my_text1r &lt;- &quot;No Negative, \nNothing, \nnothing, &amp; \nEverything&quot;
 my_grobr1 = grid.text(my_text1r, x=0.57,  y=0.82,gp=gpar(fontfamily=&quot;Montserrat&quot;,fontsize= 12, col=&quot;#2FABE1&quot;, fontface=&quot;bold&quot;))</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-19-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code> bots_graph + annotation_custom(my_grobr1) </code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-19-2.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-20-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r blue"><code> bots_graph + annotation_custom(my_grobr1) </code></pre>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-20-2.png" width="648" style="display: block; margin: auto;" /></p>
 <p>Thank you!
 Group members: Malay Memani, Derek Leung, Samy Mohamad, Yichun Hou, Agnieszka Prawda, Magdalena Cloppenburg</p>
 </div>
