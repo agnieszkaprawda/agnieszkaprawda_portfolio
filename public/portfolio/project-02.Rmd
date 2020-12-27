@@ -13,9 +13,17 @@ type: portfolio
 .pink { background-color:#fae6e6 ; 
     border-radius: 5px; 
   padding: 20px; color: #000000;}
+
+.blue { background-color:#DFF5F6 ; 
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
     
+.whitep { background-color:#fffafa ;
+    border: 3px gray;
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
     
-.white { background-color:#fffafa ;
+.whiteb { background-color:#f7ffff ;
     border: 3px gray;
     border-radius: 5px; 
   padding: 20px; color: #000000;}
@@ -41,7 +49,7 @@ knitr::opts_chunk$set(
 knitr::opts_chunk$set(class.source = "pink")
 
 
-knitr::opts_chunk$set(class.output = "white")
+knitr::opts_chunk$set(class.output = "whitep")
 ```
 
 
@@ -69,7 +77,7 @@ showtext_auto()
 ```
 
 
-# Omega Group Plc- Pay Discrimination
+### Omega Group Plc- Pay Discrimination
 
  
 
@@ -81,7 +89,6 @@ In this project I will carry out the analysis with the objective to find out whe
 ```{r load_omega_data}
 omega <- omega <- read_csv("~/Documents/Applied Statistics in R/homeworks/data/omega.csv")
 ```
-
 
 
 ```{r}
@@ -152,7 +159,7 @@ ggplot(omega,aes(x=experience,y=salary, colour= gender,fill=gender)) +
 
 
 
-I can observe a strong relationship between salary and experience. Increase in salary comes quickly at the beginning and throughout the first ~15 years, however the gains in salary become slower later over time, displaying diminishing marginal returns.
+I can observe a strong relationship between `salary and experience`. Increase in salary comes quickly at the beginning and throughout the first ~15 years, however the gains in salary become slower later over time, displaying diminishing marginal returns.
 
 I will further investigate the difference between salaries by gender through hypothesis testing, utilizing both t.test() and the simulation method from the infer package.
 
@@ -201,9 +208,9 @@ p_value_by_gender
 
 Looking at the graph the x axis ends at 10,000 dollars. The difference in the mean values of the gender salaries is 8,696 dollars. I can see that this results in a p-value close enough to zero, so I can conclude that at a 5% significance level there is a meaningful difference between the mean salaries of men and women.
 
-## Relationship Experience - Gender?
+### Relationship Experience - Gender?
 
-At the board meeting, someone raised the issue that there was indeed a substantial difference between male and female salaries, but that this was attributable to other reasons such as differences in experience. A questionnaire send out to the 50 executives in the sample reveals that the average experience of the men is approximately 21 years, whereas the women only have about 7 years experience on average (see table below).
+At the board meeting, someone raised the issue that there was indeed a substantial difference between male and female salaries, but that this was attributable to other reasons such as `differences in experience`. A questionnaire send out to the 50 executives in the sample reveals that the average experience of the men is approximately 21 years, whereas the women only have about 7 years experience on average (see table below).
 
 ```{r, experience_stats}
 # Summary Statistics of salary by gender
@@ -270,7 +277,7 @@ p_value_exp_gender
 
 The person who raised the issue at the board meeting was correct in assuming that there is a statistically significant difference between the mean levels of experience for males and females in the company.
 
-## Relationship Salary - Experience ?
+### Relationship Salary - Experience ?
 
 Someone at the meeting argues that clearly, a more thorough analysis of the relationship between salary and experience is required before any conclusion can be drawn about whether there is any gender-based salary discrimination in the company.
 
@@ -304,7 +311,7 @@ I will now analyse the relationship between salary and experience & draw a scatt
 
 As my analysis above shows, there is a significant positive relationship between years of experience and salary. I can also see what was confirmed in the previous section, that women have significantly less experience than men, with a cut off point displayed above at around 30 years. This gives an alternative reasoning besides discrimination regarding the pay gap, as more years of experience are a valuable asset that is accordingly financially rewarded with a greater salary.
 
-## Check correlations between the data
+### Check correlations between the data
 
 I will use `GGally:ggpairs()` to create a scatterplot and correlation matrix. Essentially, I change the order our variables will appear in and have the dependent variable (Y), salary, as last in our list. I will then pipe the dataframe to `ggpairs()` with `aes` arguments to colour by `gender` and make ths plots somewhat transparent (`alpha  = 0.3`).
 
