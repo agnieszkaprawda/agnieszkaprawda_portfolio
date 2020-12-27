@@ -76,3 +76,162 @@ DF
 glimpse(df)
 
 ```
+## First Graph
+
+```{r}
+library(showtext)
+font_add_google("Montserrat", "Montserrat") #downloading fonts from Google
+showtext_auto()
+
+
+df_race<- df_clean %>%  #only two genders
+  filter(gender!="Other")
+df_race<- df_race %>% 
+  group_by(officer_defined_ethnicity) %>% 
+  summarise(count = n())
+df_race<- df_race %>% 
+  mutate(percent_race=count/sum(count))
+
+
+my_colours <- c("grey70", "tomato")
+df1<- df_race %>% 
+mutate(
+    was_white = ifelse(officer_defined_ethnicity == "White", TRUE, FALSE))
+
+
+ggplot(df1, aes(x=officer_defined_ethnicity, y=percent_race, fill=was_white)) +
+    geom_bar(stat="identity", alpha=0.7)+
+theme_classic() +
+  theme(panel.grid.major.y = element_line(color = "gray60", size = 0.1),
+        panel.background = element_rect(fill = "white", colour = "white"),
+        axis.line = element_line(size = 1, colour = "grey80"),
+        axis.ticks = element_line(size = 3,colour = "grey80"),
+        axis.ticks.length = unit(.20, "cm"),
+        plot.title = element_text(color = "tomato",size=15,face="bold", family= "Montserrat"),
+        plot.subtitle = element_text(color = "tomato", face="plain", ,size= 10,family= "Montserrat"),
+        plot.caption = element_text(color = "grey40", face="italic", ,size= 7,family= "Montserrat",hjust=0),
+        axis.title.y = element_text(size = 8, angle = 90, family="Montserrat", face = "plain"),
+        axis.text.y=element_text(family="Montserrat", size=7),
+        axis.title.x = element_text(size = 8, family="Montserrat", face = "plain"),
+        axis.text.x=element_text(family="Montserrat", size=7),
+        legend.text=element_text(family="Montserrat", size=7),
+        legend.title=element_text(family="Montserrat", size=8, face="bold"),
+        legend.position = "none")+
+    labs(title = " White people accounted to 41.9% of all the cases", subtitle= "Proportion of Stop & Searches by Ethnicity ", x="Officer defined ethnicity", y=" Percent", caption="Source:  https://data.police.uk/data/") +
+  scale_y_continuous(labels = scales::percent)+
+  scale_fill_manual(values = my_colours)
+   
+
+```
+
+
+
+
+## Second Graph
+```{r}
+
+df_gender <-df_clean %>% 
+  filter(gender!="Other") %>% 
+  group_by(outcome,gender) %>% 
+  summarise(count=n(),
+            total_percent = ( count/15149)) %>% 
+mutate(result = case_when(
+    outcome %in% c("A no further action disposal") ~ "No futher action",
+    outcome %in% c("Arrest") ~ "Arrest",
+    outcome %in% c("Caution (simple or conditional)") ~ "Caution",
+    outcome %in% c("Community resolution") ~ "Community",
+    outcome %in% c("Penalty Notice for Disorder") ~ "Penalty",
+    TRUE ~ "Summons"
+    ),
+    was_female= ifelse(gender== "Female", TRUE, FALSE),
+    percent_female=(count/sum(count)))
+
+df_gender<- df_gender %>% 
+mutate(percent_female= ifelse(gender== "Female",percent_female,NA))
+
+
+ggplot(df_gender, aes(x=total_percent, y=reorder(result,total_percent), fill=was_female)) +
+    geom_bar(stat="identity", alpha=0.7)+
+theme_classic() +
+  theme(panel.grid.major.y = element_line(color = "gray60", size = 0.1),
+        panel.background = element_rect(fill = "white", colour = "white"),
+        axis.line = element_line(size = 1, colour = "grey80"),
+        axis.ticks = element_line(size = 3,colour = "grey80"),
+        axis.ticks.length = unit(.20, "cm"),
+        plot.title = element_text(color = "tomato",size=9.5,face="bold", family= "Montserrat"),
+        plot.subtitle = element_text(color = "tomato", face="plain", ,size= 9,family= "Montserrat"),
+        plot.caption = element_text(color = "grey40", face="italic", ,size= 7,family= "Montserrat",hjust=0),
+        axis.title.y = element_text(size = 8, angle = 90, family="Montserrat", face = "plain"),
+        axis.text.y=element_text(family="Montserrat", size=7),
+        axis.title.x = element_text(size = 8, family="Montserrat", face = "plain"),
+        axis.text.x=element_text(family="Montserrat", size=7),
+        legend.text=element_text(family="Montserrat", size=7),
+        legend.title=element_text(family="Montserrat", size=8, face="bold"))+
+    labs(title = "Women comprised the biggest percentage in S&S actions resulting with Community resolution", subtitle= " Proportion of Stop & Searches by Gender and Result", x="Percent", y="Result",fill= "Gender",caption="Source:  https://data.police.uk/data/") +
+  scale_x_continuous(labels = scales::percent)+
+  scale_fill_manual(values = my_colours, labels = c( "Male", "Female")) +
+  geom_text(
+    aes(label = round(percent_female,3)*100, x = round(percent_female,3)/2), 
+    color = "tomato",
+    size = 4,
+    hjust = 0.5) 
+```
+
+
+## Third Graph
+```{r}
+df3<- df_clean %>% 
+  group_by(age_range,gender,object_of_search) %>% 
+  summarise(count = n())
+
+df3$age_range <- df3$age_range %>% factor(levels= c("under 10", "10-17", "18-24", "25-34", "over 34")) 
+  
+df3<- df3 %>% 
+  filter(age_range!="under 10") %>% 
+  mutate(percent_race=count/sum(count))
+df3<- df3 %>% 
+ mutate(percentageoftotal = (count/15144),
+object_of_search=as.factor(object_of_search)) %>% 
+  mutate(object = case_when(
+    object_of_search %in% c("Anything to threaten or harm anyone","Firearms","Offensive weapons") ~ "Objects to threaten or harm",
+    object_of_search %in% c("Articles for use in criminal damage") ~ "Objects for use in criminal damage",
+    object_of_search %in% c("Controlled drugs") ~ "Controlled drugs",
+    object_of_search %in% c("Evidence of offences under the Act") ~ "Evidence of offences under the Act",
+    object_of_search %in% c("Stolen goods") ~ "Stolen goods",
+    object_of_search %in% c("Fireworks") ~ "Fireworks",
+    TRUE ~ "Not Stated"
+  ))
+
+
+colours_age <- c("#D3C54D","#B4D63E","#54B4BD","#1D445F", "#14848F","#FDAF49", "#C17716", "#F58723")
+
+ggplot(df3, aes(x=age_range, 
+                       y = percentageoftotal, 
+                                  fill = object_of_search)) + 
+  geom_bar(stat = "identity", width=0.7, position="stack") + theme_classic() +
+  theme(panel.grid.major.y = element_line(color = "gray60", size = 0.1),
+        panel.background = element_rect(fill = "white", colour = "white"),
+        axis.line = element_line(size = 1, colour = "grey80"),
+        axis.ticks = element_line(size = 3,colour = "grey80"),
+        axis.ticks.length = unit(.20, "cm"),
+        plot.title = element_text(color = "grey20",size=9.5,face="bold", family= "Montserrat"),
+        plot.subtitle = element_text(color = "grey20", face="plain", ,size= 9,family= "Montserrat"),
+        plot.caption = element_text(color = "grey40", face="italic", ,size= 7,family= "Montserrat",hjust=0),
+        axis.title.y = element_text(size = 8, angle = 90, family="Montserrat", face = "plain"),
+        axis.text.y=element_text(family="Montserrat", size=7),
+        axis.title.x = element_text(size = 8, family="Montserrat", face = "plain"),
+        axis.text.x=element_text(family="Montserrat", size=7),
+        legend.text=element_text(family="Montserrat", size=7),
+        legend.title=element_text(family="Montserrat", size=8, face="bold"))+
+    labs(title = "Across all the age groups, controlled drugs was the main reason of search", subtitle= "Proportion of Stop & Searches by age and object of search", x="Officer defined ethnicity", y="Percent",fill= "Object of search",caption="Source:  https://data.police.uk/data/") +
+  scale_y_continuous(labels = scales::percent)+
+  scale_fill_manual(values= colours_age)
+  
+
+```
+
+```{r, include=FALSE}
+knitr::knit_exit()
+```
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
