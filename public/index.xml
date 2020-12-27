@@ -120,7 +120,7 @@ library(ggplot2) library(janitor) library(tidyverse) library(caret) library(lubr
       <pubDate>Fri, 25 Sep 2020 15:58:10 +0600</pubDate>
       
       <guid>/portfolio/project-04/</guid>
-      <description>Airbnb is a prime example of a disruptive innovation, that is now one of the largest marketplaces for accomodation with over 7 million properties in more than 220 countries.</description>
+      <description>.pink { background-color:#fae6e6 ; border-radius: 5px; padding: 20px; color: #000000;} .blue { background-color:#DFF5F6 ; border-radius: 5px; padding: 20px; color: #000000;} .</description>
     </item>
     
     <item>
