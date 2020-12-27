@@ -6,112 +6,137 @@
     <description>Recent content on Agnieszka Prawda - Portfolio</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 24 Dec 2019 13:45:06 +0600</lastBuildDate>
+    <lastBuildDate>Tue, 15 Dec 2020 15:58:10 +0600</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Design Inspiration: The Best Projects From December</title>
-      <link>/blog/design-inspiration-the-best-projects-from-december/</link>
-      <pubDate>Tue, 24 Dec 2019 13:45:06 +0600</pubDate>
+      <title>Cars clustering using dimension reduction methods - PCA and LDA</title>
+      <link>/portfolio/project-08/</link>
+      <pubDate>Tue, 15 Dec 2020 15:58:10 +0600</pubDate>
       
-      <guid>/blog/design-inspiration-the-best-projects-from-december/</guid>
-      <description>Black Lines brand identity, by &amp;amp; Smith Black Lines wants it to be as easy to serve a Negroni as it is a pint of lager.</description>
+      <guid>/portfolio/project-08/</guid>
+      <description>#install.packages(&amp;quot;remotes&amp;quot;) #remotes::install_github(&amp;quot;vqv/ggbiplot&amp;quot;, force = TRUE) library(ggplot2) library(ggbiplot) #remotes::install_github(&amp;quot;kassambara/factoextra&amp;quot;) library(factoextra) library(tidyverse) library(ggbiplot) library(reshape2) library(MASS) library(rsample) library(dplyr) library(stats) QUESTION 1: PRINCIPAL COMPONENT ANALYSIS You are going to analyse a D = 11 data set called ‘mtcars’ which comes with R distribution.</description>
     </item>
     
     <item>
-      <title>The 10 Biggest Rebrands and Logo Designs of 2019</title>
-      <link>/blog/the-10-biggest-rebrands-and-logo-designs-of-2019/</link>
-      <pubDate>Tue, 24 Dec 2019 13:40:00 +0600</pubDate>
+      <title>Predicting Survival of Titanic Passengers in Python</title>
+      <link>/portfolio/project-09/</link>
+      <pubDate>Sun, 13 Dec 2020 15:44:46 +0600</pubDate>
       
-      <guid>/blog/the-10-biggest-rebrands-and-logo-designs-of-2019/</guid>
-      <description>Black Lines brand identity, by &amp;amp; Smith Black Lines wants it to be as easy to serve a Negroni as it is a pint of lager.</description>
+      <guid>/portfolio/project-09/</guid>
+      <description>IMPORT LIBRARIES import numpy as np import pandas as pd import matplotlib.pyplot as plt import random
+from sklearn.preprocessing import LabelEncoder from sklearn.neural_network import MLPClassifier # Multilayer Perceptron from sklearn.</description>
+    </item>
+    
+    <item>
+      <title>Estimation Engine for London House Prices</title>
+      <link>/portfolio/project-10/</link>
+      <pubDate>Thu, 10 Dec 2020 15:58:10 +0600</pubDate>
+      
+      <guid>/portfolio/project-10/</guid>
+      <description>div.navy1 { background-color:#686868; border-radius: 5px; padding: 20px; border-style: groove; color: #ffffff;}  Introduction and learning objectives The purpose of this exercise is to build an estimation engine to guide investment decisions in London house market.</description>
+    </item>
+    
+    <item>
+      <title>Building Recommendation Systems for BBC iPlayer users</title>
+      <link>/portfolio/project-07/</link>
+      <pubDate>Wed, 02 Dec 2020 15:58:10 +0600</pubDate>
+      
+      <guid>/portfolio/project-07/</guid>
+      <description>body { text-align: justify}   img { border-radius: 15px; }
+ div.grey { background-color:#808080; border-radius: 5px; padding: 20px; border-style: groove;}   div.</description>
+    </item>
+    
+    <item>
+      <title>Oxford Hack 2020 - Meetable MVP</title>
+      <link>/blog/design-inspiration-the-best-projects-from-december/</link>
+      <pubDate>Mon, 23 Nov 2020 13:45:06 +0600</pubDate>
+      
+      <guid>/blog/design-inspiration-the-best-projects-from-december/</guid>
+      <description>Oxford Hack 2020 - Meetable What is Meetable? Meetable is an app that enables you to find friends during the lockdown. It matches you with a small group of other students from your university every week and sets weekly challenges for you basing on your common interests.</description>
+    </item>
+    
+    <item>
+      <title>Clustering BBC iPlayer users using K means, PAM and H-Clustering  methods</title>
+      <link>/portfolio/project-06/</link>
+      <pubDate>Sun, 15 Nov 2020 15:58:10 +0600</pubDate>
+      
+      <guid>/portfolio/project-06/</guid>
+      <description>body { text-align: justify}   img { border-radius: 15px; }
+ div.grey { background-color:#808080; border-radius: 5px; padding: 20px; border-style: groove;}   div.</description>
+    </item>
+    
+    <item>
+      <title>Stop &amp; Search Police Data Visualisation</title>
+      <link>/portfolio/project-11/</link>
+      <pubDate>Wed, 11 Nov 2020 15:58:10 +0600</pubDate>
+      
+      <guid>/portfolio/project-11/</guid>
+      <description>R Markdown Kick Off This is a Problem Set 1 document created by Agnieszka Prawda. It includes data on thw worst possible grpah and graphs on the “Seek and Search” Problem.</description>
+    </item>
+    
+    <item>
+      <title>Interest rate analysis in R using logistic models</title>
+      <link>/portfolio/project-05/</link>
+      <pubDate>Tue, 27 Oct 2020 15:58:10 +0600</pubDate>
+      
+      <guid>/portfolio/project-05/</guid>
+      <description>Introduction Welcome to the second workshop. We will continue working with the lending club data. In this workshop we will take the perspective of an investor to the lending club.</description>
+    </item>
+    
+    <item>
+      <title>Predicting interest rates using K-fold CV,LASSO &amp; OLS regression</title>
+      <link>/portfolio/project-01/</link>
+      <pubDate>Sun, 11 Oct 2020 15:58:10 +0600</pubDate>
+      
+      <guid>/portfolio/project-01/</guid>
+      <description>In this piece I will analyse the data on interest rates in the Lendign Club. First I will conduct the ICE of the data together with visualisation of the variables disributions and correlations for better understanding.</description>
+    </item>
+    
+    <item>
+      <title>Predicting Prices for Munich Airbnb</title>
+      <link>/portfolio/project-04/</link>
+      <pubDate>Fri, 25 Sep 2020 15:58:10 +0600</pubDate>
+      
+      <guid>/portfolio/project-04/</guid>
+      <description>Airbnb is a prime example of a disruptive innovation, that is now one of the largest marketplaces for accomodation with over 7 million properties in more than 220 countries.</description>
+    </item>
+    
+    <item>
+      <title>Gapminder Data Analisys - Data &amp; Correlation Analysis</title>
+      <link>/portfolio/project-03/</link>
+      <pubDate>Sat, 19 Sep 2020 15:58:10 +0600</pubDate>
+      
+      <guid>/portfolio/project-03/</guid>
+      <description>Gapminder data The Gapminder data is know worldwide thanks to Hans Rosling and his webstie data in Gapminder World. The data downloaded from the website was cut into the data frame that contains just six columns from the larger .</description>
+    </item>
+    
+    <item>
+      <title>Gender Pay Discrimination - Statistical Hypothesis Testing</title>
+      <link>/portfolio/project-02/</link>
+      <pubDate>Thu, 17 Sep 2020 15:58:10 +0600</pubDate>
+      
+      <guid>/portfolio/project-02/</guid>
+      <description>Omega Group plc- Pay Discrimination At the last board meeting of Omega Group Plc., the headquarters of a large multinational company, the issue was raised that women were being discriminated in the company, in the sense that the salaries were not the same for male and female executives.</description>
     </item>
     
     <item>
       <title>Design Inspiration: The Best Projects From November</title>
-      <link>/blog/design-inspiration-the-best-projects-from-november/</link>
+      <link>/design-inspiration-the-best-projects-from-november/</link>
       <pubDate>Tue, 24 Dec 2019 13:36:06 +0600</pubDate>
       
-      <guid>/blog/design-inspiration-the-best-projects-from-november/</guid>
+      <guid>/design-inspiration-the-best-projects-from-november/</guid>
       <description>Black Lines brand identity, by &amp;amp; Smith Black Lines wants it to be as easy to serve a Negroni as it is a pint of lager.</description>
-    </item>
-    
-    <item>
-      <title>Pt Chooses Classic Blue for Its Colour of the Year 2020</title>
-      <link>/blog/pt-chooses-classic-blue-for-its-colour-of-the-year-2020/</link>
-      <pubDate>Tue, 24 Dec 2019 13:32:54 +0600</pubDate>
-      
-      <guid>/blog/pt-chooses-classic-blue-for-its-colour-of-the-year-2020/</guid>
-      <description>Black Lines brand identity, by &amp;amp; Smith Black Lines wants it to be as easy to serve a Negroni as it is a pint of lager.</description>
-    </item>
-    
-    <item>
-      <title>The 10 Biggest Product Stories of 2019</title>
-      <link>/blog/the-10-biggest-product-stories-of-2019/</link>
-      <pubDate>Tue, 24 Dec 2019 12:58:17 +0600</pubDate>
-      
-      <guid>/blog/the-10-biggest-product-stories-of-2019/</guid>
-      <description>Black Lines brand identity, by &amp;amp; Smith Black Lines wants it to be as easy to serve a Negroni as it is a pint of lager.</description>
-    </item>
-    
-    <item>
-      <title>KIO-TAPE BRAND</title>
-      <link>/portfolio/kio-tape-2/</link>
-      <pubDate>Mon, 23 Dec 2019 20:56:42 +0600</pubDate>
-      
-      <guid>/portfolio/kio-tape-2/</guid>
-      <description>The “Seamless Watch” watch has all the features that users expect in a digital watch, and some unusual features.
-The watch has the following features:</description>
-    </item>
-    
-    <item>
-      <title>USE-LESS BRAND</title>
-      <link>/portfolio/use-less-brand/</link>
-      <pubDate>Mon, 23 Dec 2019 15:58:10 +0600</pubDate>
-      
-      <guid>/portfolio/use-less-brand/</guid>
-      <description>The “Seamless Watch” watch has all the features that users expect in a digital watch, and some unusual features.
-The watch has the following features:</description>
-    </item>
-    
-    <item>
-      <title>OSEN CLOCK</title>
-      <link>/portfolio/osen-clock/</link>
-      <pubDate>Mon, 23 Dec 2019 15:56:43 +0600</pubDate>
-      
-      <guid>/portfolio/osen-clock/</guid>
-      <description>The “Seamless Watch” watch has all the features that users expect in a digital watch, and some unusual features.
-The watch has the following features:</description>
-    </item>
-    
-    <item>
-      <title>SEAMLESS WATCH</title>
-      <link>/portfolio/seamless-watch/</link>
-      <pubDate>Mon, 23 Dec 2019 15:55:44 +0600</pubDate>
-      
-      <guid>/portfolio/seamless-watch/</guid>
-      <description>The “Seamless Watch” watch has all the features that users expect in a digital watch, and some unusual features.
-The watch has the following features:</description>
-    </item>
-    
-    <item>
-      <title>KIO TAPE</title>
-      <link>/portfolio/kio-tape/</link>
-      <pubDate>Mon, 23 Dec 2019 15:44:46 +0600</pubDate>
-      
-      <guid>/portfolio/kio-tape/</guid>
-      <description>The “Seamless Watch” watch has all the features that users expect in a digital watch, and some unusual features.
-The watch has the following features:</description>
     </item>
     
     <item>
       <title>Hello R Markdown</title>
-      <link>/blog/2015-07-23-r-rmarkdown/</link>
+      <link>/2015-07-23-r-rmarkdown/</link>
       <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
       
-      <guid>/blog/2015-07-23-r-rmarkdown/</guid>
+      <guid>/2015-07-23-r-rmarkdown/</guid>
       <description>R Markdown This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.</description>
     </item>
     

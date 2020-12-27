@@ -1,0 +1,60 @@
+---
+category:
+- Data Visualisation
+date: "2020-11-11T15:58:10+06:00"
+image: images/projects/stopnsearch1.jpg
+project_images:
+title: Stop & Search Police Data Visualisation
+type: portfolio
+---
+
+
+
+<div id="r-markdown-kick-off" class="section level1">
+<h1>R Markdown Kick Off</h1>
+<p>This is a Problem Set 1 document created by Agnieszka Prawda. It includes data on thw worst possible grpah and graphs on the “Seek and Search” Problem. Enjoy!:)</p>
+</div>
+<div id="stop-and-search-plots" class="section level1">
+<h1>Stop and Search plots</h1>
+<blockquote>
+<p>In this exercise I will create 3 graphs using the “Stop and Search” dataset</p>
+</blockquote>
+<div id="loading-data" class="section level2">
+<h2>Loading Data</h2>
+<pre class="r"><code>df&lt;- read.csv(&quot;~/Documents/LBS/Data_Visualisation/01/2020-09/2020-09-metropolitan-stop-and-search.csv&quot;,na.strings=&quot;&quot;) #loading the file
+
+df&lt;- df %&gt;% 
+  clean_names() %&gt;% 
+  dplyr::select(1:3,5:13)
+
+
+df_clean&lt;- df %&gt;%  na.omit()
+
+#describe(df_clean)
+
+
+df_clean&lt;- df_clean %&gt;% mutate(gender=as.factor(gender), age_range= as.factor(age_range),  officer_defined_ethnicity = as.factor( officer_defined_ethnicity))
+
+df_clean$officer_defined_ethnicity &lt;- df_clean$officer_defined_ethnicity %&gt;% factor(levels= c(&quot;White&quot;, &quot;Black&quot;, &quot;Asian&quot;, &quot;Other&quot;))
+DF &lt;- table(df_clean$officer_defined_ethnicity)
+DF</code></pre>
+<pre><code>## 
+## White Black Asian Other 
+##  6348  5331  2759   711</code></pre>
+<pre class="r"><code>glimpse(df)</code></pre>
+<pre><code>## Rows: 19,928
+## Columns: 12
+## $ type                         &lt;chr&gt; &quot;Person and Vehicle search&quot;, &quot;Person sea…
+## $ date                         &lt;chr&gt; &quot;2020-08-31T23:00:00+00:00&quot;, &quot;2020-08-31…
+## $ part_of_a_policing_operation &lt;chr&gt; &quot;False&quot;, &quot;False&quot;, &quot;False&quot;, &quot;False&quot;, &quot;Fal…
+## $ latitude                     &lt;dbl&gt; 51.6, 51.4, 51.5, NA, NA, NA, 51.5, 51.4…
+## $ longitude                    &lt;dbl&gt; 0.2153, -0.2253, 0.0443, NA, NA, NA, -0.…
+## $ gender                       &lt;chr&gt; &quot;Female&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;Male&quot;…
+## $ age_range                    &lt;chr&gt; &quot;18-24&quot;, &quot;18-24&quot;, &quot;over 34&quot;, NA, &quot;18-24&quot;…
+## $ self_defined_ethnicity       &lt;chr&gt; &quot;White - English/Welsh/Scottish/Northern…
+## $ officer_defined_ethnicity    &lt;chr&gt; &quot;White&quot;, &quot;White&quot;, &quot;White&quot;, &quot;Black&quot;, &quot;Bla…
+## $ legislation                  &lt;chr&gt; &quot;Misuse of Drugs Act 1971 (section 23)&quot;,…
+## $ object_of_search             &lt;chr&gt; &quot;Controlled drugs&quot;, &quot;Evidence of offence…
+## $ outcome                      &lt;chr&gt; &quot;A no further action disposal&quot;, &quot;A no fu…</code></pre>
+</div>
+</div>
