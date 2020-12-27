@@ -101,6 +101,28 @@
             
 
 
+<style type="text/css">
+
+.pink { background-color:#fae6e6 ; 
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+
+.blue { background-color:#DFF5F6 ; 
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+    
+.whitep { background-color:#fffafa ;
+    border: 3px gray;
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+    
+.whiteb { background-color:#f7ffff ;
+    border: 3px gray;
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+
+    
+</style>
 <div id="lets-begin" class="section level1">
 <h1>Let’s begin</h1>
 <p>Hello, my name is Agnieszka, I am going to visualise three data visualisations basing on the Stop &amp; Search dataset. You can find more on the topic here:
@@ -441,14 +463,14 @@
 </tr>
 </tbody>
 </table>
-<pre><code>## # A tibble: 4 x 2
+<pre class="whiteb"><code>## # A tibble: 4 x 2
 ##   gender      n
 ##   &lt;chr&gt;   &lt;int&gt;
 ## 1 Male   636838
 ## 2 Female  45848
 ## 3 &lt;NA&gt;     9160
 ## 4 Other     385</code></pre>
-<pre><code>## # A tibble: 9 x 2
+<pre class="whiteb"><code>## # A tibble: 9 x 2
 ##   object_of_search                         n
 ##   &lt;chr&gt;                                &lt;int&gt;
 ## 1 Controlled drugs                    418103
@@ -460,7 +482,7 @@
 ## 7 Firearms                              4583
 ## 8 &lt;NA&gt;                                  1800
 ## 9 Fireworks                             1721</code></pre>
-<pre><code>## # A tibble: 5 x 2
+<pre class="whiteb"><code>## # A tibble: 5 x 2
 ##   officer_defined_ethnicity      n
 ##   &lt;chr&gt;                      &lt;int&gt;
 ## 1 Black                     274058
@@ -468,7 +490,7 @@
 ## 3 Asian                     118568
 ## 4 Other                      28232
 ## 5 &lt;NA&gt;                       13594</code></pre>
-<pre><code>## # A tibble: 6 x 2
+<pre class="whiteb"><code>## # A tibble: 6 x 2
 ##   age_range      n
 ##   &lt;chr&gt;      &lt;int&gt;
 ## 1 10-17     116893
@@ -477,19 +499,19 @@
 ## 4 over 34   104597
 ## 5 under 10     126
 ## 6 &lt;NA&gt;       90885</code></pre>
-<pre><code>## Geometry set for 133784 features 
+<pre class="whiteb"><code>## Geometry set for 133784 features 
 ## geometry type:  POINT
 ## dimension:      XY
 ## bbox:           xmin: -0.896 ymin: 51.3 xmax: 0.302 ymax: 51.7
 ## geographic CRS: WGS 84
 ## First 5 geometries:</code></pre>
-<pre><code>## Geometry set for 657 features 
+<pre class="whiteb"><code>## Geometry set for 657 features 
 ## geometry type:  POLYGON
 ## dimension:      XY
 ## bbox:           xmin: 504000 ymin: 156000 xmax: 562000 ymax: 201000
 ## projected CRS:  OSGB 1936 / British National Grid
 ## First 5 geometries:</code></pre>
-<pre><code>## Geometry set for 657 features 
+<pre class="whiteb"><code>## Geometry set for 657 features 
 ## geometry type:  POLYGON
 ## dimension:      XY
 ## bbox:           xmin: -0.51 ymin: 51.3 xmax: 0.334 ymax: 51.7
@@ -502,7 +524,7 @@
 <p>Let’s kick off with our graphs</p>
 <div id="st-graph-barplots" class="section level2">
 <h2>1st Graph Barplots</h2>
-<pre class="r"><code>stop_search_offence_object&lt;- stop_search_offence_sf %&gt;% 
+<pre class="r blue"><code>stop_search_offence_object&lt;- stop_search_offence_sf %&gt;% 
     filter(month!=&quot;10&quot; &amp; month!=&quot;11&quot; &amp; month!=&quot;12&quot; &amp; year!=&quot;2017&quot;) %&gt;% 
   group_by(year, object_of_search, gender,officer_defined_ethnicity) %&gt;% 
   select(year, object_of_search, gender,officer_defined_ethnicity) %&gt;%
@@ -545,7 +567,7 @@ ggplot(stop_percent,aes(x=year,y=count, fill=object_of_search )) +
 </div>
 <div id="nd-graph---map" class="section level2">
 <h2>2nd Graph - Map</h2>
-<pre class="r"><code>stop_search_offence_2020&lt;- stop_search_offence_sf %&gt;% 
+<pre class="r blue"><code>stop_search_offence_2020&lt;- stop_search_offence_sf %&gt;% 
   filter(year==2020)  %&gt;% 
   filter(object_of_search==&quot;Controlled drugs&quot;)
  #options(tigris_class = &quot;sf&quot;)
@@ -568,17 +590,17 @@ theme( plot.title = element_text(color = &quot;black&quot;,size=15,face=&quot;bo
         legend.text=element_text(family=&quot;Montserrat&quot;, size=7),
         legend.title=element_text(family=&quot;Montserrat&quot;, size=8, face=&quot;bold&quot;))+
     labs(title = &quot;In 2020, the most drug smuggling cases were tackled in\nthe city of Westminster, Newham, and Croydan &quot;, subtitle= &quot;Number of crimes in particular districts of London &quot;, x=&quot;&quot;, y=&quot;&quot;, caption=&quot;Source:  https://data.police.uk/data/&quot;)</code></pre>
-<p><img src="/portfolio/project-12_files/figure-html/unnamed-chunk-1-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>map_of_london_file &lt;- image_read(&quot;http://ontheworldmap.com/uk/city/london/map-of-london.jpg&quot;) #loading an image
+<p><img src="/portfolio/project-12_files/figure-html/unnamed-chunk-2-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r blue"><code>map_of_london_file &lt;- image_read(&quot;http://ontheworldmap.com/uk/city/london/map-of-london.jpg&quot;) #loading an image
 
 image_ggplot(map_of_london_file )+
   theme( plot.title = element_text(color = &quot;black&quot;,size=15,face=&quot;bold&quot;,vjust=270, family= &quot;Montserrat&quot;))+
   ggtitle(&quot;Map of London for comparison&quot;)</code></pre>
-<p><img src="/portfolio/project-12_files/figure-html/unnamed-chunk-1-2.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-12_files/figure-html/unnamed-chunk-2-2.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
 <div id="rd-graph---density-plots" class="section level2">
 <h2>3rd Graph - Density plots</h2>
-<pre class="r"><code>library(showtext)
+<pre class="r blue"><code>library(showtext)
 font_add_google(&quot;Montserrat&quot;, &quot;Montserrat&quot;) #downloading fonts from Google
 showtext_auto()
 
@@ -605,7 +627,7 @@ theme( plot.title = element_text(color = &quot;black&quot;,size=15,face=&quot;bo
     labs(title = &quot;In May in each year the number of crimes was the highest \n especially in crimes connected to controlled drugs issues &quot;, subtitle= &quot;Denisty plots oh cases by month &amp; object of search particular years&quot;, x=&quot;&quot;, y=&quot;&quot;, fill = &quot;Object of search&quot;, colour = &quot;Was it May?&quot;,caption=&quot;Source:  https://data.police.uk/data/&quot;)+
    scale_fill_manual(values = my_colours3)+
 scale_colour_manual(values = my_colours4)</code></pre>
-<p><img src="/portfolio/project-12_files/figure-html/unnamed-chunk-2-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-12_files/figure-html/unnamed-chunk-3-1.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="summary" class="section level1">

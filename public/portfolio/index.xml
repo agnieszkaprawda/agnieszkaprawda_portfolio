@@ -65,7 +65,7 @@ library(ggplot2) library(janitor) library(tidyverse) library(caret) library(lubr
       <pubDate>Wed, 18 Nov 2020 15:58:10 +0600</pubDate>
       
       <guid>/portfolio/project-12/</guid>
-      <description>Let’s begin Hello, my name is Agnieszka, I am going to visualise three data visualisations basing on the Stop &amp;amp; Search dataset. You can find more on the topic here: https://www.</description>
+      <description>.pink { background-color:#fae6e6 ; border-radius: 5px; padding: 20px; color: #000000;} .blue { background-color:#DFF5F6 ; border-radius: 5px; padding: 20px; color: #000000;} .whitep { background-color:#fffafa ; border: 3px gray; border-radius: 5px; padding: 20px; color: #000000;} .</description>
     </item>
     
     <item>

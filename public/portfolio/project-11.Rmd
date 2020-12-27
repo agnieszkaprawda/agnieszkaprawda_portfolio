@@ -45,10 +45,10 @@ knitr::opts_chunk$set(
   fig.align = "center"
 )
 
-knitr::opts_chunk$set(class.source = "pink")
+knitr::opts_chunk$set(class.source = "blue")
 
 
-knitr::opts_chunk$set(class.output = "whitep")
+knitr::opts_chunk$set(class.output = "whiteb")
 ```
 
 ```{r, include= FALSE}

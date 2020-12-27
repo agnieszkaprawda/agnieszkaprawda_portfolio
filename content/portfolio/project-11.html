@@ -40,7 +40,7 @@ Include stop and search data</p>
 <p>Basing on the “Stop and Search” dataset, I will prepare 3 visualisations having in mind best visualisation practics.</p>
 <div id="loading-data" class="section level3">
 <h3>Loading Data</h3>
-<pre class="r pink"><code>df&lt;- read.csv(&quot;~/Documents/LBS/Data_Visualisation/01/2020-09/2020-09-metropolitan-stop-and-search.csv&quot;,na.strings=&quot;&quot;) #loading the file
+<pre class="r blue"><code>df&lt;- read.csv(&quot;~/Documents/LBS/Data_Visualisation/01/2020-09/2020-09-metropolitan-stop-and-search.csv&quot;,na.strings=&quot;&quot;) #loading the file
 
 df&lt;- df %&gt;% 
   clean_names() %&gt;% 
@@ -57,11 +57,11 @@ df_clean&lt;- df_clean %&gt;% mutate(gender=as.factor(gender), age_range= as.fac
 df_clean$officer_defined_ethnicity &lt;- df_clean$officer_defined_ethnicity %&gt;% factor(levels= c(&quot;White&quot;, &quot;Black&quot;, &quot;Asian&quot;, &quot;Other&quot;))
 DF &lt;- table(df_clean$officer_defined_ethnicity)
 DF</code></pre>
-<pre class="whitep"><code>## 
+<pre class="whiteb"><code>## 
 ## White Black Asian Other 
 ##  6348  5331  2759   711</code></pre>
-<pre class="r pink"><code>glimpse(df)</code></pre>
-<pre class="whitep"><code>## Rows: 19,928
+<pre class="r blue"><code>glimpse(df)</code></pre>
+<pre class="whiteb"><code>## Rows: 19,928
 ## Columns: 12
 ## $ type                         &lt;chr&gt; &quot;Person and Vehicle search&quot;, &quot;Person sea…
 ## $ date                         &lt;chr&gt; &quot;2020-08-31T23:00:00+00:00&quot;, &quot;2020-08-31…
@@ -78,7 +78,7 @@ DF</code></pre>
 </div>
 <div id="first-graph" class="section level3">
 <h3>First Graph</h3>
-<pre class="r pink"><code>library(showtext)
+<pre class="r blue"><code>library(showtext)
 font_add_google(&quot;Montserrat&quot;, &quot;Montserrat&quot;) #downloading fonts from Google
 showtext_auto()
 
@@ -123,7 +123,7 @@ theme_classic() +
 </div>
 <div id="second-graph" class="section level3">
 <h3>Second Graph</h3>
-<pre class="r pink"><code>df_gender &lt;-df_clean %&gt;% 
+<pre class="r blue"><code>df_gender &lt;-df_clean %&gt;% 
   filter(gender!=&quot;Other&quot;) %&gt;% 
   group_by(outcome,gender) %&gt;% 
   summarise(count=n(),
@@ -172,7 +172,7 @@ theme_classic() +
 </div>
 <div id="third-graph" class="section level3">
 <h3>Third Graph</h3>
-<pre class="r pink"><code>df3&lt;- df_clean %&gt;% 
+<pre class="r blue"><code>df3&lt;- df_clean %&gt;% 
   group_by(age_range,gender,object_of_search) %&gt;% 
   summarise(count = n())
 
