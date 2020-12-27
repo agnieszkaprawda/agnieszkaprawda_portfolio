@@ -1,0 +1,116 @@
+# Site settings
+baseURL       = "https://agnieszkaprawdaportfolio.netlify.app/"
+languageCode  = "en-us"
+title         = "Agnieszka Prawda - Portfolio"
+theme = "roxo-hugo"
+summarylength = 25
+
+# Site Menus
+[menu]
+  # Navbar Menus
+  [[menu.nav]]
+    name    = "Home"
+    url     = ""
+    weight  = 1
+#  [[menu.nav]]
+ #   name    = "About"
+  #  url     = "about"
+   # weight  = 2
+  [[menu.nav]]
+    name    = "Portfolio"
+    url     = "portfolio"
+    weight  = 3
+  [[menu.nav]]
+    name    = "Other Projects"
+    url     = "blog"
+    weight  = 4
+  [[menu.nav]]
+    name    = "Get in touch"
+    url     = "contact"
+    weight  = 5
+
+# Site Params
+[params]
+  logo = "images/logo.png"
+  dateFormat = "26 FEB 1994"
+  # Meta data
+  description = "Roxo Hugo themes | Design Agency Template by StaticMania"
+  author = "StaticMania"
+#  # Google Analitycs
+ # googleAnalitycsID = "Your ID"
+#  # We're using formspree.io for form handling, paste your formspree url below
+ # formspreeFormUrl  = "https://formspree.io/myykjpje"
+  
+  # Navbar Action Button
+  [params.navAction]
+    status  = true
+    name    = "Get in touch"
+    url     = "contact"
+  
+
+  # Banner Section
+  [params.banner]
+    enable                = true
+    background_image      = "images/backgrounds/hero_background.png"
+    heading               = "Agnieszka Prawda"
+    tagline               = "WELCOME TO MY PORTFOLIO WEBISTE"
+    primary_button        = "See My Projects"
+    primary_button_url    = "portfolio"
+    secondary_button      = "Connect with Me"
+    secondary_button_url  = "contact"
+
+  [params.portfolio]
+    enable    = true
+    title     = "My Portfolio"
+    subtitle  = "Here you can have a look at my recent projects"
+
+  [params.call_to_action]
+    enable              = true
+    background_image    = "images/backgrounds/cta-background.jpg"
+    title               = "Contact me"
+    primary_button      = "Send an email"
+    primary_button_url  = "contact"
+    secondary_button    = "See more portfolio"
+    secondary_button_url = "portfolio"
+
+  [params.footer]
+    # Footer Contact Info
+    [params.footer.contactInfo]
+      title   = "Contact Info"
+      address = "Regent's Park, London NW1 4SA"
+      phone   = "+447762727403"
+      email   = "aprawda.mam2021@london.edu"
+      # Footer Sitemap
+      [params.footer.sitemap]
+   #     title   = "Sitemap"
+     #   [[params.footer.sitemap.link]]
+      #    name = "About Company"
+       #   url  = "about"
+       # [[params.footer.sitemap.link]]
+    #      name = "Projects"
+     #     url  = "portfolio"
+      #  [[params.footer.sitemap.link]]
+       #   name = "Other projects"
+       #   url  = "blog"
+     #   [[params.footer.sitemap.link]]
+    #      name = "Contact"
+   #       url  = "contact"
+      # Footer Social Media
+      [params.footer.social]
+        title   = "Social Media"
+        [[params.footer.social.link]]
+          name = "Linkedin"
+          url  = "https://www.linkedin.com/in/agnieszka-prawda/"
+       # [[params.footer.social.link]]
+      #    name = "Behance"
+       #   url  = "#"
+      #  [[params.footer.social.link]]
+        #  name = "Dribbble"
+        #  url  = "#"
+        #[[params.footer.social.link]]
+       #   name = "Instagram"
+      #    url  = "#"
+     # # Footer Service
+    #  [params.footer.service]
+    #    title       = "We help brands:"
+   #     description = "develop design solutions<br>produce valuable cultural content<br>create fresh brand experience"
