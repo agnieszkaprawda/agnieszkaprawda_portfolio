@@ -47,7 +47,7 @@ showtext_auto()
 ```
 
 
-# Omega Group plc- Pay Discrimination
+# Omega Group Plc- Pay Discrimination
 
  
 
@@ -63,18 +63,18 @@ omega <- omega <- read_csv("~/Documents/Applied Statistics in R/homeworks/data/o
 glimpse(omega) # examine the data frame
 ```
 
-## Relationship Salary - Gender ?
+### Relationship Salary - Gender ?
 
-The data frame `omega`  contains the salaries for the sample of 50 executives in the company. 
+The data frame `omega` contains the salaries for the sample of 50 executives in the company. 
 
 Can we conclude that there is a significant difference between the salaries of the male and female executives?
 
 To check it, I will perform different types of analyses, and check whether they all lead to the same conclusion 
 
-.	Confidence intervals
-.	Hypothesis testing
-.	Correlation analysis
-.	Regression
+> Confidence intervals
+> Hypothesis testing
+> Correlation analysis
+> Regression
 
 
 I will alculate summary statistics on salary by gender. 
