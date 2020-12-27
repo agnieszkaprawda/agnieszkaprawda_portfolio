@@ -7,10 +7,33 @@ project_images:
 title: Gapminder Data Analisys - Data & Correlation Analysis
 type: portfolio
 ---
+```{css echo=FALSE}
+
+.pink { background-color:#fae6e6 ; 
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+
+.blue { background-color:#DFF5F6 ; 
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+    
+.whitep { background-color:#fffafa ;
+    border: 3px gray;
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+    
+.whiteb { background-color:#f7ffff ;
+    border: 3px gray;
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+
+    
+```
+
 ```{r, setup, include=FALSE}
 knitr::opts_chunk$set(
   message = FALSE, 
-  warning = FALSE, 
+  warning = FALSE,
   tidy=FALSE,     # display code as typed
   size="small")   # slightly smaller font for code
 options(digits = 3)
@@ -21,6 +44,11 @@ knitr::opts_chunk$set(
   fig.height=6.75,
   fig.align = "center"
 )
+
+knitr::opts_chunk$set(class.source = "blue")
+
+
+knitr::opts_chunk$set(class.output = "whiteb")
 ```
 
 
@@ -49,11 +77,9 @@ library(vroom)
 
 ```
 
-# Gapminder data
+### Gapminder data introduction
 
-
-The Gapminder data is know worldwide thanks to Hans Rosling and his webstie [data in Gapminder World](https://www.gapminder.org/data/). The data downloaded from the website was cut into the data frame that contains just six columns from the larger . In this part, I will join a few dataframes with more data than the 'gapminder' package. Specifically, I will look at data on 
-
+The Gapminder data is known worldwide thanks to Hans Rosling and his webstie [data in Gapminder World](https://www.gapminder.org/data/). The data downloaded from the website was cut into the data frame that contains just six columns from the larger . In this part, I will join a few dataframes with more data than the 'gapminder' package. Specifically, I will look at data on 
 
 - Life expectancy at birth (life_expectancy_years.csv)
 - GDP per capita in constant 2010 US$ (https://data.worldbank.org/indicator/NY.GDP.PCAP.KD)
@@ -66,7 +92,7 @@ For this, I will use the `wbstats` package to download data from the World Bank.
 
 I will join the 3 dataframes (life_expectancy, worldbank_data, and HIV) into one. I will tidy my data first and then perform [join operations](http://r4ds.had.co.nz/relational-data.html). 
 
-To join all the 3 dataframes I used left.join in order to keep our data tidy. On the left side of the "data" dataframe we can find all the categorical variables that describe our data. On the right side, we can find numerical variables.
+To join all the 3 dataframes I use **left.join** in order to keep our data tidy. On the left side of the "data" dataframe we can find all the categorical variables that describe our data. On the right side, we can find numerical variables.
 
 ```{r, get_data, cache=TRUE}
 
@@ -85,7 +111,10 @@ worldbank_data <- wb_data(country="countries_only",
                           start_date = 1960, 
                           end_date = 2016) %>% rename(year=date)
 
+```
 
+
+```{r}
 # get a dataframe of information regarding countries, indicators, sources, regions, indicator topics, lending types, income levels,  from the World Bank API 
 countries <-  wbstats::wb_cachelist$countries
 
@@ -114,12 +143,17 @@ big_df_cleaned<- big_df_cleaned %>%
   rename(hiv_count=count.x, 
          life_expectancy=count.y)
   
-  
+```
+
+
+```{r}
 glimpse(big_df_cleaned)
   
 ```
 
 ### What is the relationship between HIV prevalence and life expectancy?
+
+I will examine now the relationship between HIV prevalance and life expectancy. I will look at the trend progressing in time. 
 
 ```{r fig.width=7, fig.height=8}
 big_df_cleaned_1990 <- big_df_cleaned %>% 
@@ -161,6 +195,8 @@ As we can conclude from the graph, over years the relationship between HIV preva
 
 ### What is the relationship between fertility rate and GDP per capita?
 
+Let's have a look now at the correlation between fertility rate  and GDp per capita in particular reserached regions.
+
 ```{r}
 by_region <- big_df_cleaned %>% 
   group_by(region) %>% 
@@ -197,11 +233,14 @@ facet_wrap(~region,
         legend.position = "none")
 
 ```
-W can notice from the graph that in richer countries the fertility, tends to be lower. However, the important factor here is to reember about the free scales of the graphs presented. Even though, the same trend is visible across all the regions, it is much stronger in developed regions than in the poor ones.
+
+We can notice from the graph that in richer countries the fertility, tends to be lower. However, the important factor here is to remember about the free scales of the graphs presented. Even though, the same trend is visible across all the regions, it is much stronger in developed regions than in the poor ones.
 
 
 
 ### Which regions have the most observations with missing HIV data?
+
+In order to better understand the data, I need to examine the missing values of particular variables. In this chunk, I will look at the missing values regarding HIV across particular regions.
 
 ```{r}
 
@@ -387,9 +426,9 @@ theme(panel.grid.major.y = element_line(color = "gray60", size = 0.1),
 
 ```
 
-
-
 ### Is there a relationship between primary school enrollment and fertility rate?
+
+Let me now inspect the relationship between education ad fertility date in particular regions. I will plot the smooth_lines for each of the regions to better undertand trends and differences in particular parts of the world.
 
 ``` {r}
 #Create data frame with relevant variables

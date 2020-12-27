@@ -120,7 +120,7 @@ library(ggplot2) library(janitor) library(tidyverse) library(caret) library(lubr
       <pubDate>Sat, 19 Sep 2020 15:58:10 +0600</pubDate>
       
       <guid>/portfolio/project-03/</guid>
-      <description>Gapminder data The Gapminder data is know worldwide thanks to Hans Rosling and his webstie data in Gapminder World. The data downloaded from the website was cut into the data frame that contains just six columns from the larger .</description>
+      <description>.pink { background-color:#fae6e6 ; border-radius: 5px; padding: 20px; color: #000000;} .blue { background-color:#DFF5F6 ; border-radius: 5px; padding: 20px; color: #000000;} .whitep { background-color:#fffafa ; border: 3px gray; border-radius: 5px; padding: 20px; color: #000000;} .</description>
     </item>
     
     <item>
