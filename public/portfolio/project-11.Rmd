@@ -7,10 +7,33 @@ project_images:
 title: Stop & Search Police Data Visualisation
 type: portfolio
 ---
+```{css echo=FALSE}
+
+.pink { background-color:#fae6e6 ; 
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+
+.blue { background-color:#DFF5F6 ; 
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+    
+.whitep { background-color:#fffafa ;
+    border: 3px gray;
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+    
+.whiteb { background-color:#f7ffff ;
+    border: 3px gray;
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+
+    
+```
+
 ```{r, setup, include=FALSE}
 knitr::opts_chunk$set(
   message = FALSE, 
-  warning = FALSE, 
+  warning = FALSE,
   tidy=FALSE,     # display code as typed
   size="small")   # slightly smaller font for code
 options(digits = 3)
@@ -21,13 +44,16 @@ knitr::opts_chunk$set(
   fig.height=6.75,
   fig.align = "center"
 )
+
+knitr::opts_chunk$set(class.source = "pink")
+
+
+knitr::opts_chunk$set(class.output = "whitep")
 ```
 
 # R Markdown Kick Off
 
-This is a Problem Set 1 document created by Agnieszka Prawda. It includes data on thw worst possible grpah and graphs on the "Seek and Search" Problem. Enjoy!:)
-
-```{r huxtable-stuff}
+```{r, include= FALSE}
 library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
 library(mosaic)
 library(ggthemes)
@@ -52,9 +78,17 @@ library(scales)
 
 # Stop and Search plots
 
-> In this exercise I will create 3 graphs using the "Stop and Search" dataset 
+The raw data on "Stop and Search" comes from the following [webiste](https://data.police.uk/data/).
 
-## Loading Data
+I will analyse the follwing data:
+Date Range: Sep 2020
+Metropolitan Police Service
+Include stop and search data
+
+
+Basing on the "Stop and Search" dataset, I will prepare 3 visualisations having in mind best visualisation practics.
+
+### Loading Data
 ```{r}
 df<- read.csv("~/Documents/LBS/Data_Visualisation/01/2020-09/2020-09-metropolitan-stop-and-search.csv",na.strings="") #loading the file
 
@@ -76,9 +110,9 @@ DF
 glimpse(df)
 
 ```
-## First Graph
+### First Graph
 
-```{r}
+```{r fig.height=6}
 library(showtext)
 font_add_google("Montserrat", "Montserrat") #downloading fonts from Google
 showtext_auto()
@@ -110,9 +144,9 @@ theme_classic() +
         plot.title = element_text(color = "tomato",size=15,face="bold", family= "Montserrat"),
         plot.subtitle = element_text(color = "tomato", face="plain", ,size= 10,family= "Montserrat"),
         plot.caption = element_text(color = "grey40", face="italic", ,size= 7,family= "Montserrat",hjust=0),
-        axis.title.y = element_text(size = 8, angle = 90, family="Montserrat", face = "plain"),
+        axis.title.y = element_text(size = 8, angle = 90, family="Montserrat", face = "bold"),
         axis.text.y=element_text(family="Montserrat", size=7),
-        axis.title.x = element_text(size = 8, family="Montserrat", face = "plain"),
+        axis.title.x = element_text(size = 8, family="Montserrat", face = "bold"),
         axis.text.x=element_text(family="Montserrat", size=7),
         legend.text=element_text(family="Montserrat", size=7),
         legend.title=element_text(family="Montserrat", size=8, face="bold"),
@@ -127,8 +161,8 @@ theme_classic() +
 
 
 
-## Second Graph
-```{r}
+### Second Graph
+```{r fig.height=6}
 
 df_gender <-df_clean %>% 
   filter(gender!="Other") %>% 
@@ -161,25 +195,25 @@ theme_classic() +
         plot.title = element_text(color = "tomato",size=9.5,face="bold", family= "Montserrat"),
         plot.subtitle = element_text(color = "tomato", face="plain", ,size= 9,family= "Montserrat"),
         plot.caption = element_text(color = "grey40", face="italic", ,size= 7,family= "Montserrat",hjust=0),
-        axis.title.y = element_text(size = 8, angle = 90, family="Montserrat", face = "plain"),
+        axis.title.y = element_text(size = 7, angle = 90, family="Montserrat", face = "bold"),
         axis.text.y=element_text(family="Montserrat", size=7),
-        axis.title.x = element_text(size = 8, family="Montserrat", face = "plain"),
+        axis.title.x = element_text(size = 7, family="Montserrat", face = "bold"),
         axis.text.x=element_text(family="Montserrat", size=7),
         legend.text=element_text(family="Montserrat", size=7),
         legend.title=element_text(family="Montserrat", size=8, face="bold"))+
-    labs(title = "Women comprised the biggest percentage in S&S actions resulting with Community resolution", subtitle= " Proportion of Stop & Searches by Gender and Result", x="Percent", y="Result",fill= "Gender",caption="Source:  https://data.police.uk/data/") +
+    labs(title = "Women comprised the biggest percentage in S&S actions resulting with\n Community resolution", subtitle= " Proportion of Stop & Searches by Gender and Result", x="Percent", y="Result",fill= "Gender",caption="Source:  https://data.police.uk/data/") +
   scale_x_continuous(labels = scales::percent)+
   scale_fill_manual(values = my_colours, labels = c( "Male", "Female")) +
   geom_text(
     aes(label = round(percent_female,3)*100, x = round(percent_female,3)/2), 
     color = "tomato",
-    size = 4,
+    size = 3,
     hjust = 0.5) 
 ```
 
 
-## Third Graph
-```{r}
+### Third Graph
+```{r fig.height=6}
 df3<- df_clean %>% 
   group_by(age_range,gender,object_of_search) %>% 
   summarise(count = n())
@@ -217,12 +251,12 @@ ggplot(df3, aes(x=age_range,
         plot.title = element_text(color = "grey20",size=9.5,face="bold", family= "Montserrat"),
         plot.subtitle = element_text(color = "grey20", face="plain", ,size= 9,family= "Montserrat"),
         plot.caption = element_text(color = "grey40", face="italic", ,size= 7,family= "Montserrat",hjust=0),
-        axis.title.y = element_text(size = 8, angle = 90, family="Montserrat", face = "plain"),
+        axis.title.y = element_text(size = 8, angle = 90, family="Montserrat", face = "bold"),
         axis.text.y=element_text(family="Montserrat", size=7),
-        axis.title.x = element_text(size = 8, family="Montserrat", face = "plain"),
+        axis.title.x = element_text(size = 8, family="Montserrat", face = "bold"),
         axis.text.x=element_text(family="Montserrat", size=7),
-        legend.text=element_text(family="Montserrat", size=7),
-        legend.title=element_text(family="Montserrat", size=8, face="bold"))+
+        legend.text=element_text(family="Montserrat", size=5.5),
+        legend.title=element_text(family="Montserrat", size=6, face="bold"))+
     labs(title = "Across all the age groups, controlled drugs was the main reason of search", subtitle= "Proportion of Stop & Searches by age and object of search", x="Officer defined ethnicity", y="Percent",fill= "Object of search",caption="Source:  https://data.police.uk/data/") +
   scale_y_continuous(labels = scales::percent)+
   scale_fill_manual(values= colours_age)
@@ -230,3 +264,5 @@ ggplot(df3, aes(x=age_range,
 
 ```
 
+
+Thank you!

@@ -101,38 +101,42 @@
             
 
 
+<style type="text/css">
+
+.pink { background-color:#fae6e6 ; 
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+
+.blue { background-color:#DFF5F6 ; 
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+    
+.whitep { background-color:#fffafa ;
+    border: 3px gray;
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+    
+.whiteb { background-color:#f7ffff ;
+    border: 3px gray;
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+
+    
+</style>
 <div id="r-markdown-kick-off" class="section level1">
 <h1>R Markdown Kick Off</h1>
-<p>This is a Problem Set 1 document created by Agnieszka Prawda. It includes data on thw worst possible grpah and graphs on the “Seek and Search” Problem. Enjoy!:)</p>
-<pre class="r"><code>library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
-library(mosaic)
-library(ggthemes)
-library(GGally)
-library(readxl)
-library(here)
-library(skimr)
-library(janitor)
-library(broom)
-library(tidyquant)
-library(infer)
-library(openintro)
-library(ggplot2)
-library(cowplot)
-library(extrafont)
-library(devtools)
-loadfonts(device=&quot;pdf&quot;)
-library(magick)
-library(Hmisc)
-library(scales)</code></pre>
 </div>
 <div id="stop-and-search-plots" class="section level1">
 <h1>Stop and Search plots</h1>
-<blockquote>
-<p>In this exercise I will create 3 graphs using the “Stop and Search” dataset</p>
-</blockquote>
-<div id="loading-data" class="section level2">
-<h2>Loading Data</h2>
-<pre class="r"><code>df&lt;- read.csv(&quot;~/Documents/LBS/Data_Visualisation/01/2020-09/2020-09-metropolitan-stop-and-search.csv&quot;,na.strings=&quot;&quot;) #loading the file
+<p>The raw data on “Stop and Search” comes from the following <a href="https://data.police.uk/data/">webiste</a>.</p>
+<p>I will analyse the follwing data:
+Date Range: Sep 2020
+Metropolitan Police Service
+Include stop and search data</p>
+<p>Basing on the “Stop and Search” dataset, I will prepare 3 visualisations having in mind best visualisation practics.</p>
+<div id="loading-data" class="section level3">
+<h3>Loading Data</h3>
+<pre class="r pink"><code>df&lt;- read.csv(&quot;~/Documents/LBS/Data_Visualisation/01/2020-09/2020-09-metropolitan-stop-and-search.csv&quot;,na.strings=&quot;&quot;) #loading the file
 
 df&lt;- df %&gt;% 
   clean_names() %&gt;% 
@@ -149,11 +153,11 @@ df_clean&lt;- df_clean %&gt;% mutate(gender=as.factor(gender), age_range= as.fac
 df_clean$officer_defined_ethnicity &lt;- df_clean$officer_defined_ethnicity %&gt;% factor(levels= c(&quot;White&quot;, &quot;Black&quot;, &quot;Asian&quot;, &quot;Other&quot;))
 DF &lt;- table(df_clean$officer_defined_ethnicity)
 DF</code></pre>
-<pre><code>## 
+<pre class="whitep"><code>## 
 ## White Black Asian Other 
 ##  6348  5331  2759   711</code></pre>
-<pre class="r"><code>glimpse(df)</code></pre>
-<pre><code>## Rows: 19,928
+<pre class="r pink"><code>glimpse(df)</code></pre>
+<pre class="whitep"><code>## Rows: 19,928
 ## Columns: 12
 ## $ type                         &lt;chr&gt; &quot;Person and Vehicle search&quot;, &quot;Person sea…
 ## $ date                         &lt;chr&gt; &quot;2020-08-31T23:00:00+00:00&quot;, &quot;2020-08-31…
@@ -168,9 +172,9 @@ DF</code></pre>
 ## $ object_of_search             &lt;chr&gt; &quot;Controlled drugs&quot;, &quot;Evidence of offence…
 ## $ outcome                      &lt;chr&gt; &quot;A no further action disposal&quot;, &quot;A no fu…</code></pre>
 </div>
-<div id="first-graph" class="section level2">
-<h2>First Graph</h2>
-<pre class="r"><code>library(showtext)
+<div id="first-graph" class="section level3">
+<h3>First Graph</h3>
+<pre class="r pink"><code>library(showtext)
 font_add_google(&quot;Montserrat&quot;, &quot;Montserrat&quot;) #downloading fonts from Google
 showtext_auto()
 
@@ -201,9 +205,9 @@ theme_classic() +
         plot.title = element_text(color = &quot;tomato&quot;,size=15,face=&quot;bold&quot;, family= &quot;Montserrat&quot;),
         plot.subtitle = element_text(color = &quot;tomato&quot;, face=&quot;plain&quot;, ,size= 10,family= &quot;Montserrat&quot;),
         plot.caption = element_text(color = &quot;grey40&quot;, face=&quot;italic&quot;, ,size= 7,family= &quot;Montserrat&quot;,hjust=0),
-        axis.title.y = element_text(size = 8, angle = 90, family=&quot;Montserrat&quot;, face = &quot;plain&quot;),
+        axis.title.y = element_text(size = 8, angle = 90, family=&quot;Montserrat&quot;, face = &quot;bold&quot;),
         axis.text.y=element_text(family=&quot;Montserrat&quot;, size=7),
-        axis.title.x = element_text(size = 8, family=&quot;Montserrat&quot;, face = &quot;plain&quot;),
+        axis.title.x = element_text(size = 8, family=&quot;Montserrat&quot;, face = &quot;bold&quot;),
         axis.text.x=element_text(family=&quot;Montserrat&quot;, size=7),
         legend.text=element_text(family=&quot;Montserrat&quot;, size=7),
         legend.title=element_text(family=&quot;Montserrat&quot;, size=8, face=&quot;bold&quot;),
@@ -211,11 +215,11 @@ theme_classic() +
     labs(title = &quot; White people accounted to 41.9% of all the cases&quot;, subtitle= &quot;Proportion of Stop &amp; Searches by Ethnicity &quot;, x=&quot;Officer defined ethnicity&quot;, y=&quot; Percent&quot;, caption=&quot;Source:  https://data.police.uk/data/&quot;) +
   scale_y_continuous(labels = scales::percent)+
   scale_fill_manual(values = my_colours)</code></pre>
-<p><img src="/portfolio/project-11_files/figure-html/unnamed-chunk-2-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-11_files/figure-html/unnamed-chunk-4-1.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
-<div id="second-graph" class="section level2">
-<h2>Second Graph</h2>
-<pre class="r"><code>df_gender &lt;-df_clean %&gt;% 
+<div id="second-graph" class="section level3">
+<h3>Second Graph</h3>
+<pre class="r pink"><code>df_gender &lt;-df_clean %&gt;% 
   filter(gender!=&quot;Other&quot;) %&gt;% 
   group_by(outcome,gender) %&gt;% 
   summarise(count=n(),
@@ -246,25 +250,25 @@ theme_classic() +
         plot.title = element_text(color = &quot;tomato&quot;,size=9.5,face=&quot;bold&quot;, family= &quot;Montserrat&quot;),
         plot.subtitle = element_text(color = &quot;tomato&quot;, face=&quot;plain&quot;, ,size= 9,family= &quot;Montserrat&quot;),
         plot.caption = element_text(color = &quot;grey40&quot;, face=&quot;italic&quot;, ,size= 7,family= &quot;Montserrat&quot;,hjust=0),
-        axis.title.y = element_text(size = 8, angle = 90, family=&quot;Montserrat&quot;, face = &quot;plain&quot;),
+        axis.title.y = element_text(size = 7, angle = 90, family=&quot;Montserrat&quot;, face = &quot;bold&quot;),
         axis.text.y=element_text(family=&quot;Montserrat&quot;, size=7),
-        axis.title.x = element_text(size = 8, family=&quot;Montserrat&quot;, face = &quot;plain&quot;),
+        axis.title.x = element_text(size = 7, family=&quot;Montserrat&quot;, face = &quot;bold&quot;),
         axis.text.x=element_text(family=&quot;Montserrat&quot;, size=7),
         legend.text=element_text(family=&quot;Montserrat&quot;, size=7),
         legend.title=element_text(family=&quot;Montserrat&quot;, size=8, face=&quot;bold&quot;))+
-    labs(title = &quot;Women comprised the biggest percentage in S&amp;S actions resulting with Community resolution&quot;, subtitle= &quot; Proportion of Stop &amp; Searches by Gender and Result&quot;, x=&quot;Percent&quot;, y=&quot;Result&quot;,fill= &quot;Gender&quot;,caption=&quot;Source:  https://data.police.uk/data/&quot;) +
+    labs(title = &quot;Women comprised the biggest percentage in S&amp;S actions resulting with\n Community resolution&quot;, subtitle= &quot; Proportion of Stop &amp; Searches by Gender and Result&quot;, x=&quot;Percent&quot;, y=&quot;Result&quot;,fill= &quot;Gender&quot;,caption=&quot;Source:  https://data.police.uk/data/&quot;) +
   scale_x_continuous(labels = scales::percent)+
   scale_fill_manual(values = my_colours, labels = c( &quot;Male&quot;, &quot;Female&quot;)) +
   geom_text(
     aes(label = round(percent_female,3)*100, x = round(percent_female,3)/2), 
     color = &quot;tomato&quot;,
-    size = 4,
+    size = 3,
     hjust = 0.5) </code></pre>
-<p><img src="/portfolio/project-11_files/figure-html/unnamed-chunk-3-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-11_files/figure-html/unnamed-chunk-5-1.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
-<div id="third-graph" class="section level2">
-<h2>Third Graph</h2>
-<pre class="r"><code>df3&lt;- df_clean %&gt;% 
+<div id="third-graph" class="section level3">
+<h3>Third Graph</h3>
+<pre class="r pink"><code>df3&lt;- df_clean %&gt;% 
   group_by(age_range,gender,object_of_search) %&gt;% 
   summarise(count = n())
 
@@ -301,16 +305,17 @@ ggplot(df3, aes(x=age_range,
         plot.title = element_text(color = &quot;grey20&quot;,size=9.5,face=&quot;bold&quot;, family= &quot;Montserrat&quot;),
         plot.subtitle = element_text(color = &quot;grey20&quot;, face=&quot;plain&quot;, ,size= 9,family= &quot;Montserrat&quot;),
         plot.caption = element_text(color = &quot;grey40&quot;, face=&quot;italic&quot;, ,size= 7,family= &quot;Montserrat&quot;,hjust=0),
-        axis.title.y = element_text(size = 8, angle = 90, family=&quot;Montserrat&quot;, face = &quot;plain&quot;),
+        axis.title.y = element_text(size = 8, angle = 90, family=&quot;Montserrat&quot;, face = &quot;bold&quot;),
         axis.text.y=element_text(family=&quot;Montserrat&quot;, size=7),
-        axis.title.x = element_text(size = 8, family=&quot;Montserrat&quot;, face = &quot;plain&quot;),
+        axis.title.x = element_text(size = 8, family=&quot;Montserrat&quot;, face = &quot;bold&quot;),
         axis.text.x=element_text(family=&quot;Montserrat&quot;, size=7),
-        legend.text=element_text(family=&quot;Montserrat&quot;, size=7),
-        legend.title=element_text(family=&quot;Montserrat&quot;, size=8, face=&quot;bold&quot;))+
+        legend.text=element_text(family=&quot;Montserrat&quot;, size=5.5),
+        legend.title=element_text(family=&quot;Montserrat&quot;, size=6, face=&quot;bold&quot;))+
     labs(title = &quot;Across all the age groups, controlled drugs was the main reason of search&quot;, subtitle= &quot;Proportion of Stop &amp; Searches by age and object of search&quot;, x=&quot;Officer defined ethnicity&quot;, y=&quot;Percent&quot;,fill= &quot;Object of search&quot;,caption=&quot;Source:  https://data.police.uk/data/&quot;) +
   scale_y_continuous(labels = scales::percent)+
   scale_fill_manual(values= colours_age)</code></pre>
-<p><img src="/portfolio/project-11_files/figure-html/unnamed-chunk-4-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-11_files/figure-html/unnamed-chunk-6-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p>Thank you!</p>
 </div>
 </div>
 
