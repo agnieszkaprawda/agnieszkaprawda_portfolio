@@ -51,7 +51,6 @@ knitr::opts_chunk$set(class.source = "blue")
 knitr::opts_chunk$set(class.output = "whiteb")
 ```
 
-###Loading Packages
 ```{r, include= FALSE}
 library(ggplot2)
 library(janitor)
@@ -77,7 +76,7 @@ library(tmap)
 ```
 
 
-###Importing the Data Set
+### Importing the Data Set
 ```{r include=FALSE}
 hotels_raw<-vroom("~/Documents/LBS/Data Science/Session 09/AM10_Group6/Hotel_Reviews 2.csv") %>% clean_names()
 global_hotel_chain_size <- read_excel("~/Documents/LBS/Data Science/Session 09/AM10_Group6/Global Hotel Chains Size.xlsx") %>%clean_names()
@@ -85,30 +84,29 @@ global_hotel_chain_size <- read_excel("~/Documents/LBS/Data Science/Session 09/A
 booking_satisfaction <- vroom("~/Documents/LBS/Data Science/Session 09/AM10_Group6/Europe Hotel Booking Satisfaction Score.csv")%>%clean_names()
 country_continent <- vroom("~/Documents/LBS/Data Science/Session 09/AM10_Group6/continents2.csv")%>%clean_names()
 ```
-# Story Time
 
- We are a group of individuals working within the Data Analytics Team at Booking.com, and have been asked to gather insights on the mid- to high-end (luxury) hotel market in Europe. We are to present our results to our Team Lead.
+### Story Time
+
+As a team member of Data Analytics Team at Booking.com, I have been asked to gather insights on the mid- to high-end (luxury) hotel market in Europe. I am to present my results to my Team Lead.
  
   
-# Cleaning Data Set global_hotel_chain_sizec
+#`## Cleaning Data Set global_hotel_chain_sizec
+
 First, let's have a look at the overall global luxury & upscale hotel market. 
+
 ```{r}
 # let's have a look on our data set
-describe(global_hotel_chain_size) 
+#describe(global_hotel_chain_size) 
 #Remove empty columns and rows
 global_hotel_chain_size_clean<-remove_empty(global_hotel_chain_size, which = c("rows","cols"))
-describe(global_hotel_chain_size_clean) 
+#describe(global_hotel_chain_size_clean) 
 ```
 
-# Cleaning Data Set hotels_raw
-```{r}
-Hmisc::describe(hotels_raw)
-```
-
+### Cleaning Data Set hotels_raw
 ```{r}
 glimpse(hotels_raw)
 hotels_date_correct<-hotels_raw %>% mutate(review_date=as.Date(review_date,"%d/%m/%Y")) %>% mutate(country=word(hotel_address,-1,sep=fixed(" ")))
-glimpse(hotels_date_correct)
+#glimpse(hotels_date_correct)
 ```
 
 ```{r}
@@ -117,7 +115,7 @@ hotel1<-remove_empty(hotels_date_correct, which = c("rows","cols"))%>%
   filter(!is.na(lat))
 #Check for duplicates (visualize bots)
 duplicates<-hotel1%>%get_dupes(positive_review, negative_review, hotel_name, reviewer_nationality)
-duplicates
+#duplicates
 #delete duplicates
 hotel2<-hotel1%>%
   distinct(positive_review, negative_review, hotel_name, reviewer_nationality, .keep_all = TRUE)
@@ -125,8 +123,10 @@ md.pattern(hotel2,rotate.names = T)
 ```
 
 
-# Europe vs. different continents - Luxury Chains, Upper Upscale Chains
-Now we are good to go. First analysis:
+### Europe vs. different continents - Luxury Chains, Upper Upscale Chains
+Now I am good to go. 
+
+First analysis:
 ```{r}
  # distribution of all the variables chain scale
 data.frame(table(global_hotel_chain_size_clean$chain_scale))
@@ -196,9 +196,9 @@ first_plot
 ```
 
 
-# European landscape in terms of chain types
+### European landscape in terms of chain types
 
-```{r}
+```{r, fig.height=6}
 # data on how in Europe the chains are distributed
 chain_types_europe<- chain_size_pivot %>% 
   filter(region=="Europe") %>% 
@@ -210,8 +210,9 @@ mutate(
     is_chain = ifelse(chain_scale == "Luxury Chains",  TRUE,
                       ifelse(chain_scale== "Upper Upscale Chains", TRUE, FALSE)))
 # Chart of the data across all the regions
- 
- gg<-ggplot(is_chain, aes(x=reorder(chain_scale,chain_scale), y=count, fill=is_chain)) +
+  my_text <- "Upper Upscale + Luxury = 162"
+  
+ggplot(is_chain, aes(x=reorder(chain_scale,chain_scale), y=count, fill=is_chain)) +
     geom_bar(stat="identity", alpha=0.8)+
 theme_minimal() +
   theme(panel.grid.major.y = element_line(color = "gray60", size = 0.1),
@@ -232,17 +233,14 @@ theme_minimal() +
     labs(title = "Europe seems to be abundant in the chains of our aim ", subtitle= "Number of all the types of chains in Europe", x="Hotel sector", y=" Number of chians", caption="Source: https://www.kaggle.com/ployyyywa/global-hotel-chain-presence") +
   scale_y_continuous()+
   scale_fill_manual(values = my_colours2)+ 
-   geom_label(aes(label=count),family = "Montserrat", fontface="bold", color="white", )
- 
- my_text <- "Upper Upscale + Luxury = 162"
-my_grob = grid.text(my_text, x=0.82,  y=0.7,gp=gpar(fontfamily="Montserrat",fontsize=10, col="#2FABE1", fontface="bold"))
-gg + annotation_custom(my_grob)
+   geom_label(aes(label=count),family = "Montserrat", fontface="bold", color="white", )+
+   annotation_custom(grid.text(my_text, x=0.85,  y=0.7,gp=gpar(fontfamily="Montserrat",fontsize=8.5, col="#2FABE1", fontface="bold")))
  
 ```
 
-# Average rating of hotels by country
+### Average rating of hotels by country
 
-```{r}
+```{r fig.height=6}
 #7.hotels with highest ratings (possible: combined with location)
 #average rating of hotels by country
 hotel3<-hotel2 %>%
@@ -277,9 +275,9 @@ ggplot(is_france, aes(x=average_score,y=reorder(country,average_score),fill=is_f
   scale_fill_manual(values = my_colours3)
 ```
 
-# Hotels of excellent ratings, by country
+### Hotels of excellent ratings, by country
 
-```{r}
+```{r fig.height=6}
 ##hotels with highest ratings
 ##choose all hotels > 8/8.5/9
 hotel4<-hotel3%>%
@@ -310,9 +308,9 @@ ggplot(hotel4,aes(x=reorder(country,count),y=count,fill=factor(is_best)))+
   coord_flip()
 ```
 
-# Proportion of Top 5 Reviewer Nationalities per Country
+### Proportion of Top 5 Reviewer Nationalities per Country
 
-```{r}
+```{r fig.height=6}
 maggiehoteldata <- hotel2 %>% mutate(country=recode(
   country, `Kingdom`= "United Kingdom")) %>%  # change Kingdom to United Kingdom to allow matching
   rename(hotelcountry = country)
@@ -432,10 +430,10 @@ panel.grid.major.y = element_line(color = "gray60", size = 0.1),
 stackedbarplot
 ```
 
-# Region and subregion reviers' background
+### Region and subregion reviers' background
 
-## Creating variables
-```{r}
+#### Creating variables
+```{r fig.height=6}
 glimpse(hotel2)
 hotel_review_nationality<- hotel2 %>%  #merging main table with countries and continents of reviwers' origin
   left_join(country_continent, by=c("reviewer_nationality"="name")) %>% 
@@ -455,9 +453,9 @@ reviews_by_subregion<- hotel_review_nationality  %>%  #creating summary for subr
 ```
 
 
-# Reviewers' origin by region
+### Reviewers' origin by region
 
-```{r}
+```{r, fig.height=6}
 
 # pivoting regions
 reviews_by_region_pivot<- reviews_by_region %>% 
@@ -514,19 +512,13 @@ plot_region_reviews<-reviews_by_region_pivot %>%
 
 plot_region_reviews +annotation_custom(my_grob) + annotation_custom(my_grob2)+annotation_custom(my_grob3) 
 
-   
-  
-    
-                                   
-                                  
-
 ```
 
 
 
-# Reviewers' origin by Subregion
+### Reviewers' origin by Subregion
 
-```{r}
+```{r, fig.height=6}
 reviews_by_subregion_pivot<- reviews_by_subregion %>% 
   pivot_longer(cols = 4:5, names_to= "type_review", values_to= "score", values_drop_na = TRUE) # pivoted dataframe
 reviews_by_subregion_pivot$type_review<- reviews_by_subregion_pivot$type_review %>%  factor(levels= c("avg_no_negative", "avg_no_positive")) # creating avg no of positive & negative words per region + average review score per subregion
@@ -566,8 +558,6 @@ plot_subregion_reviews <-reviews_by_subregion_pivot %>%
                 color = "tomato", size=0.8)+
   geom_hline(yintercept = 17.5, linetype="dashed", 
                 color = "#45B05F", size=0.8)
-   
-   
      my_text1s <- "Negative"
     my_text2s <- "Positive"
     my_text3s <- "Average \nreview score"
@@ -577,11 +567,11 @@ my_grobs3 = grid.text(my_text3s, x=0.77,  y=0.94,gp=gpar(fontfamily="Montserrat"
  plot_subregion_reviews + annotation_custom(my_grobs1) + annotation_custom(my_grobs2)+annotation_custom(my_grobs3)
 ```
 
-# Creating wordclouds with most popular positive/ negative words
+### Creating wordclouds with most popular positive/ negative words
 
-## Preparing dataset
+#### Preparing dataset
 
-```{r}
+```{r, fig.height=6}
 hotelcloud<-hotel2[!is.na(hotel2$positive_review), ]
 hotelcloud<-hotel2[!is.na(hotel2$negative_review), ]
 ```
@@ -621,9 +611,9 @@ inspect(DTM_neg)
 rm(review_neg,review_pos)
 ```
 
-##Positive wordcloud
+#### Positive wordcloud
 
-```{r}
+```{r, fig.height=6}
 ##Positive wordcloud
 #convert to tibble
 m <- as.matrix(DTM_pos)
@@ -637,7 +627,6 @@ wordCountDoc_pos <- DTM_pos_tidy %>%
         arrange(desc(total_pos)) 
 print(wordCountDoc_pos %>% top_n(5))
 #wordcloud
-colors()
 library(wordcloud)
 library(wordcloud2)
 wordcloud(words = wordCountDoc_pos$word, 
@@ -650,8 +639,8 @@ wordcloud(words = wordCountDoc_pos$word,
   title(main = "Most Frequent Words in Positive Reviews", col.main = "#810f7c", size = 8, family="Montserrat", face = "bold")
 ```
 
-##Negatvie wordcloud
-```{r}
+#### Negatvie wordcloud
+```{r, fig.height=6}
 ##Negatvie wordcloud
 #convert to tibble
 m <- as.matrix(DTM_neg)
@@ -665,7 +654,6 @@ wordCountDoc_neg <- DTM_neg_tidy %>%
         arrange(desc(total_neg)) 
 print(wordCountDoc_neg %>% top_n(5))
 #wordcloud
-colors()
 wordcloud(words = wordCountDoc_neg$word, 
           freq = wordCountDoc_neg$total_neg, 
           max.words = 150,
@@ -679,8 +667,8 @@ wordcloud(words = wordCountDoc_neg$word,
 
 
 
-# Hotel reviewed by highest number of alleged bots
-```{r}
+### Hotel reviewed by highest number of alleged bots
+```{r, fig.height=6}
 bots_by_hotel<-duplicates%>% 
   group_by(hotel_name)%>%
   summarise(count=n())%>%
@@ -713,8 +701,8 @@ theme_minimal() + #put simple theme to emnphasise the graphs
 ```
 
 
-# Meaningless reviews vs meaningful reviews
-```{r}
+### Meaningless reviews vs meaningful reviews
+```{r, fig.height=6}
 #popularity of bots
 bots_by_popularity<-duplicates%>%
   mutate(negative_review_renew=ifelse(negative_review=="No Negative"|negative_review=="Nothing"|negative_review=="nothing"|negative_review=="Everything","Meaningless review","Meaningful review"))%>% #define meaningless review and meaningful review for visualisation
@@ -745,15 +733,10 @@ theme_minimal() +
   scale_y_continuous()+
   scale_fill_manual(values = c("grey80"))+
   geom_label(aes(label=sum),family="Montserrat", fontface="bold" )
-bots_graph
 my_text1r <- "No Negative, \nNothing, \nnothing, & \nEverything"
-my_grobr1 = grid.text(my_text1r, x=0.57,  y=0.82,gp=gpar(fontfamily="Montserrat",fontsize= 12, col="#2FABE1", fontface="bold"))
+my_grobr1 <- grid.text(my_text1r, x=0.57,  y=0.82,gp=gpar(fontfamily="Montserrat",fontsize= 12, col="#2FABE1", fontface="bold"))
  bots_graph + annotation_custom(my_grobr1) 
 ```
 
-
-
-
 Thank you!
-Group members: Malay Memani, Derek Leung, Samy Mohamad, Yichun Hou, Agnieszka Prawda, Magdalena Cloppenburg
 

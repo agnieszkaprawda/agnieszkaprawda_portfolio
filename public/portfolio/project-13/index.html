@@ -123,378 +123,22 @@
 
     
 </style>
-<p>###Loading Packages</p>
-<p>###Importing the Data Set</p>
-<div id="story-time" class="section level1">
-<h1>Story Time</h1>
-<p>We are a group of individuals working within the Data Analytics Team at Booking.com, and have been asked to gather insights on the mid- to high-end (luxury) hotel market in Europe. We are to present our results to our Team Lead.</p>
+<div id="importing-the-data-set" class="section level3">
+<h3>Importing the Data Set</h3>
 </div>
-<div id="cleaning-data-set-global_hotel_chain_sizec" class="section level1">
-<h1>Cleaning Data Set global_hotel_chain_sizec</h1>
+<div id="story-time" class="section level3">
+<h3>Story Time</h3>
+<p>As a team member of Data Analytics Team at Booking.com, I have been asked to gather insights on the mid- to high-end (luxury) hotel market in Europe. I am to present my results to my Team Lead.</p>
+<p>#`## Cleaning Data Set global_hotel_chain_sizec</p>
 <p>First, let’s have a look at the overall global luxury &amp; upscale hotel market.</p>
 <pre class="r blue"><code># let&#39;s have a look on our data set
-describe(global_hotel_chain_size) </code></pre>
-<pre class="whiteb"><code>## global_hotel_chain_size 
-## 
-##  13  Variables      1092  Observations
-## --------------------------------------------------------------------------------
-## scale_id 
-##        n  missing distinct     Info     Mean      Gmd 
-##     1092        0        6    0.965    3.554    1.703 
-## 
-## lowest : 1 2 3 4 5, highest: 2 3 4 5 6
-##                                               
-## Value          1     2     3     4     5     6
-## Frequency    115   161   276   225   174   141
-## Proportion 0.105 0.147 0.253 0.206 0.159 0.129
-## --------------------------------------------------------------------------------
-## chain_scale 
-##        n  missing distinct 
-##     1092        0        6 
-## 
-## lowest : Economy Chains        Luxury Chains         Midscale Chains       Upper Midscale Chains Upper Upscale Chains 
-## highest: Luxury Chains         Midscale Chains       Upper Midscale Chains Upper Upscale Chains  Upscale Chains       
-##                                                                             
-## Value             Economy Chains         Luxury Chains       Midscale Chains
-## Frequency                    141                   115                   174
-## Proportion                 0.129                 0.105                 0.159
-##                                                                             
-## Value      Upper Midscale Chains  Upper Upscale Chains        Upscale Chains
-## Frequency                    225                   161                   276
-## Proportion                 0.206                 0.147                 0.253
-## --------------------------------------------------------------------------------
-## affiliation_name 
-##        n  missing distinct 
-##     1092        0     1092 
-## 
-## lowest : 21c Museum Hotels             25Hours Hotels                3 Palms Hotels &amp; Resorts      7 Days Inn                    A &amp; O Hotel &amp; Hostel         
-## highest: Zhongwei AF                   ZIP by Premier Inn            Zleep Hotels                  Zoetry Wellness &amp; Spa Resorts Zone by The Park             
-## --------------------------------------------------------------------------------
-## aff_parent_company_name 
-##        n  missing distinct 
-##     1092        0      689 
-## 
-## lowest : 25Hours Hotels                            7 Days Inn                                A &amp; O Hotel &amp; Hostel Vienna GmbH          A Victory Hotels                          Abad Group                               
-## highest: Zhejiang SSAW Hospitality Service Company Zhongan Inns                              Zhongwei Hotel Group                      Zleep Hotels                              Zoetry Wellness &amp; Spa Resorts            
-## --------------------------------------------------------------------------------
-## africa 
-##        n  missing distinct    value 
-##      139      953        1        X 
-##               
-## Value        X
-## Frequency  139
-## Proportion   1
-## --------------------------------------------------------------------------------
-## apac 
-##        n  missing distinct    value 
-##      491      601        1        X 
-##               
-## Value        X
-## Frequency  491
-## Proportion   1
-## --------------------------------------------------------------------------------
-## c_s_america 
-##        n  missing distinct    value 
-##      136      956        1        X 
-##               
-## Value        X
-## Frequency  136
-## Proportion   1
-## --------------------------------------------------------------------------------
-## europe 
-##        n  missing distinct    value 
-##      532      560        1        X 
-##               
-## Value        X
-## Frequency  532
-## Proportion   1
-## --------------------------------------------------------------------------------
-## middle_east 
-##        n  missing distinct    value 
-##      143      949        1        X 
-##               
-## Value        X
-## Frequency  143
-## Proportion   1
-## --------------------------------------------------------------------------------
-## n_america_excl_us 
-##        n  missing distinct    value 
-##      202      890        1        X 
-##               
-## Value        X
-## Frequency  202
-## Proportion   1
-## --------------------------------------------------------------------------------
-## united_states 
-##        n  missing distinct    value 
-##      276      816        1        X 
-##               
-## Value        X
-## Frequency  276
-## Proportion   1
-## --------------------------------------------------------------------------------
-## 
-## Variables with all observations missing:
-## 
-## [1] x5  x12</code></pre>
-<pre class="r blue"><code>#Remove empty columns and rows
+#describe(global_hotel_chain_size) 
+#Remove empty columns and rows
 global_hotel_chain_size_clean&lt;-remove_empty(global_hotel_chain_size, which = c(&quot;rows&quot;,&quot;cols&quot;))
-describe(global_hotel_chain_size_clean) </code></pre>
-<pre class="whiteb"><code>## global_hotel_chain_size_clean 
-## 
-##  11  Variables      1092  Observations
-## --------------------------------------------------------------------------------
-## scale_id 
-##        n  missing distinct     Info     Mean      Gmd 
-##     1092        0        6    0.965    3.554    1.703 
-## 
-## lowest : 1 2 3 4 5, highest: 2 3 4 5 6
-##                                               
-## Value          1     2     3     4     5     6
-## Frequency    115   161   276   225   174   141
-## Proportion 0.105 0.147 0.253 0.206 0.159 0.129
-## --------------------------------------------------------------------------------
-## chain_scale 
-##        n  missing distinct 
-##     1092        0        6 
-## 
-## lowest : Economy Chains        Luxury Chains         Midscale Chains       Upper Midscale Chains Upper Upscale Chains 
-## highest: Luxury Chains         Midscale Chains       Upper Midscale Chains Upper Upscale Chains  Upscale Chains       
-##                                                                             
-## Value             Economy Chains         Luxury Chains       Midscale Chains
-## Frequency                    141                   115                   174
-## Proportion                 0.129                 0.105                 0.159
-##                                                                             
-## Value      Upper Midscale Chains  Upper Upscale Chains        Upscale Chains
-## Frequency                    225                   161                   276
-## Proportion                 0.206                 0.147                 0.253
-## --------------------------------------------------------------------------------
-## affiliation_name 
-##        n  missing distinct 
-##     1092        0     1092 
-## 
-## lowest : 21c Museum Hotels             25Hours Hotels                3 Palms Hotels &amp; Resorts      7 Days Inn                    A &amp; O Hotel &amp; Hostel         
-## highest: Zhongwei AF                   ZIP by Premier Inn            Zleep Hotels                  Zoetry Wellness &amp; Spa Resorts Zone by The Park             
-## --------------------------------------------------------------------------------
-## aff_parent_company_name 
-##        n  missing distinct 
-##     1092        0      689 
-## 
-## lowest : 25Hours Hotels                            7 Days Inn                                A &amp; O Hotel &amp; Hostel Vienna GmbH          A Victory Hotels                          Abad Group                               
-## highest: Zhejiang SSAW Hospitality Service Company Zhongan Inns                              Zhongwei Hotel Group                      Zleep Hotels                              Zoetry Wellness &amp; Spa Resorts            
-## --------------------------------------------------------------------------------
-## africa 
-##        n  missing distinct    value 
-##      139      953        1        X 
-##               
-## Value        X
-## Frequency  139
-## Proportion   1
-## --------------------------------------------------------------------------------
-## apac 
-##        n  missing distinct    value 
-##      491      601        1        X 
-##               
-## Value        X
-## Frequency  491
-## Proportion   1
-## --------------------------------------------------------------------------------
-## c_s_america 
-##        n  missing distinct    value 
-##      136      956        1        X 
-##               
-## Value        X
-## Frequency  136
-## Proportion   1
-## --------------------------------------------------------------------------------
-## europe 
-##        n  missing distinct    value 
-##      532      560        1        X 
-##               
-## Value        X
-## Frequency  532
-## Proportion   1
-## --------------------------------------------------------------------------------
-## middle_east 
-##        n  missing distinct    value 
-##      143      949        1        X 
-##               
-## Value        X
-## Frequency  143
-## Proportion   1
-## --------------------------------------------------------------------------------
-## n_america_excl_us 
-##        n  missing distinct    value 
-##      202      890        1        X 
-##               
-## Value        X
-## Frequency  202
-## Proportion   1
-## --------------------------------------------------------------------------------
-## united_states 
-##        n  missing distinct    value 
-##      276      816        1        X 
-##               
-## Value        X
-## Frequency  276
-## Proportion   1
-## --------------------------------------------------------------------------------</code></pre>
+#describe(global_hotel_chain_size_clean) </code></pre>
 </div>
-<div id="cleaning-data-set-hotels_raw" class="section level1">
-<h1>Cleaning Data Set hotels_raw</h1>
-<pre class="r blue"><code>Hmisc::describe(hotels_raw)</code></pre>
-<pre class="whiteb"><code>## hotels_raw 
-## 
-##  17  Variables      515738  Observations
-## --------------------------------------------------------------------------------
-## hotel_address 
-##        n  missing distinct 
-##   515738        0     1493 
-## 
-## lowest : 1 15 Templeton Place Earl s Court Kensington and Chelsea London SW5 9NB United Kingdom 1 2 Serjeant s Inn Fleet Street City of London London EC4Y 1LL United Kingdom          1 3 Queens Garden Westminster Borough London W2 3BA United Kingdom                     1 3 Rue d Argentine 16th arr 75116 Paris France                                        1 5 Passage Ruelle 18th arr 75018 Paris France                                        
-## highest: Wiedner Hauptstra e 44 04 Wieden 1040 Vienna Austria                                   Wildpretmarkt 5 01 Innere Stadt 1010 Vienna Austria                                    Wilton Place Knightsbridge Westminster Borough London SW1X 7RL United Kingdom          Wrights Lane Kensington and Chelsea London W8 5SP United Kingdom                       Wurzbachgasse 21 15 Rudolfsheim F nfhaus 1150 Vienna Austria                          
-## --------------------------------------------------------------------------------
-## additional_number_of_scoring 
-##        n  missing distinct     Info     Mean      Gmd      .05      .10 
-##   515738        0      480        1    498.1    480.2       57       84 
-##      .25      .50      .75      .90      .95 
-##      169      341      660     1100     1444 
-## 
-## lowest :    1    4    5    6    7, highest: 1831 1936 2288 2623 2682
-## --------------------------------------------------------------------------------
-## review_date 
-##        n  missing distinct 
-##   515738        0      731 
-## 
-## lowest : 1/1/2016  1/1/2017  1/10/2016 1/10/2017 1/11/2016
-## highest: 9/7/2016  9/8/2015  9/8/2016  9/9/2015  9/9/2016 
-## --------------------------------------------------------------------------------
-## average_score 
-##        n  missing distinct     Info     Mean      Gmd      .05      .10 
-##   515738        0       34    0.997    8.397   0.6113      7.4      7.7 
-##      .25      .50      .75      .90      .95 
-##      8.1      8.4      8.8      9.1      9.2 
-## 
-## lowest : 5.2 6.4 6.6 6.7 6.8, highest: 9.3 9.4 9.5 9.6 9.8
-## --------------------------------------------------------------------------------
-## hotel_name 
-##        n  missing distinct 
-##   515738        0     1492 
-## 
-## lowest : 11 Cadogan Gardens                 1K Hotel                           25hours Hotel beim MuseumsQuartier 41                                 45 Park Lane Dorchester Collection
-## highest: Windsor Opera                      Worldhotel Cristoforo Colombo      XO Hotel                           Zenit Barcelona                    Zenit Borrell                     
-## --------------------------------------------------------------------------------
-## reviewer_nationality 
-##        n  missing distinct 
-##   515215      523      226 
-## 
-## lowest : Abkhazia Georgia  Afghanistan       Albania           Algeria           American Samoa   
-## highest: Vietnam           Wallis and Futuna Yemen             Zambia            Zimbabwe         
-## --------------------------------------------------------------------------------
-## negative_review 
-##        n  missing distinct 
-##   514736     1002   326564 
-## 
-## lowest : 0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  0 00 Comments                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0 8ml quoted distance from O2 confusing as TAXI fare is approx 20 00                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               0 AND THE LARGEST I asked them to change the shower gel at least twice when it became empty But it wasn t replaced until my check out This is not a 4 star hotel at all 1 Only one towel in the room when I checked in But it was solved when I asked a receptionist 2 The loud sound of trams near the hotel are extremely noisy 3 The Elevator in the hotel is very strange I click the button just to descend It stopped in the my floor but then it run upward 4 Wi fi is working but it periodically interrupted 5 There is no any sound insulation in the hotel I could to hear a snore of the neighbours in the adjacent room The ventilation in the bathroom is very noisy 0 communication with the hotel we sent many questions through booking and direct e mail but NO ONE answered We asked if we could pay cash when we get there we inquired about the amount of money that was withdrawn Now 8 DAYS LATER the amount they took is still reserved and nobody is answering the staff s attitude gave us a wrong room the view we had a perfect view of a concrete wall see attached photos the breakfast the only edible things were the croissants the tomatoes were old the omelette was not done the thin walls we could hear everything that was going on in the other rooms                                                                        
-## highest: Zooming noise as from 7 30 of whirlpool on roof                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    Ztl area                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           zu wenig Steckdosen f r Laptop etc missing plugs for electronic devices                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Zwarte Piete in hotel lobby 1970s decor badly needs a makeover                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     zwembad communicatie over de boeking                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
-## --------------------------------------------------------------------------------
-## review_total_negative_word_counts 
-##        n  missing distinct     Info     Mean      Gmd      .05      .10 
-##   515738        0      402    0.984    18.54    24.16        0        0 
-##      .25      .50      .75      .90      .95 
-##        2        9       23       46       69 
-## 
-## lowest :   0   2   3   4   5, highest: 400 401 402 403 408
-## --------------------------------------------------------------------------------
-## total_number_of_reviews 
-##        n  missing distinct     Info     Mean      Gmd      .05      .10 
-##   515738        0     1142        1     2744     2303      435      631 
-##      .25      .50      .75      .90      .95 
-##     1161     2134     3613     5726     7371 
-## 
-## lowest :    43    45    49    51    54, highest:  9086  9568 10842 12158 16670
-## --------------------------------------------------------------------------------
-## positive_review 
-##        n  missing distinct 
-##   515544      194   407550 
-## 
-## lowest : 0 noises Good sleep 10 minutes from bus or metro                                                                                                                                              1 200 meters away from the Bacelona Sants station 2 Friendly front desk people                                                                                                                1 24 hour room service available 2 michelin star restaurants located in the hotel 3 spa available 4 pleasant staff                                                                            1 A very good location 3 m walk to Oxford Circus Tube Station see remarks 3 Cosy room clean panoramic view from high floor acomodation rooms between 10th to 14th fl 3 Nice and helpful staff 1 All day refreshment and tapas 2 Nibbles in the room were superb                                                                                                                            
-## highest: Zero personal attention in spite of me being a Spire Member The worse Crowne Plaza I have been to                                                                                             Zinc bar menu was very good and barbe cue on terrace was original and pleasant                                                                                                                Zola the night manager was really friendly helpful All the staff managers were very helpful and friendly                                                                                      Zola the receptionist such a kind man Service like this is unbeatable                                                                                                                         Zzstaff was excellent                                                                                                                                                                        
-## --------------------------------------------------------------------------------
-## review_total_positive_word_counts 
-##        n  missing distinct     Info     Mean      Gmd      .05      .10 
-##   515738        0      365    0.999    17.78    18.75        0        2 
-##      .25      .50      .75      .90      .95 
-##        5       11       22       40       56 
-## 
-## lowest :   0   2   3   4   5, highest: 382 383 384 386 395
-## --------------------------------------------------------------------------------
-## total_number_of_reviews_reviewer_has_given 
-##        n  missing distinct     Info     Mean      Gmd      .05      .10 
-##   515738        0      198    0.969    7.166     8.61        1        1 
-##      .25      .50      .75      .90      .95 
-##        1        3        8       18       26 
-## 
-## lowest :   1   2   3   4   5, highest: 281 297 315 330 355
-## --------------------------------------------------------------------------------
-## reviewer_score 
-##        n  missing distinct     Info     Mean      Gmd      .05      .10 
-##   515738        0       37    0.983    8.395    1.744      5.0      5.8 
-##      .25      .50      .75      .90      .95 
-##      7.5      8.8      9.6     10.0     10.0 
-## 
-## lowest :  2.5  2.9  3.0  3.1  3.3, highest:  9.2  9.4  9.5  9.6 10.0
-## --------------------------------------------------------------------------------
-## tags 
-##        n  missing distinct 
-##   515738        0    55242 
-## 
-## lowest : [&#39; Business trip &#39;, &#39; Couple &#39;, &#39; 1 King Bed Guest Room &#39;, &#39; Stayed 2 nights &#39;, &#39; Submitted from a mobile device &#39;]                   [&#39; Business trip &#39;, &#39; Couple &#39;, &#39; 1 King Bed Guest Room &#39;, &#39; Stayed 6 nights &#39;]                                                       [&#39; Business trip &#39;, &#39; Couple &#39;, &#39; 2 rooms &#39;, &#39; Stayed 1 night &#39;, &#39; Submitted from a mobile device &#39;]                                  [&#39; Business trip &#39;, &#39; Couple &#39;, &#39; 2 rooms &#39;, &#39; Stayed 1 night &#39;]                                                                      [&#39; Business trip &#39;, &#39; Couple &#39;, &#39; 2 rooms &#39;, &#39; Stayed 13 nights &#39;]                                                                   
-## highest: [&#39; With a pet &#39;, &#39; Solo traveler &#39;, &#39; Superior Queen Room &#39;, &#39; Stayed 5 nights &#39;, &#39; Submitted from a mobile device &#39;]                 [&#39; With a pet &#39;, &#39; Solo traveler &#39;, &#39; Superior Queen Room with Double Sofa &#39;, &#39; Stayed 1 night &#39;, &#39; Submitted from a mobile device &#39;] [&#39; With a pet &#39;, &#39; Solo traveler &#39;, &#39; Superior Shard King &#39;, &#39; Stayed 1 night &#39;, &#39; Submitted from a mobile device &#39;]                  [&#39; With a pet &#39;, &#39; Solo traveler &#39;, &#39; Twin Room &#39;, &#39; Stayed 2 nights &#39;]                                                               [&#39; With a pet &#39;, &#39; Solo traveler &#39;, &#39; Twin Room &#39;, &#39; Stayed 4 nights &#39;]                                                              
-## --------------------------------------------------------------------------------
-## days_since_review 
-##        n  missing distinct 
-##   515738        0      731 
-## 
-## lowest : 0 days  1 days  10 days 100 day 101 day
-## highest: 95 days 96 days 97 days 98 days 99 days
-## --------------------------------------------------------------------------------
-## lat 
-##        n  missing distinct     Info     Mean      Gmd      .05      .10 
-##   512470     3268     1472        1    49.44    3.353    41.39    41.40 
-##      .25      .50      .75      .90      .95 
-##    48.21    51.50    51.52    52.34    52.37 
-## 
-## lowest : 41.3 41.4 41.4 41.4 41.4, highest: 52.4 52.4 52.4 52.4 52.4
-##                                                                          
-## Value        41.3   41.4   45.4   45.5   48.2   48.3   48.8   48.9   51.4
-## Frequency     572  59370   1439  35768  35981    279  11318  48228    549
-## Proportion  0.001  0.116  0.003  0.070  0.070  0.001  0.022  0.094  0.001
-##                                       
-## Value        51.5   51.6   52.3   52.4
-## Frequency  251638  10114  10664  46550
-## Proportion  0.491  0.020  0.021  0.091
-## 
-## For the frequency table, variable is rounded to the nearest 0.1
-## --------------------------------------------------------------------------------
-## lng 
-##        n  missing distinct     Info     Mean      Gmd      .05      .10 
-##   512470     3268     1472        1    2.824     4.22 -0.19475 -0.18511 
-##      .25      .50      .75      .90      .95 
-## -0.14337  0.01061  4.83444  9.20032 16.35645 
-## 
-## lowest : -0.370 -0.319 -0.306 -0.292 -0.291, highest: 16.420 16.421 16.422 16.422 16.429
-##                                                                          
-## Value        -0.4   -0.2    0.0    2.2    2.4    4.8    5.0    9.0    9.2
-## Frequency     932 207009  54360  70993  48495  45693  11521    493  36714
-## Proportion  0.002  0.404  0.106  0.139  0.095  0.089  0.022  0.001  0.072
-##                         
-## Value        16.2   16.4
-## Frequency     498  35762
-## Proportion  0.001  0.070
-## 
-## For the frequency table, variable is rounded to the nearest 0.2
-## --------------------------------------------------------------------------------</code></pre>
+<div id="cleaning-data-set-hotels_raw" class="section level3">
+<h3>Cleaning Data Set hotels_raw</h3>
 <pre class="r blue"><code>glimpse(hotels_raw)</code></pre>
 <pre class="whiteb"><code>## Rows: 515,738
 ## Columns: 17
@@ -516,57 +160,18 @@ describe(global_hotel_chain_size_clean) </code></pre>
 ## $ lat                                        &lt;dbl&gt; 52.4, 52.4, 52.4, 52.4, 52…
 ## $ lng                                        &lt;dbl&gt; 4.92, 4.92, 4.92, 4.92, 4.…</code></pre>
 <pre class="r blue"><code>hotels_date_correct&lt;-hotels_raw %&gt;% mutate(review_date=as.Date(review_date,&quot;%d/%m/%Y&quot;)) %&gt;% mutate(country=word(hotel_address,-1,sep=fixed(&quot; &quot;)))
-glimpse(hotels_date_correct)</code></pre>
-<pre class="whiteb"><code>## Rows: 515,738
-## Columns: 18
-## $ hotel_address                              &lt;chr&gt; &quot;s Gravesandestraat 55 Oos…
-## $ additional_number_of_scoring               &lt;dbl&gt; 194, 194, 194, 194, 194, 1…
-## $ review_date                                &lt;date&gt; 2017-03-08, 2017-03-08, N…
-## $ average_score                              &lt;dbl&gt; 7.7, 7.7, 7.7, 7.7, 7.7, 7…
-## $ hotel_name                                 &lt;chr&gt; &quot;Hotel Arena&quot;, &quot;Hotel Aren…
-## $ reviewer_nationality                       &lt;chr&gt; &quot;Russia&quot;, &quot;Ireland&quot;, &quot;Aust…
-## $ negative_review                            &lt;chr&gt; &quot;I am so angry that i made…
-## $ review_total_negative_word_counts          &lt;dbl&gt; 397, 0, 42, 210, 140, 17, …
-## $ total_number_of_reviews                    &lt;dbl&gt; 1403, 1403, 1403, 1403, 14…
-## $ positive_review                            &lt;chr&gt; &quot;Only the park outside of …
-## $ review_total_positive_word_counts          &lt;dbl&gt; 11, 105, 21, 26, 8, 20, 18…
-## $ total_number_of_reviews_reviewer_has_given &lt;dbl&gt; 7, 7, 9, 1, 3, 1, 6, 1, 3,…
-## $ reviewer_score                             &lt;dbl&gt; 2.9, 7.5, 7.1, 3.8, 6.7, 6…
-## $ tags                                       &lt;chr&gt; &quot;[&#39; Leisure trip &#39;, &#39; Coup…
-## $ days_since_review                          &lt;chr&gt; &quot;0 days&quot;, &quot;0 days&quot;, &quot;3 day…
-## $ lat                                        &lt;dbl&gt; 52.4, 52.4, 52.4, 52.4, 52…
-## $ lng                                        &lt;dbl&gt; 4.92, 4.92, 4.92, 4.92, 4.…
-## $ country                                    &lt;chr&gt; &quot;Netherlands&quot;, &quot;Netherland…</code></pre>
+#glimpse(hotels_date_correct)</code></pre>
 <pre class="r blue"><code>#Remove empty columns and rows
 hotel1&lt;-remove_empty(hotels_date_correct, which = c(&quot;rows&quot;,&quot;cols&quot;))%&gt;%
   filter(!is.na(lat))
 #Check for duplicates (visualize bots)
 duplicates&lt;-hotel1%&gt;%get_dupes(positive_review, negative_review, hotel_name, reviewer_nationality)
-duplicates</code></pre>
-<pre class="whiteb"><code>## # A tibble: 2,664 x 19
-##    positive_review negative_review hotel_name reviewer_nation… dupe_count
-##    &lt;chr&gt;           &lt;chr&gt;           &lt;chr&gt;      &lt;chr&gt;                 &lt;int&gt;
-##  1 1 The room is … 1 bad air cond… Hotel Mon… China                     2
-##  2 1 The room is … 1 bad air cond… Hotel Mon… China                     2
-##  3 A brilliant ho… The fridge in … H tel Con… United Kingdom            2
-##  4 A brilliant ho… The fridge in … H tel Con… United Kingdom            2
-##  5 A pleasant if … As always in P… H tel Con… United Kingdom            2
-##  6 A pleasant if … As always in P… H tel Con… United Kingdom            2
-##  7 A pleasent sta… No Negative     H tel Bau… Barbados                  2
-##  8 A pleasent sta… No Negative     H tel Bau… Barbados                  2
-##  9 Absolutely lov… No Negative     H tel Bau… United Kingdom            2
-## 10 Absolutely lov… No Negative     H tel Bau… United Kingdom            2
-## # … with 2,654 more rows, and 14 more variables: hotel_address &lt;chr&gt;,
-## #   additional_number_of_scoring &lt;dbl&gt;, review_date &lt;date&gt;,
-## #   average_score &lt;dbl&gt;, review_total_negative_word_counts &lt;dbl&gt;,
-## #   total_number_of_reviews &lt;dbl&gt;, review_total_positive_word_counts &lt;dbl&gt;,
-## #   total_number_of_reviews_reviewer_has_given &lt;dbl&gt;, reviewer_score &lt;dbl&gt;,
-## #   tags &lt;chr&gt;, days_since_review &lt;chr&gt;, lat &lt;dbl&gt;, lng &lt;dbl&gt;, country &lt;chr&gt;</code></pre>
-<pre class="r blue"><code>#delete duplicates
+#duplicates
+#delete duplicates
 hotel2&lt;-hotel1%&gt;%
   distinct(positive_review, negative_review, hotel_name, reviewer_nationality, .keep_all = TRUE)
 md.pattern(hotel2,rotate.names = T)</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-7-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-6-1.png" width="648" style="display: block; margin: auto;" /></p>
 <pre class="whiteb"><code>##        hotel_address additional_number_of_scoring average_score hotel_name
 ## 201588             1                            1             1          1
 ## 307726             1                            1             1          1
@@ -640,9 +245,10 @@ md.pattern(hotel2,rotate.names = T)</code></pre>
 ## 39                   0           0      3
 ##                    986      308705 310399</code></pre>
 </div>
-<div id="europe-vs.-different-continents---luxury-chains-upper-upscale-chains" class="section level1">
-<h1>Europe vs. different continents - Luxury Chains, Upper Upscale Chains</h1>
-<p>Now we are good to go. First analysis:</p>
+<div id="europe-vs.-different-continents---luxury-chains-upper-upscale-chains" class="section level3">
+<h3>Europe vs. different continents - Luxury Chains, Upper Upscale Chains</h3>
+<p>Now I am good to go.</p>
+<p>First analysis:</p>
 <pre class="r blue"><code> # distribution of all the variables chain scale
 data.frame(table(global_hotel_chain_size_clean$chain_scale))</code></pre>
 <pre class="whiteb"><code>##                    Var1 Freq
@@ -742,10 +348,10 @@ theme_minimal() +
    geom_label(aes(label=count),family = &quot;Montserrat&quot;, fontface=&quot;bold&quot;, color=&quot;grey20&quot;, )
    
 first_plot</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-8-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-7-1.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
-<div id="european-landscape-in-terms-of-chain-types" class="section level1">
-<h1>European landscape in terms of chain types</h1>
+<div id="european-landscape-in-terms-of-chain-types" class="section level3">
+<h3>European landscape in terms of chain types</h3>
 <pre class="r blue"><code># data on how in Europe the chains are distributed
 chain_types_europe&lt;- chain_size_pivot %&gt;% 
   filter(region==&quot;Europe&quot;) %&gt;% 
@@ -757,8 +363,9 @@ mutate(
     is_chain = ifelse(chain_scale == &quot;Luxury Chains&quot;,  TRUE,
                       ifelse(chain_scale== &quot;Upper Upscale Chains&quot;, TRUE, FALSE)))
 # Chart of the data across all the regions
- 
- gg&lt;-ggplot(is_chain, aes(x=reorder(chain_scale,chain_scale), y=count, fill=is_chain)) +
+  my_text &lt;- &quot;Upper Upscale + Luxury = 162&quot;
+  
+ggplot(is_chain, aes(x=reorder(chain_scale,chain_scale), y=count, fill=is_chain)) +
     geom_bar(stat=&quot;identity&quot;, alpha=0.8)+
 theme_minimal() +
   theme(panel.grid.major.y = element_line(color = &quot;gray60&quot;, size = 0.1),
@@ -779,16 +386,12 @@ theme_minimal() +
     labs(title = &quot;Europe seems to be abundant in the chains of our aim &quot;, subtitle= &quot;Number of all the types of chains in Europe&quot;, x=&quot;Hotel sector&quot;, y=&quot; Number of chians&quot;, caption=&quot;Source: https://www.kaggle.com/ployyyywa/global-hotel-chain-presence&quot;) +
   scale_y_continuous()+
   scale_fill_manual(values = my_colours2)+ 
-   geom_label(aes(label=count),family = &quot;Montserrat&quot;, fontface=&quot;bold&quot;, color=&quot;white&quot;, )
- 
- my_text &lt;- &quot;Upper Upscale + Luxury = 162&quot;
-my_grob = grid.text(my_text, x=0.82,  y=0.7,gp=gpar(fontfamily=&quot;Montserrat&quot;,fontsize=10, col=&quot;#2FABE1&quot;, fontface=&quot;bold&quot;))</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-9-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r blue"><code>gg + annotation_custom(my_grob)</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-9-2.png" width="648" style="display: block; margin: auto;" /></p>
+   geom_label(aes(label=count),family = &quot;Montserrat&quot;, fontface=&quot;bold&quot;, color=&quot;white&quot;, )+
+   annotation_custom(grid.text(my_text, x=0.85,  y=0.7,gp=gpar(fontfamily=&quot;Montserrat&quot;,fontsize=8.5, col=&quot;#2FABE1&quot;, fontface=&quot;bold&quot;)))</code></pre>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-8-1.png" width="648" style="display: block; margin: auto;" /><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-8-2.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
-<div id="average-rating-of-hotels-by-country" class="section level1">
-<h1>Average rating of hotels by country</h1>
+<div id="average-rating-of-hotels-by-country" class="section level3">
+<h3>Average rating of hotels by country</h3>
 <pre class="r blue"><code>#7.hotels with highest ratings (possible: combined with location)
 #average rating of hotels by country
 hotel3&lt;-hotel2 %&gt;%
@@ -821,10 +424,10 @@ ggplot(is_france, aes(x=average_score,y=reorder(country,average_score),fill=is_f
         legend.position = &quot;none&quot;)+
     labs(title = &quot;France has the highest median rating&quot;, subtitle= &quot;Distribution of average ratings of hotels across 6 selected countries&quot;, x=&quot;Average rating of hotels&quot;, y=&quot;Country&quot;, caption=&quot;Source: https://www.kaggle.com/ployyyywa/global-hotel-chain-presence&quot;) +
   scale_fill_manual(values = my_colours3)</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-10-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-9-1.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
-<div id="hotels-of-excellent-ratings-by-country" class="section level1">
-<h1>Hotels of excellent ratings, by country</h1>
+<div id="hotels-of-excellent-ratings-by-country" class="section level3">
+<h3>Hotels of excellent ratings, by country</h3>
 <pre class="r blue"><code>##hotels with highest ratings
 ##choose all hotels &gt; 8/8.5/9
 hotel4&lt;-hotel3%&gt;%
@@ -853,10 +456,10 @@ ggplot(hotel4,aes(x=reorder(country,count),y=count,fill=factor(is_best)))+
     labs(title = &quot;UK &amp; France dominate hotels with &gt;9 average rating&quot;, subtitle= &quot;Number of &gt;9 rating hotels in 6 selected countries&quot;, x=&quot;Country&quot;, y=&quot;No. of hotels with rating &gt;9&quot;, caption=&quot;Source: https://www.kaggle.com/ployyyywa/global-hotel-chain-presence&quot;)+
   scale_fill_manual(values=c(&quot;grey80&quot;,&quot;#2FABE1&quot;)) +
   coord_flip()</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-11-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-10-1.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
-<div id="proportion-of-top-5-reviewer-nationalities-per-country" class="section level1">
-<h1>Proportion of Top 5 Reviewer Nationalities per Country</h1>
+<div id="proportion-of-top-5-reviewer-nationalities-per-country" class="section level3">
+<h3>Proportion of Top 5 Reviewer Nationalities per Country</h3>
 <pre class="r blue"><code>maggiehoteldata &lt;- hotel2 %&gt;% mutate(country=recode(
   country, `Kingdom`= &quot;United Kingdom&quot;)) %&gt;%  # change Kingdom to United Kingdom to allow matching
   rename(hotelcountry = country)
@@ -974,12 +577,12 @@ panel.grid.major.y = element_line(color = &quot;gray60&quot;, size = 0.1),
         legend.text=element_text(family=&quot;Montserrat&quot;, size=7))
  
 stackedbarplot</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-12-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-11-1.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
-<div id="region-and-subregion-reviers-background" class="section level1">
-<h1>Region and subregion reviers’ background</h1>
-<div id="creating-variables" class="section level2">
-<h2>Creating variables</h2>
+<div id="region-and-subregion-reviers-background" class="section level3">
+<h3>Region and subregion reviers’ background</h3>
+<div id="creating-variables" class="section level4">
+<h4>Creating variables</h4>
 <pre class="r blue"><code>glimpse(hotel2)</code></pre>
 <pre class="whiteb"><code>## Rows: 510,945
 ## Columns: 18
@@ -1018,8 +621,8 @@ reviews_by_subregion&lt;- hotel_review_nationality  %&gt;%  #creating summary fo
   arrange(desc(avg_review))</code></pre>
 </div>
 </div>
-<div id="reviewers-origin-by-region" class="section level1">
-<h1>Reviewers’ origin by region</h1>
+<div id="reviewers-origin-by-region" class="section level3">
+<h3>Reviewers’ origin by region</h3>
 <pre class="r blue"><code># pivoting regions
 reviews_by_region_pivot&lt;- reviews_by_region %&gt;% 
   pivot_longer(cols = 3:4, names_to= &quot;type_review&quot;, values_to= &quot;score&quot;, values_drop_na = TRUE) # pivoted dataframe
@@ -1041,7 +644,7 @@ my_colours_positive&lt;- c(&quot;#45B05F&quot;, &quot;tomato&quot;,&quot;#FFBAAD
 my_grob = grid.text(my_text1r, x=0.43,  y=0.83,gp=gpar(fontfamily=&quot;Montserrat&quot;,fontsize= 11, col=&quot;tomato&quot;, fontface=&quot;bold&quot;))
 my_grob2 = grid.text(my_text2r, x=0.54,  y=0.83,gp=gpar(fontfamily=&quot;Montserrat&quot;,fontsize= 11, col=&quot;#F1FFEB&quot;, fontface=2))
 my_grob3 = grid.text(my_text3r, x=0.68,  y=0.95,gp=gpar(fontfamily=&quot;Montserrat&quot;,fontsize= 8, col=&quot;black&quot;, fontface=2))</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-14-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-13-1.png" width="648" style="display: block; margin: auto;" /></p>
 <pre class="r blue"><code>quartz()
 # negative and positive
 plot_region_reviews&lt;-reviews_by_region_pivot %&gt;%
@@ -1075,10 +678,10 @@ plot_region_reviews&lt;-reviews_by_region_pivot %&gt;%
                 color = &quot;#45B05F&quot;, size=0.8)
 
 plot_region_reviews +annotation_custom(my_grob) + annotation_custom(my_grob2)+annotation_custom(my_grob3) </code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-14-2.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-13-2.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
-<div id="reviewers-origin-by-subregion" class="section level1">
-<h1>Reviewers’ origin by Subregion</h1>
+<div id="reviewers-origin-by-subregion" class="section level3">
+<h3>Reviewers’ origin by Subregion</h3>
 <pre class="r blue"><code>reviews_by_subregion_pivot&lt;- reviews_by_subregion %&gt;% 
   pivot_longer(cols = 4:5, names_to= &quot;type_review&quot;, values_to= &quot;score&quot;, values_drop_na = TRUE) # pivoted dataframe
 reviews_by_subregion_pivot$type_review&lt;- reviews_by_subregion_pivot$type_review %&gt;%  factor(levels= c(&quot;avg_no_negative&quot;, &quot;avg_no_positive&quot;)) # creating avg no of positive &amp; negative words per region + average review score per subregion
@@ -1118,22 +721,20 @@ plot_subregion_reviews &lt;-reviews_by_subregion_pivot %&gt;%
                 color = &quot;tomato&quot;, size=0.8)+
   geom_hline(yintercept = 17.5, linetype=&quot;dashed&quot;, 
                 color = &quot;#45B05F&quot;, size=0.8)
-   
-   
      my_text1s &lt;- &quot;Negative&quot;
     my_text2s &lt;- &quot;Positive&quot;
     my_text3s &lt;- &quot;Average \nreview score&quot;
 my_grobs1 = grid.text(my_text1s, x=0.425,  y=0.85,gp=gpar(fontfamily=&quot;Montserrat&quot;,fontsize= 8, col=&quot;tomato&quot;, fontface=&quot;bold&quot;))
 my_grobs2 = grid.text(my_text2s, x=0.545,  y=0.85,gp=gpar(fontfamily=&quot;Montserrat&quot;,fontsize= 8, col=&quot;#3FA259&quot;, fontface=2))
 my_grobs3 = grid.text(my_text3s, x=0.77,  y=0.94,gp=gpar(fontfamily=&quot;Montserrat&quot;,fontsize= 9, col=&quot;black&quot;, fontface=2))</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-15-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-14-1.png" width="648" style="display: block; margin: auto;" /></p>
 <pre class="r blue"><code> plot_subregion_reviews + annotation_custom(my_grobs1) + annotation_custom(my_grobs2)+annotation_custom(my_grobs3)</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-15-2.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-14-2.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
-<div id="creating-wordclouds-with-most-popular-positive-negative-words" class="section level1">
-<h1>Creating wordclouds with most popular positive/ negative words</h1>
-<div id="preparing-dataset" class="section level2">
-<h2>Preparing dataset</h2>
+<div id="creating-wordclouds-with-most-popular-positive-negative-words" class="section level3">
+<h3>Creating wordclouds with most popular positive/ negative words</h3>
+<div id="preparing-dataset" class="section level4">
+<h4>Preparing dataset</h4>
 <pre class="r blue"><code>hotelcloud&lt;-hotel2[!is.na(hotel2$positive_review), ]
 hotelcloud&lt;-hotel2[!is.na(hotel2$negative_review), ]</code></pre>
 <pre class="r blue"><code>hotelcloud2&lt;-hotelcloud
@@ -1160,7 +761,7 @@ DTM_pos &lt;- DocumentTermMatrix(review_pos, control = list(
             removePunctuation = TRUE,
             stripWhitespace = TRUE))
 dim(DTM_pos) </code></pre>
-<pre class="whiteb"><code>## [1] 6000 5576</code></pre>
+<pre class="whiteb"><code>## [1] 6000 5512</code></pre>
 <pre class="r blue"><code>DTM_neg &lt;- DocumentTermMatrix(review_neg, control = list(
             tolower = TRUE,
             removeNumbers = TRUE,
@@ -1168,26 +769,28 @@ dim(DTM_pos) </code></pre>
             removePunctuation = TRUE,
             stripWhitespace = TRUE))
 inspect(DTM_neg) </code></pre>
-<pre class="whiteb"><code>## &lt;&lt;DocumentTermMatrix (documents: 6000, terms: 7415)&gt;&gt;
-## Non-/sparse entries: 72264/44417736
+<pre class="whiteb"><code>## &lt;&lt;DocumentTermMatrix (documents: 6000, terms: 7458)&gt;&gt;
+## Non-/sparse entries: 74438/44673562
 ## Sparsity           : 100%
-## Maximal term length: 16
+## Maximal term length: 21
 ## Weighting          : term frequency (tf)
 ## Sample             :
 ##       Terms
-## Docs   bathroom bit breakfast didn like little one rooms small staff
-##   1314        0   0         6    0    0      0   1     0     0     2
-##   1808        0   0         0    0    0      0   1     4     0     1
-##   2251        0   0         0    0    1      1   2     1     0     0
-##   3063        2   0         0    4    3      0   2     1     4     0
-##   4075        0   0         0    0    0      0   0     1     0     4
-##   4102        0   0         2    1    0      0   0     0     0     0
-##   4179        2   1         1    4    1      0   1     1     1     1
-##   5329        0   0         4    1    0      0   2     0     0     0
-##   5580        0   1         0    4    0      1   2     1     1     1
-##   5893        0   0         0    1    2      0   0     1     0     0</code></pre>
+## Docs   bathroom bed bit breakfast didn little one rooms small staff
+##   1438        0   1   0         1    0      0   0     1     1     0
+##   2200        0   0   0         0    0      0   0     0     0     2
+##   3412        0   0   0         4    1      0   2     0     0     0
+##   3561        1   1   0         0    0      1   1     3     0     1
+##   4482        0   1   0         0    3      1   1     3     0     1
+##   4703        3   3   0         0    1      0   0     8     2     0
+##   4771        0   2   1         0    0      1   0     0     0     0
+##   4942        1   3   0         3    0      0   1     1     3     2
+##   5658        0   0   0         0    0      1   2     1     0     0
+##   5754        0   0   0         0    0      0   0     0     0     2</code></pre>
 <pre class="r blue"><code>rm(review_neg,review_pos)</code></pre>
-<p>##Positive wordcloud</p>
+</div>
+<div id="positive-wordcloud" class="section level4">
+<h4>Positive wordcloud</h4>
 <pre class="r blue"><code>##Positive wordcloud
 #convert to tibble
 m &lt;- as.matrix(DTM_pos)
@@ -1203,233 +806,13 @@ print(wordCountDoc_pos %&gt;% top_n(5))</code></pre>
 <pre class="whiteb"><code>## # A tibble: 5 x 2
 ##   word      total_pos
 ##   &lt;chr&gt;         &lt;dbl&gt;
-## 1 staff          2607
-## 2 location       2476
-## 3 good           1753
-## 4 great          1415
-## 5 breakfast      1259</code></pre>
+## 1 staff          2541
+## 2 location       2439
+## 3 good           1729
+## 4 great          1477
+## 5 breakfast      1190</code></pre>
 <pre class="r blue"><code>#wordcloud
-colors()</code></pre>
-<pre class="whiteb"><code>##   [1] &quot;white&quot;                &quot;aliceblue&quot;            &quot;antiquewhite&quot;        
-##   [4] &quot;antiquewhite1&quot;        &quot;antiquewhite2&quot;        &quot;antiquewhite3&quot;       
-##   [7] &quot;antiquewhite4&quot;        &quot;aquamarine&quot;           &quot;aquamarine1&quot;         
-##  [10] &quot;aquamarine2&quot;          &quot;aquamarine3&quot;          &quot;aquamarine4&quot;         
-##  [13] &quot;azure&quot;                &quot;azure1&quot;               &quot;azure2&quot;              
-##  [16] &quot;azure3&quot;               &quot;azure4&quot;               &quot;beige&quot;               
-##  [19] &quot;bisque&quot;               &quot;bisque1&quot;              &quot;bisque2&quot;             
-##  [22] &quot;bisque3&quot;              &quot;bisque4&quot;              &quot;black&quot;               
-##  [25] &quot;blanchedalmond&quot;       &quot;blue&quot;                 &quot;blue1&quot;               
-##  [28] &quot;blue2&quot;                &quot;blue3&quot;                &quot;blue4&quot;               
-##  [31] &quot;blueviolet&quot;           &quot;brown&quot;                &quot;brown1&quot;              
-##  [34] &quot;brown2&quot;               &quot;brown3&quot;               &quot;brown4&quot;              
-##  [37] &quot;burlywood&quot;            &quot;burlywood1&quot;           &quot;burlywood2&quot;          
-##  [40] &quot;burlywood3&quot;           &quot;burlywood4&quot;           &quot;cadetblue&quot;           
-##  [43] &quot;cadetblue1&quot;           &quot;cadetblue2&quot;           &quot;cadetblue3&quot;          
-##  [46] &quot;cadetblue4&quot;           &quot;chartreuse&quot;           &quot;chartreuse1&quot;         
-##  [49] &quot;chartreuse2&quot;          &quot;chartreuse3&quot;          &quot;chartreuse4&quot;         
-##  [52] &quot;chocolate&quot;            &quot;chocolate1&quot;           &quot;chocolate2&quot;          
-##  [55] &quot;chocolate3&quot;           &quot;chocolate4&quot;           &quot;coral&quot;               
-##  [58] &quot;coral1&quot;               &quot;coral2&quot;               &quot;coral3&quot;              
-##  [61] &quot;coral4&quot;               &quot;cornflowerblue&quot;       &quot;cornsilk&quot;            
-##  [64] &quot;cornsilk1&quot;            &quot;cornsilk2&quot;            &quot;cornsilk3&quot;           
-##  [67] &quot;cornsilk4&quot;            &quot;cyan&quot;                 &quot;cyan1&quot;               
-##  [70] &quot;cyan2&quot;                &quot;cyan3&quot;                &quot;cyan4&quot;               
-##  [73] &quot;darkblue&quot;             &quot;darkcyan&quot;             &quot;darkgoldenrod&quot;       
-##  [76] &quot;darkgoldenrod1&quot;       &quot;darkgoldenrod2&quot;       &quot;darkgoldenrod3&quot;      
-##  [79] &quot;darkgoldenrod4&quot;       &quot;darkgray&quot;             &quot;darkgreen&quot;           
-##  [82] &quot;darkgrey&quot;             &quot;darkkhaki&quot;            &quot;darkmagenta&quot;         
-##  [85] &quot;darkolivegreen&quot;       &quot;darkolivegreen1&quot;      &quot;darkolivegreen2&quot;     
-##  [88] &quot;darkolivegreen3&quot;      &quot;darkolivegreen4&quot;      &quot;darkorange&quot;          
-##  [91] &quot;darkorange1&quot;          &quot;darkorange2&quot;          &quot;darkorange3&quot;         
-##  [94] &quot;darkorange4&quot;          &quot;darkorchid&quot;           &quot;darkorchid1&quot;         
-##  [97] &quot;darkorchid2&quot;          &quot;darkorchid3&quot;          &quot;darkorchid4&quot;         
-## [100] &quot;darkred&quot;              &quot;darksalmon&quot;           &quot;darkseagreen&quot;        
-## [103] &quot;darkseagreen1&quot;        &quot;darkseagreen2&quot;        &quot;darkseagreen3&quot;       
-## [106] &quot;darkseagreen4&quot;        &quot;darkslateblue&quot;        &quot;darkslategray&quot;       
-## [109] &quot;darkslategray1&quot;       &quot;darkslategray2&quot;       &quot;darkslategray3&quot;      
-## [112] &quot;darkslategray4&quot;       &quot;darkslategrey&quot;        &quot;darkturquoise&quot;       
-## [115] &quot;darkviolet&quot;           &quot;deeppink&quot;             &quot;deeppink1&quot;           
-## [118] &quot;deeppink2&quot;            &quot;deeppink3&quot;            &quot;deeppink4&quot;           
-## [121] &quot;deepskyblue&quot;          &quot;deepskyblue1&quot;         &quot;deepskyblue2&quot;        
-## [124] &quot;deepskyblue3&quot;         &quot;deepskyblue4&quot;         &quot;dimgray&quot;             
-## [127] &quot;dimgrey&quot;              &quot;dodgerblue&quot;           &quot;dodgerblue1&quot;         
-## [130] &quot;dodgerblue2&quot;          &quot;dodgerblue3&quot;          &quot;dodgerblue4&quot;         
-## [133] &quot;firebrick&quot;            &quot;firebrick1&quot;           &quot;firebrick2&quot;          
-## [136] &quot;firebrick3&quot;           &quot;firebrick4&quot;           &quot;floralwhite&quot;         
-## [139] &quot;forestgreen&quot;          &quot;gainsboro&quot;            &quot;ghostwhite&quot;          
-## [142] &quot;gold&quot;                 &quot;gold1&quot;                &quot;gold2&quot;               
-## [145] &quot;gold3&quot;                &quot;gold4&quot;                &quot;goldenrod&quot;           
-## [148] &quot;goldenrod1&quot;           &quot;goldenrod2&quot;           &quot;goldenrod3&quot;          
-## [151] &quot;goldenrod4&quot;           &quot;gray&quot;                 &quot;gray0&quot;               
-## [154] &quot;gray1&quot;                &quot;gray2&quot;                &quot;gray3&quot;               
-## [157] &quot;gray4&quot;                &quot;gray5&quot;                &quot;gray6&quot;               
-## [160] &quot;gray7&quot;                &quot;gray8&quot;                &quot;gray9&quot;               
-## [163] &quot;gray10&quot;               &quot;gray11&quot;               &quot;gray12&quot;              
-## [166] &quot;gray13&quot;               &quot;gray14&quot;               &quot;gray15&quot;              
-## [169] &quot;gray16&quot;               &quot;gray17&quot;               &quot;gray18&quot;              
-## [172] &quot;gray19&quot;               &quot;gray20&quot;               &quot;gray21&quot;              
-## [175] &quot;gray22&quot;               &quot;gray23&quot;               &quot;gray24&quot;              
-## [178] &quot;gray25&quot;               &quot;gray26&quot;               &quot;gray27&quot;              
-## [181] &quot;gray28&quot;               &quot;gray29&quot;               &quot;gray30&quot;              
-## [184] &quot;gray31&quot;               &quot;gray32&quot;               &quot;gray33&quot;              
-## [187] &quot;gray34&quot;               &quot;gray35&quot;               &quot;gray36&quot;              
-## [190] &quot;gray37&quot;               &quot;gray38&quot;               &quot;gray39&quot;              
-## [193] &quot;gray40&quot;               &quot;gray41&quot;               &quot;gray42&quot;              
-## [196] &quot;gray43&quot;               &quot;gray44&quot;               &quot;gray45&quot;              
-## [199] &quot;gray46&quot;               &quot;gray47&quot;               &quot;gray48&quot;              
-## [202] &quot;gray49&quot;               &quot;gray50&quot;               &quot;gray51&quot;              
-## [205] &quot;gray52&quot;               &quot;gray53&quot;               &quot;gray54&quot;              
-## [208] &quot;gray55&quot;               &quot;gray56&quot;               &quot;gray57&quot;              
-## [211] &quot;gray58&quot;               &quot;gray59&quot;               &quot;gray60&quot;              
-## [214] &quot;gray61&quot;               &quot;gray62&quot;               &quot;gray63&quot;              
-## [217] &quot;gray64&quot;               &quot;gray65&quot;               &quot;gray66&quot;              
-## [220] &quot;gray67&quot;               &quot;gray68&quot;               &quot;gray69&quot;              
-## [223] &quot;gray70&quot;               &quot;gray71&quot;               &quot;gray72&quot;              
-## [226] &quot;gray73&quot;               &quot;gray74&quot;               &quot;gray75&quot;              
-## [229] &quot;gray76&quot;               &quot;gray77&quot;               &quot;gray78&quot;              
-## [232] &quot;gray79&quot;               &quot;gray80&quot;               &quot;gray81&quot;              
-## [235] &quot;gray82&quot;               &quot;gray83&quot;               &quot;gray84&quot;              
-## [238] &quot;gray85&quot;               &quot;gray86&quot;               &quot;gray87&quot;              
-## [241] &quot;gray88&quot;               &quot;gray89&quot;               &quot;gray90&quot;              
-## [244] &quot;gray91&quot;               &quot;gray92&quot;               &quot;gray93&quot;              
-## [247] &quot;gray94&quot;               &quot;gray95&quot;               &quot;gray96&quot;              
-## [250] &quot;gray97&quot;               &quot;gray98&quot;               &quot;gray99&quot;              
-## [253] &quot;gray100&quot;              &quot;green&quot;                &quot;green1&quot;              
-## [256] &quot;green2&quot;               &quot;green3&quot;               &quot;green4&quot;              
-## [259] &quot;greenyellow&quot;          &quot;grey&quot;                 &quot;grey0&quot;               
-## [262] &quot;grey1&quot;                &quot;grey2&quot;                &quot;grey3&quot;               
-## [265] &quot;grey4&quot;                &quot;grey5&quot;                &quot;grey6&quot;               
-## [268] &quot;grey7&quot;                &quot;grey8&quot;                &quot;grey9&quot;               
-## [271] &quot;grey10&quot;               &quot;grey11&quot;               &quot;grey12&quot;              
-## [274] &quot;grey13&quot;               &quot;grey14&quot;               &quot;grey15&quot;              
-## [277] &quot;grey16&quot;               &quot;grey17&quot;               &quot;grey18&quot;              
-## [280] &quot;grey19&quot;               &quot;grey20&quot;               &quot;grey21&quot;              
-## [283] &quot;grey22&quot;               &quot;grey23&quot;               &quot;grey24&quot;              
-## [286] &quot;grey25&quot;               &quot;grey26&quot;               &quot;grey27&quot;              
-## [289] &quot;grey28&quot;               &quot;grey29&quot;               &quot;grey30&quot;              
-## [292] &quot;grey31&quot;               &quot;grey32&quot;               &quot;grey33&quot;              
-## [295] &quot;grey34&quot;               &quot;grey35&quot;               &quot;grey36&quot;              
-## [298] &quot;grey37&quot;               &quot;grey38&quot;               &quot;grey39&quot;              
-## [301] &quot;grey40&quot;               &quot;grey41&quot;               &quot;grey42&quot;              
-## [304] &quot;grey43&quot;               &quot;grey44&quot;               &quot;grey45&quot;              
-## [307] &quot;grey46&quot;               &quot;grey47&quot;               &quot;grey48&quot;              
-## [310] &quot;grey49&quot;               &quot;grey50&quot;               &quot;grey51&quot;              
-## [313] &quot;grey52&quot;               &quot;grey53&quot;               &quot;grey54&quot;              
-## [316] &quot;grey55&quot;               &quot;grey56&quot;               &quot;grey57&quot;              
-## [319] &quot;grey58&quot;               &quot;grey59&quot;               &quot;grey60&quot;              
-## [322] &quot;grey61&quot;               &quot;grey62&quot;               &quot;grey63&quot;              
-## [325] &quot;grey64&quot;               &quot;grey65&quot;               &quot;grey66&quot;              
-## [328] &quot;grey67&quot;               &quot;grey68&quot;               &quot;grey69&quot;              
-## [331] &quot;grey70&quot;               &quot;grey71&quot;               &quot;grey72&quot;              
-## [334] &quot;grey73&quot;               &quot;grey74&quot;               &quot;grey75&quot;              
-## [337] &quot;grey76&quot;               &quot;grey77&quot;               &quot;grey78&quot;              
-## [340] &quot;grey79&quot;               &quot;grey80&quot;               &quot;grey81&quot;              
-## [343] &quot;grey82&quot;               &quot;grey83&quot;               &quot;grey84&quot;              
-## [346] &quot;grey85&quot;               &quot;grey86&quot;               &quot;grey87&quot;              
-## [349] &quot;grey88&quot;               &quot;grey89&quot;               &quot;grey90&quot;              
-## [352] &quot;grey91&quot;               &quot;grey92&quot;               &quot;grey93&quot;              
-## [355] &quot;grey94&quot;               &quot;grey95&quot;               &quot;grey96&quot;              
-## [358] &quot;grey97&quot;               &quot;grey98&quot;               &quot;grey99&quot;              
-## [361] &quot;grey100&quot;              &quot;honeydew&quot;             &quot;honeydew1&quot;           
-## [364] &quot;honeydew2&quot;            &quot;honeydew3&quot;            &quot;honeydew4&quot;           
-## [367] &quot;hotpink&quot;              &quot;hotpink1&quot;             &quot;hotpink2&quot;            
-## [370] &quot;hotpink3&quot;             &quot;hotpink4&quot;             &quot;indianred&quot;           
-## [373] &quot;indianred1&quot;           &quot;indianred2&quot;           &quot;indianred3&quot;          
-## [376] &quot;indianred4&quot;           &quot;ivory&quot;                &quot;ivory1&quot;              
-## [379] &quot;ivory2&quot;               &quot;ivory3&quot;               &quot;ivory4&quot;              
-## [382] &quot;khaki&quot;                &quot;khaki1&quot;               &quot;khaki2&quot;              
-## [385] &quot;khaki3&quot;               &quot;khaki4&quot;               &quot;lavender&quot;            
-## [388] &quot;lavenderblush&quot;        &quot;lavenderblush1&quot;       &quot;lavenderblush2&quot;      
-## [391] &quot;lavenderblush3&quot;       &quot;lavenderblush4&quot;       &quot;lawngreen&quot;           
-## [394] &quot;lemonchiffon&quot;         &quot;lemonchiffon1&quot;        &quot;lemonchiffon2&quot;       
-## [397] &quot;lemonchiffon3&quot;        &quot;lemonchiffon4&quot;        &quot;lightblue&quot;           
-## [400] &quot;lightblue1&quot;           &quot;lightblue2&quot;           &quot;lightblue3&quot;          
-## [403] &quot;lightblue4&quot;           &quot;lightcoral&quot;           &quot;lightcyan&quot;           
-## [406] &quot;lightcyan1&quot;           &quot;lightcyan2&quot;           &quot;lightcyan3&quot;          
-## [409] &quot;lightcyan4&quot;           &quot;lightgoldenrod&quot;       &quot;lightgoldenrod1&quot;     
-## [412] &quot;lightgoldenrod2&quot;      &quot;lightgoldenrod3&quot;      &quot;lightgoldenrod4&quot;     
-## [415] &quot;lightgoldenrodyellow&quot; &quot;lightgray&quot;            &quot;lightgreen&quot;          
-## [418] &quot;lightgrey&quot;            &quot;lightpink&quot;            &quot;lightpink1&quot;          
-## [421] &quot;lightpink2&quot;           &quot;lightpink3&quot;           &quot;lightpink4&quot;          
-## [424] &quot;lightsalmon&quot;          &quot;lightsalmon1&quot;         &quot;lightsalmon2&quot;        
-## [427] &quot;lightsalmon3&quot;         &quot;lightsalmon4&quot;         &quot;lightseagreen&quot;       
-## [430] &quot;lightskyblue&quot;         &quot;lightskyblue1&quot;        &quot;lightskyblue2&quot;       
-## [433] &quot;lightskyblue3&quot;        &quot;lightskyblue4&quot;        &quot;lightslateblue&quot;      
-## [436] &quot;lightslategray&quot;       &quot;lightslategrey&quot;       &quot;lightsteelblue&quot;      
-## [439] &quot;lightsteelblue1&quot;      &quot;lightsteelblue2&quot;      &quot;lightsteelblue3&quot;     
-## [442] &quot;lightsteelblue4&quot;      &quot;lightyellow&quot;          &quot;lightyellow1&quot;        
-## [445] &quot;lightyellow2&quot;         &quot;lightyellow3&quot;         &quot;lightyellow4&quot;        
-## [448] &quot;limegreen&quot;            &quot;linen&quot;                &quot;magenta&quot;             
-## [451] &quot;magenta1&quot;             &quot;magenta2&quot;             &quot;magenta3&quot;            
-## [454] &quot;magenta4&quot;             &quot;maroon&quot;               &quot;maroon1&quot;             
-## [457] &quot;maroon2&quot;              &quot;maroon3&quot;              &quot;maroon4&quot;             
-## [460] &quot;mediumaquamarine&quot;     &quot;mediumblue&quot;           &quot;mediumorchid&quot;        
-## [463] &quot;mediumorchid1&quot;        &quot;mediumorchid2&quot;        &quot;mediumorchid3&quot;       
-## [466] &quot;mediumorchid4&quot;        &quot;mediumpurple&quot;         &quot;mediumpurple1&quot;       
-## [469] &quot;mediumpurple2&quot;        &quot;mediumpurple3&quot;        &quot;mediumpurple4&quot;       
-## [472] &quot;mediumseagreen&quot;       &quot;mediumslateblue&quot;      &quot;mediumspringgreen&quot;   
-## [475] &quot;mediumturquoise&quot;      &quot;mediumvioletred&quot;      &quot;midnightblue&quot;        
-## [478] &quot;mintcream&quot;            &quot;mistyrose&quot;            &quot;mistyrose1&quot;          
-## [481] &quot;mistyrose2&quot;           &quot;mistyrose3&quot;           &quot;mistyrose4&quot;          
-## [484] &quot;moccasin&quot;             &quot;navajowhite&quot;          &quot;navajowhite1&quot;        
-## [487] &quot;navajowhite2&quot;         &quot;navajowhite3&quot;         &quot;navajowhite4&quot;        
-## [490] &quot;navy&quot;                 &quot;navyblue&quot;             &quot;oldlace&quot;             
-## [493] &quot;olivedrab&quot;            &quot;olivedrab1&quot;           &quot;olivedrab2&quot;          
-## [496] &quot;olivedrab3&quot;           &quot;olivedrab4&quot;           &quot;orange&quot;              
-## [499] &quot;orange1&quot;              &quot;orange2&quot;              &quot;orange3&quot;             
-## [502] &quot;orange4&quot;              &quot;orangered&quot;            &quot;orangered1&quot;          
-## [505] &quot;orangered2&quot;           &quot;orangered3&quot;           &quot;orangered4&quot;          
-## [508] &quot;orchid&quot;               &quot;orchid1&quot;              &quot;orchid2&quot;             
-## [511] &quot;orchid3&quot;              &quot;orchid4&quot;              &quot;palegoldenrod&quot;       
-## [514] &quot;palegreen&quot;            &quot;palegreen1&quot;           &quot;palegreen2&quot;          
-## [517] &quot;palegreen3&quot;           &quot;palegreen4&quot;           &quot;paleturquoise&quot;       
-## [520] &quot;paleturquoise1&quot;       &quot;paleturquoise2&quot;       &quot;paleturquoise3&quot;      
-## [523] &quot;paleturquoise4&quot;       &quot;palevioletred&quot;        &quot;palevioletred1&quot;      
-## [526] &quot;palevioletred2&quot;       &quot;palevioletred3&quot;       &quot;palevioletred4&quot;      
-## [529] &quot;papayawhip&quot;           &quot;peachpuff&quot;            &quot;peachpuff1&quot;          
-## [532] &quot;peachpuff2&quot;           &quot;peachpuff3&quot;           &quot;peachpuff4&quot;          
-## [535] &quot;peru&quot;                 &quot;pink&quot;                 &quot;pink1&quot;               
-## [538] &quot;pink2&quot;                &quot;pink3&quot;                &quot;pink4&quot;               
-## [541] &quot;plum&quot;                 &quot;plum1&quot;                &quot;plum2&quot;               
-## [544] &quot;plum3&quot;                &quot;plum4&quot;                &quot;powderblue&quot;          
-## [547] &quot;purple&quot;               &quot;purple1&quot;              &quot;purple2&quot;             
-## [550] &quot;purple3&quot;              &quot;purple4&quot;              &quot;red&quot;                 
-## [553] &quot;red1&quot;                 &quot;red2&quot;                 &quot;red3&quot;                
-## [556] &quot;red4&quot;                 &quot;rosybrown&quot;            &quot;rosybrown1&quot;          
-## [559] &quot;rosybrown2&quot;           &quot;rosybrown3&quot;           &quot;rosybrown4&quot;          
-## [562] &quot;royalblue&quot;            &quot;royalblue1&quot;           &quot;royalblue2&quot;          
-## [565] &quot;royalblue3&quot;           &quot;royalblue4&quot;           &quot;saddlebrown&quot;         
-## [568] &quot;salmon&quot;               &quot;salmon1&quot;              &quot;salmon2&quot;             
-## [571] &quot;salmon3&quot;              &quot;salmon4&quot;              &quot;sandybrown&quot;          
-## [574] &quot;seagreen&quot;             &quot;seagreen1&quot;            &quot;seagreen2&quot;           
-## [577] &quot;seagreen3&quot;            &quot;seagreen4&quot;            &quot;seashell&quot;            
-## [580] &quot;seashell1&quot;            &quot;seashell2&quot;            &quot;seashell3&quot;           
-## [583] &quot;seashell4&quot;            &quot;sienna&quot;               &quot;sienna1&quot;             
-## [586] &quot;sienna2&quot;              &quot;sienna3&quot;              &quot;sienna4&quot;             
-## [589] &quot;skyblue&quot;              &quot;skyblue1&quot;             &quot;skyblue2&quot;            
-## [592] &quot;skyblue3&quot;             &quot;skyblue4&quot;             &quot;slateblue&quot;           
-## [595] &quot;slateblue1&quot;           &quot;slateblue2&quot;           &quot;slateblue3&quot;          
-## [598] &quot;slateblue4&quot;           &quot;slategray&quot;            &quot;slategray1&quot;          
-## [601] &quot;slategray2&quot;           &quot;slategray3&quot;           &quot;slategray4&quot;          
-## [604] &quot;slategrey&quot;            &quot;snow&quot;                 &quot;snow1&quot;               
-## [607] &quot;snow2&quot;                &quot;snow3&quot;                &quot;snow4&quot;               
-## [610] &quot;springgreen&quot;          &quot;springgreen1&quot;         &quot;springgreen2&quot;        
-## [613] &quot;springgreen3&quot;         &quot;springgreen4&quot;         &quot;steelblue&quot;           
-## [616] &quot;steelblue1&quot;           &quot;steelblue2&quot;           &quot;steelblue3&quot;          
-## [619] &quot;steelblue4&quot;           &quot;tan&quot;                  &quot;tan1&quot;                
-## [622] &quot;tan2&quot;                 &quot;tan3&quot;                 &quot;tan4&quot;                
-## [625] &quot;thistle&quot;              &quot;thistle1&quot;             &quot;thistle2&quot;            
-## [628] &quot;thistle3&quot;             &quot;thistle4&quot;             &quot;tomato&quot;              
-## [631] &quot;tomato1&quot;              &quot;tomato2&quot;              &quot;tomato3&quot;             
-## [634] &quot;tomato4&quot;              &quot;turquoise&quot;            &quot;turquoise1&quot;          
-## [637] &quot;turquoise2&quot;           &quot;turquoise3&quot;           &quot;turquoise4&quot;          
-## [640] &quot;violet&quot;               &quot;violetred&quot;            &quot;violetred1&quot;          
-## [643] &quot;violetred2&quot;           &quot;violetred3&quot;           &quot;violetred4&quot;          
-## [646] &quot;wheat&quot;                &quot;wheat1&quot;               &quot;wheat2&quot;              
-## [649] &quot;wheat3&quot;               &quot;wheat4&quot;               &quot;whitesmoke&quot;          
-## [652] &quot;yellow&quot;               &quot;yellow1&quot;              &quot;yellow2&quot;             
-## [655] &quot;yellow3&quot;              &quot;yellow4&quot;              &quot;yellowgreen&quot;</code></pre>
-<pre class="r blue"><code>library(wordcloud)
+library(wordcloud)
 library(wordcloud2)
 wordcloud(words = wordCountDoc_pos$word, 
           freq = wordCountDoc_pos$total_pos, 
@@ -1439,9 +822,11 @@ wordcloud(words = wordCountDoc_pos$word,
           rot.per = 0.35,
           colors = c(&quot;#ccebc5&quot;, &quot;#7bccc4&quot;, &quot;#7fbf7b&quot;,&quot;#4eb3d3&quot;,&quot;#8c6bb1&quot;,&quot;#810f7c&quot;))+
   title(main = &quot;Most Frequent Words in Positive Reviews&quot;, col.main = &quot;#810f7c&quot;, size = 8, family=&quot;Montserrat&quot;, face = &quot;bold&quot;)</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-17-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-16-1.png" width="648" style="display: block; margin: auto;" /></p>
 <pre class="whiteb"><code>## integer(0)</code></pre>
-<p>##Negatvie wordcloud</p>
+</div>
+<div id="negatvie-wordcloud" class="section level4">
+<h4>Negatvie wordcloud</h4>
 <pre class="r blue"><code>##Negatvie wordcloud
 #convert to tibble
 m &lt;- as.matrix(DTM_neg)
@@ -1457,233 +842,13 @@ print(wordCountDoc_neg %&gt;% top_n(5))</code></pre>
 <pre class="whiteb"><code>## # A tibble: 5 x 2
 ##   word      total_neg
 ##   &lt;chr&gt;         &lt;dbl&gt;
-## 1 breakfast      1079
-## 2 small           853
-## 3 staff           631
-## 4 rooms           592
-## 5 one             553</code></pre>
+## 1 breakfast      1075
+## 2 small           871
+## 3 staff           703
+## 4 rooms           637
+## 5 bed             586</code></pre>
 <pre class="r blue"><code>#wordcloud
-colors()</code></pre>
-<pre class="whiteb"><code>##   [1] &quot;white&quot;                &quot;aliceblue&quot;            &quot;antiquewhite&quot;        
-##   [4] &quot;antiquewhite1&quot;        &quot;antiquewhite2&quot;        &quot;antiquewhite3&quot;       
-##   [7] &quot;antiquewhite4&quot;        &quot;aquamarine&quot;           &quot;aquamarine1&quot;         
-##  [10] &quot;aquamarine2&quot;          &quot;aquamarine3&quot;          &quot;aquamarine4&quot;         
-##  [13] &quot;azure&quot;                &quot;azure1&quot;               &quot;azure2&quot;              
-##  [16] &quot;azure3&quot;               &quot;azure4&quot;               &quot;beige&quot;               
-##  [19] &quot;bisque&quot;               &quot;bisque1&quot;              &quot;bisque2&quot;             
-##  [22] &quot;bisque3&quot;              &quot;bisque4&quot;              &quot;black&quot;               
-##  [25] &quot;blanchedalmond&quot;       &quot;blue&quot;                 &quot;blue1&quot;               
-##  [28] &quot;blue2&quot;                &quot;blue3&quot;                &quot;blue4&quot;               
-##  [31] &quot;blueviolet&quot;           &quot;brown&quot;                &quot;brown1&quot;              
-##  [34] &quot;brown2&quot;               &quot;brown3&quot;               &quot;brown4&quot;              
-##  [37] &quot;burlywood&quot;            &quot;burlywood1&quot;           &quot;burlywood2&quot;          
-##  [40] &quot;burlywood3&quot;           &quot;burlywood4&quot;           &quot;cadetblue&quot;           
-##  [43] &quot;cadetblue1&quot;           &quot;cadetblue2&quot;           &quot;cadetblue3&quot;          
-##  [46] &quot;cadetblue4&quot;           &quot;chartreuse&quot;           &quot;chartreuse1&quot;         
-##  [49] &quot;chartreuse2&quot;          &quot;chartreuse3&quot;          &quot;chartreuse4&quot;         
-##  [52] &quot;chocolate&quot;            &quot;chocolate1&quot;           &quot;chocolate2&quot;          
-##  [55] &quot;chocolate3&quot;           &quot;chocolate4&quot;           &quot;coral&quot;               
-##  [58] &quot;coral1&quot;               &quot;coral2&quot;               &quot;coral3&quot;              
-##  [61] &quot;coral4&quot;               &quot;cornflowerblue&quot;       &quot;cornsilk&quot;            
-##  [64] &quot;cornsilk1&quot;            &quot;cornsilk2&quot;            &quot;cornsilk3&quot;           
-##  [67] &quot;cornsilk4&quot;            &quot;cyan&quot;                 &quot;cyan1&quot;               
-##  [70] &quot;cyan2&quot;                &quot;cyan3&quot;                &quot;cyan4&quot;               
-##  [73] &quot;darkblue&quot;             &quot;darkcyan&quot;             &quot;darkgoldenrod&quot;       
-##  [76] &quot;darkgoldenrod1&quot;       &quot;darkgoldenrod2&quot;       &quot;darkgoldenrod3&quot;      
-##  [79] &quot;darkgoldenrod4&quot;       &quot;darkgray&quot;             &quot;darkgreen&quot;           
-##  [82] &quot;darkgrey&quot;             &quot;darkkhaki&quot;            &quot;darkmagenta&quot;         
-##  [85] &quot;darkolivegreen&quot;       &quot;darkolivegreen1&quot;      &quot;darkolivegreen2&quot;     
-##  [88] &quot;darkolivegreen3&quot;      &quot;darkolivegreen4&quot;      &quot;darkorange&quot;          
-##  [91] &quot;darkorange1&quot;          &quot;darkorange2&quot;          &quot;darkorange3&quot;         
-##  [94] &quot;darkorange4&quot;          &quot;darkorchid&quot;           &quot;darkorchid1&quot;         
-##  [97] &quot;darkorchid2&quot;          &quot;darkorchid3&quot;          &quot;darkorchid4&quot;         
-## [100] &quot;darkred&quot;              &quot;darksalmon&quot;           &quot;darkseagreen&quot;        
-## [103] &quot;darkseagreen1&quot;        &quot;darkseagreen2&quot;        &quot;darkseagreen3&quot;       
-## [106] &quot;darkseagreen4&quot;        &quot;darkslateblue&quot;        &quot;darkslategray&quot;       
-## [109] &quot;darkslategray1&quot;       &quot;darkslategray2&quot;       &quot;darkslategray3&quot;      
-## [112] &quot;darkslategray4&quot;       &quot;darkslategrey&quot;        &quot;darkturquoise&quot;       
-## [115] &quot;darkviolet&quot;           &quot;deeppink&quot;             &quot;deeppink1&quot;           
-## [118] &quot;deeppink2&quot;            &quot;deeppink3&quot;            &quot;deeppink4&quot;           
-## [121] &quot;deepskyblue&quot;          &quot;deepskyblue1&quot;         &quot;deepskyblue2&quot;        
-## [124] &quot;deepskyblue3&quot;         &quot;deepskyblue4&quot;         &quot;dimgray&quot;             
-## [127] &quot;dimgrey&quot;              &quot;dodgerblue&quot;           &quot;dodgerblue1&quot;         
-## [130] &quot;dodgerblue2&quot;          &quot;dodgerblue3&quot;          &quot;dodgerblue4&quot;         
-## [133] &quot;firebrick&quot;            &quot;firebrick1&quot;           &quot;firebrick2&quot;          
-## [136] &quot;firebrick3&quot;           &quot;firebrick4&quot;           &quot;floralwhite&quot;         
-## [139] &quot;forestgreen&quot;          &quot;gainsboro&quot;            &quot;ghostwhite&quot;          
-## [142] &quot;gold&quot;                 &quot;gold1&quot;                &quot;gold2&quot;               
-## [145] &quot;gold3&quot;                &quot;gold4&quot;                &quot;goldenrod&quot;           
-## [148] &quot;goldenrod1&quot;           &quot;goldenrod2&quot;           &quot;goldenrod3&quot;          
-## [151] &quot;goldenrod4&quot;           &quot;gray&quot;                 &quot;gray0&quot;               
-## [154] &quot;gray1&quot;                &quot;gray2&quot;                &quot;gray3&quot;               
-## [157] &quot;gray4&quot;                &quot;gray5&quot;                &quot;gray6&quot;               
-## [160] &quot;gray7&quot;                &quot;gray8&quot;                &quot;gray9&quot;               
-## [163] &quot;gray10&quot;               &quot;gray11&quot;               &quot;gray12&quot;              
-## [166] &quot;gray13&quot;               &quot;gray14&quot;               &quot;gray15&quot;              
-## [169] &quot;gray16&quot;               &quot;gray17&quot;               &quot;gray18&quot;              
-## [172] &quot;gray19&quot;               &quot;gray20&quot;               &quot;gray21&quot;              
-## [175] &quot;gray22&quot;               &quot;gray23&quot;               &quot;gray24&quot;              
-## [178] &quot;gray25&quot;               &quot;gray26&quot;               &quot;gray27&quot;              
-## [181] &quot;gray28&quot;               &quot;gray29&quot;               &quot;gray30&quot;              
-## [184] &quot;gray31&quot;               &quot;gray32&quot;               &quot;gray33&quot;              
-## [187] &quot;gray34&quot;               &quot;gray35&quot;               &quot;gray36&quot;              
-## [190] &quot;gray37&quot;               &quot;gray38&quot;               &quot;gray39&quot;              
-## [193] &quot;gray40&quot;               &quot;gray41&quot;               &quot;gray42&quot;              
-## [196] &quot;gray43&quot;               &quot;gray44&quot;               &quot;gray45&quot;              
-## [199] &quot;gray46&quot;               &quot;gray47&quot;               &quot;gray48&quot;              
-## [202] &quot;gray49&quot;               &quot;gray50&quot;               &quot;gray51&quot;              
-## [205] &quot;gray52&quot;               &quot;gray53&quot;               &quot;gray54&quot;              
-## [208] &quot;gray55&quot;               &quot;gray56&quot;               &quot;gray57&quot;              
-## [211] &quot;gray58&quot;               &quot;gray59&quot;               &quot;gray60&quot;              
-## [214] &quot;gray61&quot;               &quot;gray62&quot;               &quot;gray63&quot;              
-## [217] &quot;gray64&quot;               &quot;gray65&quot;               &quot;gray66&quot;              
-## [220] &quot;gray67&quot;               &quot;gray68&quot;               &quot;gray69&quot;              
-## [223] &quot;gray70&quot;               &quot;gray71&quot;               &quot;gray72&quot;              
-## [226] &quot;gray73&quot;               &quot;gray74&quot;               &quot;gray75&quot;              
-## [229] &quot;gray76&quot;               &quot;gray77&quot;               &quot;gray78&quot;              
-## [232] &quot;gray79&quot;               &quot;gray80&quot;               &quot;gray81&quot;              
-## [235] &quot;gray82&quot;               &quot;gray83&quot;               &quot;gray84&quot;              
-## [238] &quot;gray85&quot;               &quot;gray86&quot;               &quot;gray87&quot;              
-## [241] &quot;gray88&quot;               &quot;gray89&quot;               &quot;gray90&quot;              
-## [244] &quot;gray91&quot;               &quot;gray92&quot;               &quot;gray93&quot;              
-## [247] &quot;gray94&quot;               &quot;gray95&quot;               &quot;gray96&quot;              
-## [250] &quot;gray97&quot;               &quot;gray98&quot;               &quot;gray99&quot;              
-## [253] &quot;gray100&quot;              &quot;green&quot;                &quot;green1&quot;              
-## [256] &quot;green2&quot;               &quot;green3&quot;               &quot;green4&quot;              
-## [259] &quot;greenyellow&quot;          &quot;grey&quot;                 &quot;grey0&quot;               
-## [262] &quot;grey1&quot;                &quot;grey2&quot;                &quot;grey3&quot;               
-## [265] &quot;grey4&quot;                &quot;grey5&quot;                &quot;grey6&quot;               
-## [268] &quot;grey7&quot;                &quot;grey8&quot;                &quot;grey9&quot;               
-## [271] &quot;grey10&quot;               &quot;grey11&quot;               &quot;grey12&quot;              
-## [274] &quot;grey13&quot;               &quot;grey14&quot;               &quot;grey15&quot;              
-## [277] &quot;grey16&quot;               &quot;grey17&quot;               &quot;grey18&quot;              
-## [280] &quot;grey19&quot;               &quot;grey20&quot;               &quot;grey21&quot;              
-## [283] &quot;grey22&quot;               &quot;grey23&quot;               &quot;grey24&quot;              
-## [286] &quot;grey25&quot;               &quot;grey26&quot;               &quot;grey27&quot;              
-## [289] &quot;grey28&quot;               &quot;grey29&quot;               &quot;grey30&quot;              
-## [292] &quot;grey31&quot;               &quot;grey32&quot;               &quot;grey33&quot;              
-## [295] &quot;grey34&quot;               &quot;grey35&quot;               &quot;grey36&quot;              
-## [298] &quot;grey37&quot;               &quot;grey38&quot;               &quot;grey39&quot;              
-## [301] &quot;grey40&quot;               &quot;grey41&quot;               &quot;grey42&quot;              
-## [304] &quot;grey43&quot;               &quot;grey44&quot;               &quot;grey45&quot;              
-## [307] &quot;grey46&quot;               &quot;grey47&quot;               &quot;grey48&quot;              
-## [310] &quot;grey49&quot;               &quot;grey50&quot;               &quot;grey51&quot;              
-## [313] &quot;grey52&quot;               &quot;grey53&quot;               &quot;grey54&quot;              
-## [316] &quot;grey55&quot;               &quot;grey56&quot;               &quot;grey57&quot;              
-## [319] &quot;grey58&quot;               &quot;grey59&quot;               &quot;grey60&quot;              
-## [322] &quot;grey61&quot;               &quot;grey62&quot;               &quot;grey63&quot;              
-## [325] &quot;grey64&quot;               &quot;grey65&quot;               &quot;grey66&quot;              
-## [328] &quot;grey67&quot;               &quot;grey68&quot;               &quot;grey69&quot;              
-## [331] &quot;grey70&quot;               &quot;grey71&quot;               &quot;grey72&quot;              
-## [334] &quot;grey73&quot;               &quot;grey74&quot;               &quot;grey75&quot;              
-## [337] &quot;grey76&quot;               &quot;grey77&quot;               &quot;grey78&quot;              
-## [340] &quot;grey79&quot;               &quot;grey80&quot;               &quot;grey81&quot;              
-## [343] &quot;grey82&quot;               &quot;grey83&quot;               &quot;grey84&quot;              
-## [346] &quot;grey85&quot;               &quot;grey86&quot;               &quot;grey87&quot;              
-## [349] &quot;grey88&quot;               &quot;grey89&quot;               &quot;grey90&quot;              
-## [352] &quot;grey91&quot;               &quot;grey92&quot;               &quot;grey93&quot;              
-## [355] &quot;grey94&quot;               &quot;grey95&quot;               &quot;grey96&quot;              
-## [358] &quot;grey97&quot;               &quot;grey98&quot;               &quot;grey99&quot;              
-## [361] &quot;grey100&quot;              &quot;honeydew&quot;             &quot;honeydew1&quot;           
-## [364] &quot;honeydew2&quot;            &quot;honeydew3&quot;            &quot;honeydew4&quot;           
-## [367] &quot;hotpink&quot;              &quot;hotpink1&quot;             &quot;hotpink2&quot;            
-## [370] &quot;hotpink3&quot;             &quot;hotpink4&quot;             &quot;indianred&quot;           
-## [373] &quot;indianred1&quot;           &quot;indianred2&quot;           &quot;indianred3&quot;          
-## [376] &quot;indianred4&quot;           &quot;ivory&quot;                &quot;ivory1&quot;              
-## [379] &quot;ivory2&quot;               &quot;ivory3&quot;               &quot;ivory4&quot;              
-## [382] &quot;khaki&quot;                &quot;khaki1&quot;               &quot;khaki2&quot;              
-## [385] &quot;khaki3&quot;               &quot;khaki4&quot;               &quot;lavender&quot;            
-## [388] &quot;lavenderblush&quot;        &quot;lavenderblush1&quot;       &quot;lavenderblush2&quot;      
-## [391] &quot;lavenderblush3&quot;       &quot;lavenderblush4&quot;       &quot;lawngreen&quot;           
-## [394] &quot;lemonchiffon&quot;         &quot;lemonchiffon1&quot;        &quot;lemonchiffon2&quot;       
-## [397] &quot;lemonchiffon3&quot;        &quot;lemonchiffon4&quot;        &quot;lightblue&quot;           
-## [400] &quot;lightblue1&quot;           &quot;lightblue2&quot;           &quot;lightblue3&quot;          
-## [403] &quot;lightblue4&quot;           &quot;lightcoral&quot;           &quot;lightcyan&quot;           
-## [406] &quot;lightcyan1&quot;           &quot;lightcyan2&quot;           &quot;lightcyan3&quot;          
-## [409] &quot;lightcyan4&quot;           &quot;lightgoldenrod&quot;       &quot;lightgoldenrod1&quot;     
-## [412] &quot;lightgoldenrod2&quot;      &quot;lightgoldenrod3&quot;      &quot;lightgoldenrod4&quot;     
-## [415] &quot;lightgoldenrodyellow&quot; &quot;lightgray&quot;            &quot;lightgreen&quot;          
-## [418] &quot;lightgrey&quot;            &quot;lightpink&quot;            &quot;lightpink1&quot;          
-## [421] &quot;lightpink2&quot;           &quot;lightpink3&quot;           &quot;lightpink4&quot;          
-## [424] &quot;lightsalmon&quot;          &quot;lightsalmon1&quot;         &quot;lightsalmon2&quot;        
-## [427] &quot;lightsalmon3&quot;         &quot;lightsalmon4&quot;         &quot;lightseagreen&quot;       
-## [430] &quot;lightskyblue&quot;         &quot;lightskyblue1&quot;        &quot;lightskyblue2&quot;       
-## [433] &quot;lightskyblue3&quot;        &quot;lightskyblue4&quot;        &quot;lightslateblue&quot;      
-## [436] &quot;lightslategray&quot;       &quot;lightslategrey&quot;       &quot;lightsteelblue&quot;      
-## [439] &quot;lightsteelblue1&quot;      &quot;lightsteelblue2&quot;      &quot;lightsteelblue3&quot;     
-## [442] &quot;lightsteelblue4&quot;      &quot;lightyellow&quot;          &quot;lightyellow1&quot;        
-## [445] &quot;lightyellow2&quot;         &quot;lightyellow3&quot;         &quot;lightyellow4&quot;        
-## [448] &quot;limegreen&quot;            &quot;linen&quot;                &quot;magenta&quot;             
-## [451] &quot;magenta1&quot;             &quot;magenta2&quot;             &quot;magenta3&quot;            
-## [454] &quot;magenta4&quot;             &quot;maroon&quot;               &quot;maroon1&quot;             
-## [457] &quot;maroon2&quot;              &quot;maroon3&quot;              &quot;maroon4&quot;             
-## [460] &quot;mediumaquamarine&quot;     &quot;mediumblue&quot;           &quot;mediumorchid&quot;        
-## [463] &quot;mediumorchid1&quot;        &quot;mediumorchid2&quot;        &quot;mediumorchid3&quot;       
-## [466] &quot;mediumorchid4&quot;        &quot;mediumpurple&quot;         &quot;mediumpurple1&quot;       
-## [469] &quot;mediumpurple2&quot;        &quot;mediumpurple3&quot;        &quot;mediumpurple4&quot;       
-## [472] &quot;mediumseagreen&quot;       &quot;mediumslateblue&quot;      &quot;mediumspringgreen&quot;   
-## [475] &quot;mediumturquoise&quot;      &quot;mediumvioletred&quot;      &quot;midnightblue&quot;        
-## [478] &quot;mintcream&quot;            &quot;mistyrose&quot;            &quot;mistyrose1&quot;          
-## [481] &quot;mistyrose2&quot;           &quot;mistyrose3&quot;           &quot;mistyrose4&quot;          
-## [484] &quot;moccasin&quot;             &quot;navajowhite&quot;          &quot;navajowhite1&quot;        
-## [487] &quot;navajowhite2&quot;         &quot;navajowhite3&quot;         &quot;navajowhite4&quot;        
-## [490] &quot;navy&quot;                 &quot;navyblue&quot;             &quot;oldlace&quot;             
-## [493] &quot;olivedrab&quot;            &quot;olivedrab1&quot;           &quot;olivedrab2&quot;          
-## [496] &quot;olivedrab3&quot;           &quot;olivedrab4&quot;           &quot;orange&quot;              
-## [499] &quot;orange1&quot;              &quot;orange2&quot;              &quot;orange3&quot;             
-## [502] &quot;orange4&quot;              &quot;orangered&quot;            &quot;orangered1&quot;          
-## [505] &quot;orangered2&quot;           &quot;orangered3&quot;           &quot;orangered4&quot;          
-## [508] &quot;orchid&quot;               &quot;orchid1&quot;              &quot;orchid2&quot;             
-## [511] &quot;orchid3&quot;              &quot;orchid4&quot;              &quot;palegoldenrod&quot;       
-## [514] &quot;palegreen&quot;            &quot;palegreen1&quot;           &quot;palegreen2&quot;          
-## [517] &quot;palegreen3&quot;           &quot;palegreen4&quot;           &quot;paleturquoise&quot;       
-## [520] &quot;paleturquoise1&quot;       &quot;paleturquoise2&quot;       &quot;paleturquoise3&quot;      
-## [523] &quot;paleturquoise4&quot;       &quot;palevioletred&quot;        &quot;palevioletred1&quot;      
-## [526] &quot;palevioletred2&quot;       &quot;palevioletred3&quot;       &quot;palevioletred4&quot;      
-## [529] &quot;papayawhip&quot;           &quot;peachpuff&quot;            &quot;peachpuff1&quot;          
-## [532] &quot;peachpuff2&quot;           &quot;peachpuff3&quot;           &quot;peachpuff4&quot;          
-## [535] &quot;peru&quot;                 &quot;pink&quot;                 &quot;pink1&quot;               
-## [538] &quot;pink2&quot;                &quot;pink3&quot;                &quot;pink4&quot;               
-## [541] &quot;plum&quot;                 &quot;plum1&quot;                &quot;plum2&quot;               
-## [544] &quot;plum3&quot;                &quot;plum4&quot;                &quot;powderblue&quot;          
-## [547] &quot;purple&quot;               &quot;purple1&quot;              &quot;purple2&quot;             
-## [550] &quot;purple3&quot;              &quot;purple4&quot;              &quot;red&quot;                 
-## [553] &quot;red1&quot;                 &quot;red2&quot;                 &quot;red3&quot;                
-## [556] &quot;red4&quot;                 &quot;rosybrown&quot;            &quot;rosybrown1&quot;          
-## [559] &quot;rosybrown2&quot;           &quot;rosybrown3&quot;           &quot;rosybrown4&quot;          
-## [562] &quot;royalblue&quot;            &quot;royalblue1&quot;           &quot;royalblue2&quot;          
-## [565] &quot;royalblue3&quot;           &quot;royalblue4&quot;           &quot;saddlebrown&quot;         
-## [568] &quot;salmon&quot;               &quot;salmon1&quot;              &quot;salmon2&quot;             
-## [571] &quot;salmon3&quot;              &quot;salmon4&quot;              &quot;sandybrown&quot;          
-## [574] &quot;seagreen&quot;             &quot;seagreen1&quot;            &quot;seagreen2&quot;           
-## [577] &quot;seagreen3&quot;            &quot;seagreen4&quot;            &quot;seashell&quot;            
-## [580] &quot;seashell1&quot;            &quot;seashell2&quot;            &quot;seashell3&quot;           
-## [583] &quot;seashell4&quot;            &quot;sienna&quot;               &quot;sienna1&quot;             
-## [586] &quot;sienna2&quot;              &quot;sienna3&quot;              &quot;sienna4&quot;             
-## [589] &quot;skyblue&quot;              &quot;skyblue1&quot;             &quot;skyblue2&quot;            
-## [592] &quot;skyblue3&quot;             &quot;skyblue4&quot;             &quot;slateblue&quot;           
-## [595] &quot;slateblue1&quot;           &quot;slateblue2&quot;           &quot;slateblue3&quot;          
-## [598] &quot;slateblue4&quot;           &quot;slategray&quot;            &quot;slategray1&quot;          
-## [601] &quot;slategray2&quot;           &quot;slategray3&quot;           &quot;slategray4&quot;          
-## [604] &quot;slategrey&quot;            &quot;snow&quot;                 &quot;snow1&quot;               
-## [607] &quot;snow2&quot;                &quot;snow3&quot;                &quot;snow4&quot;               
-## [610] &quot;springgreen&quot;          &quot;springgreen1&quot;         &quot;springgreen2&quot;        
-## [613] &quot;springgreen3&quot;         &quot;springgreen4&quot;         &quot;steelblue&quot;           
-## [616] &quot;steelblue1&quot;           &quot;steelblue2&quot;           &quot;steelblue3&quot;          
-## [619] &quot;steelblue4&quot;           &quot;tan&quot;                  &quot;tan1&quot;                
-## [622] &quot;tan2&quot;                 &quot;tan3&quot;                 &quot;tan4&quot;                
-## [625] &quot;thistle&quot;              &quot;thistle1&quot;             &quot;thistle2&quot;            
-## [628] &quot;thistle3&quot;             &quot;thistle4&quot;             &quot;tomato&quot;              
-## [631] &quot;tomato1&quot;              &quot;tomato2&quot;              &quot;tomato3&quot;             
-## [634] &quot;tomato4&quot;              &quot;turquoise&quot;            &quot;turquoise1&quot;          
-## [637] &quot;turquoise2&quot;           &quot;turquoise3&quot;           &quot;turquoise4&quot;          
-## [640] &quot;violet&quot;               &quot;violetred&quot;            &quot;violetred1&quot;          
-## [643] &quot;violetred2&quot;           &quot;violetred3&quot;           &quot;violetred4&quot;          
-## [646] &quot;wheat&quot;                &quot;wheat1&quot;               &quot;wheat2&quot;              
-## [649] &quot;wheat3&quot;               &quot;wheat4&quot;               &quot;whitesmoke&quot;          
-## [652] &quot;yellow&quot;               &quot;yellow1&quot;              &quot;yellow2&quot;             
-## [655] &quot;yellow3&quot;              &quot;yellow4&quot;              &quot;yellowgreen&quot;</code></pre>
-<pre class="r blue"><code>wordcloud(words = wordCountDoc_neg$word, 
+wordcloud(words = wordCountDoc_neg$word, 
           freq = wordCountDoc_neg$total_neg, 
           max.words = 150,
           min.freq = 140,
@@ -1692,12 +857,12 @@ colors()</code></pre>
           rot.per = 0.35,
           colors = c(&quot;#ccebc5&quot;, &quot;#7bccc4&quot;, &quot;#7fbf7b&quot;,&quot;#4eb3d3&quot;,&quot;#8c6bb1&quot;,&quot;#810f7c&quot;))+
     title(main = &quot;Most Frequent Words in Negative Reviews&quot;, col.main = &quot;#810f7c&quot;, size = 8, family=&quot;Montserrat&quot;, face = &quot;bold&quot;)</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-18-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-17-1.png" width="648" style="display: block; margin: auto;" /></p>
 <pre class="whiteb"><code>## integer(0)</code></pre>
 </div>
 </div>
-<div id="hotel-reviewed-by-highest-number-of-alleged-bots" class="section level1">
-<h1>Hotel reviewed by highest number of alleged bots</h1>
+<div id="hotel-reviewed-by-highest-number-of-alleged-bots" class="section level3">
+<h3>Hotel reviewed by highest number of alleged bots</h3>
 <pre class="r blue"><code>bots_by_hotel&lt;-duplicates%&gt;% 
   group_by(hotel_name)%&gt;%
   summarise(count=n())%&gt;%
@@ -1727,10 +892,10 @@ theme_minimal() + #put simple theme to emnphasise the graphs
   scale_y_continuous()+
   scale_fill_manual(values = c(&quot;grey80&quot;, &quot;#2FABE1&quot;))+ #specifying the colours
    geom_label(aes(label=count))</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-19-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-18-1.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
-<div id="meaningless-reviews-vs-meaningful-reviews" class="section level1">
-<h1>Meaningless reviews vs meaningful reviews</h1>
+<div id="meaningless-reviews-vs-meaningful-reviews" class="section level3">
+<h3>Meaningless reviews vs meaningful reviews</h3>
 <pre class="r blue"><code>#popularity of bots
 bots_by_popularity&lt;-duplicates%&gt;%
   mutate(negative_review_renew=ifelse(negative_review==&quot;No Negative&quot;|negative_review==&quot;Nothing&quot;|negative_review==&quot;nothing&quot;|negative_review==&quot;Everything&quot;,&quot;Meaningless review&quot;,&quot;Meaningful review&quot;))%&gt;% #define meaningless review and meaningful review for visualisation
@@ -1761,14 +926,12 @@ theme_minimal() +
   scale_y_continuous()+
   scale_fill_manual(values = c(&quot;grey80&quot;))+
   geom_label(aes(label=sum),family=&quot;Montserrat&quot;, fontface=&quot;bold&quot; )
-bots_graph
 my_text1r &lt;- &quot;No Negative, \nNothing, \nnothing, &amp; \nEverything&quot;
-my_grobr1 = grid.text(my_text1r, x=0.57,  y=0.82,gp=gpar(fontfamily=&quot;Montserrat&quot;,fontsize= 12, col=&quot;#2FABE1&quot;, fontface=&quot;bold&quot;))</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-20-1.png" width="648" style="display: block; margin: auto;" /></p>
+my_grobr1 &lt;- grid.text(my_text1r, x=0.57,  y=0.82,gp=gpar(fontfamily=&quot;Montserrat&quot;,fontsize= 12, col=&quot;#2FABE1&quot;, fontface=&quot;bold&quot;))</code></pre>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-19-1.png" width="648" style="display: block; margin: auto;" /></p>
 <pre class="r blue"><code> bots_graph + annotation_custom(my_grobr1) </code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-20-2.png" width="648" style="display: block; margin: auto;" /></p>
-<p>Thank you!
-Group members: Malay Memani, Derek Leung, Samy Mohamad, Yichun Hou, Agnieszka Prawda, Magdalena Cloppenburg</p>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-19-2.png" width="648" style="display: block; margin: auto;" /></p>
+<p>Thank you!</p>
 </div>
 
           </div>

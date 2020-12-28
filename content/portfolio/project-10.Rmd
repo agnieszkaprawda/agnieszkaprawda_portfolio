@@ -4,13 +4,36 @@ category:
 date: "2020-12-10T15:58:10+06:00"
 image: images/projects/londonhouse1.png
 project_images:
-title: Estimation Engine for London House Prices 
+title: Estimation Engine for London House Prices with Stacked Final Model using Tree Models, LASSO, Random Forest & GBM 
 type: portfolio
 ---
+```{css echo=FALSE}
+
+.pink { background-color:#fae6e6 ; 
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+
+.blue { background-color:#DFF5F6 ; 
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+    
+.whitep { background-color:#fffafa ;
+    border: 3px gray;
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+    
+.whiteb { background-color:#f7ffff ;
+    border: 3px gray;
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+
+    
+```
+
 ```{r, setup, include=FALSE}
 knitr::opts_chunk$set(
   message = FALSE, 
-  warning = FALSE, 
+  warning = FALSE,
   tidy=FALSE,     # display code as typed
   size="small")   # slightly smaller font for code
 options(digits = 3)
@@ -21,14 +44,12 @@ knitr::opts_chunk$set(
   fig.height=6.75,
   fig.align = "center"
 )
+
+knitr::opts_chunk$set(class.source = "pink")
+
+
+knitr::opts_chunk$set(class.output = "whitep")
 ```
-
-<style>
-div.navy1 { background-color:#686868; border-radius: 5px; padding: 20px; border-style: groove; color: #ffffff;}
-
-</style>
-
-
 
 ```{r, load_libraries, include = FALSE}
 
@@ -72,10 +93,9 @@ showtext_auto()
 
 ```
 
-# Introduction and learning objectives
 
-<div class = "navy1">
-The purpose of this exercise is to build an estimation engine to guide investment decisions in London house market. I will first build machine learning algorithms (and tune them) to estimate the house prices given variety of information about each property. Then, using my algorithm, I will choose 200 houses to invest in out of about 2000 houses on the market at the moment.
+
+The purpose of this project is to build an estimation engine to guide investment decisions in London house market. I will first build machine learning algorithms (and tune them) to estimate the house prices given variety of information about each property. Then, using my algorithm, I will choose 200 houses to invest in out of about 2000 houses on the market at the moment.
 
 
 <b>Objectives</b>
@@ -87,9 +107,9 @@ The purpose of this exercise is to build an estimation engine to guide investmen
   <li>Interpreting data mining algorithms and deducing importance of variables</li>
   <li>Using results of data mining algorithms to make business decisions</li>
 </ol>  
-</div>
 
-# Load data
+
+### Load data
 
 There are two sets of data, i) training data that has the actual prices ii) out of sample data that has the asking prices. I will now load both data sets. 
 
@@ -140,7 +160,7 @@ str(london_house_prices_2019_out_of_sample)
 
 ```
 
-In my predictions, i will not use columns between date:country. For the rest of variables, I will investigate their performance and correlation to price in further steps.
+In my predictions, I will not use columns between date:country. For the rest of variables, I will investigate their performance and correlation to price in further steps.
 
 ```{r split the price data to training and testing}
 #let's do the initial split
@@ -154,8 +174,7 @@ test_data <- testing(train_test_split)
 
 ```
 
-
-# Visualize data 
+### Visualize data 
 
 In this section I will visualise my data. The most useful plots will tackle factor variables from our dataset, as the numeric ones we can examine later on in the correlation matrix.
 
@@ -397,11 +416,14 @@ vis12
 
 ```
 
-### Learnings from visualisations: 
+#### Learnings from visualisations
+
 It seems that the price of houses located in the most distinguished districts in London is significantly affected and much higher than in other districts - the same trend tackles the most popular and best located tube stations and postcodes_short.. Therefore, I will create three new varaibles in my data:
-- is_district - that will have value "TRUE" for the most expensive districts and "FALSE" for the rest
-- is_station - that will take the value "TRUE" for the station where house price was above 2,000,000.
-- is_postcode - that will take the value "TRUE" for the postcode_short where house price exceeded 2,000,000.
+<ul>
+<li>`is_district` : that will have value "TRUE" for the most expensive districts and "FALSE" for the rest</li>
+<li>`is_station` : that will take the value "TRUE" for the station where house price was above 2,000,000.</li>
+<li>`is_postcode` : that will take the value "TRUE" for the postcode_short where house price exceeded 2,000,000.</li>
+</ul>
 
 Additionally, we can learn from the visualisations, that property_type and distance to the station combined also have a significant influence on the price. Also, london_zone and distance_to_station seem to be interconnected.
 
@@ -410,7 +432,7 @@ When in comes to such variables as "current_energy_rating", "freehold_or_leaseho
 From the graphs, we can deduct that for "water_company" and "windows_energy_eff" only one value of each variable seems to affect the price significantly. We will further exemine it in the next steps.
 
 
-# Feature engineering
+### Feature engineering
 
 I will now add new variables to my dayaset basing on what I found in the section above. 
 
@@ -505,9 +527,10 @@ mutate(is_postcode = ifelse(postcode_short == "W1B" |
 
 ```
 
-# Distribution of dependent variable
+### Distribution of dependent variable
 
 I will now check the distirbution of the "price" variable to check if it follows the Normal distribution.
+
 ```{r}
 
 #distribution of price 
@@ -551,7 +574,7 @@ train_data %>%
 Price variable is highly right-skewed. For sake of this exercise I will not run the algorithm on the log price as the stack algorithm can use only one dependent variable. Tree based models that I will build in further steps can handle such a distribution much better and possibly will perform even better for price than for log(price). Therefore, to stay consistent, I will stick to "price" for all my models.
 
 
-# Numeric variables
+### Numeric variables
 
 I will now estimate a correlation table between prices and other continuous variables.
 
@@ -571,11 +594,11 @@ train_data %>%
 ```
 Variables that are most correlated with "price" variable are: average_income, london_zone, co2_emissions_current, co2_emissions_potential, number_habitable_rooms and total_floor_area. Nevertheless, let's keep in mind, that pairs: co2_emissions_current & co2_emissions_potential and number_habitable_rooms & total_floor_area are highly correlated. In my models i will as well investigate interactions of variables that have a reasonable explanation and are very weakly correlated.
 
-# Fit a linear regression model
+### Fit a linear regression model
 
 First linear model comes from the workshop. I will build on it in future models.
 
-## Model 1
+#### Model 1
 ```{r LR model}
 
 
@@ -599,7 +622,7 @@ control <- trainControl(method = "cv", number = CVfolds, returnResamp = "final",
 #summary(model1_lm)
 ```
 
-## Model 2
+#### Model 2
 
 ```{r}
 
@@ -617,7 +640,7 @@ control <- trainControl(method = "cv", number = CVfolds, returnResamp = "final",
 
 ```
 
-## Model 3
+#### Model 3
 
 ```{r}
 
@@ -636,7 +659,7 @@ control <- trainControl(method = "cv", number = CVfolds, returnResamp = "final",
 ```
 
 
-## Model 4
+#### Model 4
 
 ```{r}
 
@@ -655,7 +678,7 @@ control <- trainControl(method = "cv", number = CVfolds, returnResamp = "final",
 
 ```
 
-## Model 5 - Final model
+#### Model 5 - Final model
 
 In this model, I will add all the significant interactions that I found and the postcode_short variable.
 
@@ -686,7 +709,7 @@ names(performancelr) <- c("Rsquare", "RMSE")
 performancelr
 ```
 
-## Model log 
+#### Model log 
 
 I will now try out how well the log_price performs vs. the unlogged one
 
@@ -706,7 +729,7 @@ I will now try out how well the log_price performs vs. the unlogged one
 ```
 
 
-## Importance 
+#### Importance 
 
 ```{r}
 # we can check variable importance as well
@@ -730,7 +753,7 @@ plot(importance5)
 
 
 ```
-## Predict the values in testing and out of sample data
+#### Predict the values in testing and out of sample data
 
 Below I use the predict function to test the performance of the model in testing data and summarize the performance of the linear regression model. I can measure the quality of my predictions when looking at vlaues of RMSE and Rsquare. The lower the RMSE, the lower the error we can get in our predicted data. The higher the Rsquared, the more percentage of data is explained by the model.
 
@@ -752,11 +775,11 @@ lr_results
 #predictions_oos
 ```
 
-# Tree model
+### Tree model
 
 Next I fit a tree model using the same subset of features. Again I will add more variables in the next steps and tune the parameter of my tree to find a better fit. 
 
-## First model
+#### First model
 ```{r}
 
 #model2_tree <- train(
@@ -780,7 +803,7 @@ Next I fit a tree model using the same subset of features. Again I will add more
 
 
 
-## Model tree 2
+#### Model tree 2
 ```{r}
 
 #model3_tree <- train(
@@ -803,7 +826,9 @@ Next I fit a tree model using the same subset of features. Again I will add more
 #plot(importance)
 #importance
 ```
-## Tree model 4
+
+#### Tree model 4
+
 ```{r}
 #set.seed(1)
 #model4_tree <- train(
@@ -830,7 +855,9 @@ Next I fit a tree model using the same subset of features. Again I will add more
 
 
 ```
-# Next tree model
+
+#### Next tree model
+
 ```{r}
 #setting seed
 set.seed(1)
@@ -858,7 +885,8 @@ rpart.plot(modeltrial2$finalModel)
 
 ```
 
-## Choosing the right split for model tree 4
+#### Choosing the right split for model tree 4
+
 ```{r}
 
 #modelLookup("rpart")
@@ -893,7 +921,8 @@ rpart.plot(modeltrial2$finalModel)
 
 ```
 
-## Final tree model
+#### Final tree model
+
 ```{r}
 #choosing small grid so the algorithm choose the best local cp
 Grid <- expand.grid(cp = seq( 0.00005, 0.00015,0.00005))
@@ -944,11 +973,11 @@ performancetree
 
 As expected a single tree in this case does not perform this well, however it is expected. This is why in my further analysis I will use hundreds of trees. One single tree overfits easily and is not the best predictor.
 
-# Other algorithms
+### Other algorithms
 
 I will use three other algorithms to predict prices. I will also tune the parameters of these algorithms in order to obtain best possible performance.
 
-## LASSO model
+#### LASSO model
 ```{r}
 #  LASSO model
 
@@ -1003,7 +1032,7 @@ LASSO_results
 ```
 As we can see, the best performance is for lambda=0, which translates for linear regression with no regularization. Therefore, in my multimodel, I will choose only one of these.
 
-## RANDOM FOREST
+#### RANDOM FOREST
 
 Parameters for random forest models in the ranger function that implements random forest i) ‘mtry’: number of randomly chosen variables to do a split each time ii) splitrule: purity measure we use. I will only use gini iii) min.node.size: Minimum size allowed for a leaf iv) ‘importance’: is an option to get a sense of the importance of the variables. We will use it below.
 ```{r}
@@ -1050,7 +1079,7 @@ rf_results
 
 ```
 
-## GRADIENT BOOSTING MACHINE
+#### GRADIENT BOOSTING MACHINE
 ```{r}
 modelLookup("gbm")
 
@@ -1090,7 +1119,7 @@ GBM_results
 
 ```
 
-# All models' performance compared
+### All models' performance compared
 
 Now I will compare performance of all my models. To do so, I will compare the Rsquare (not the Adjusted one!) of all the models.
 
@@ -1112,14 +1141,14 @@ print(gbmFit1)
 
 
 
-# Stacking
+### Stacking
 I will now use stacking to ensemble 4 of my created algorithms.
 ```{r}
 multimodel<- list(tree=model_tree_final,lasso=lasso,ranger= rfregFit, gbm= gbmFit1)
 class(multimodel)<- "caretList"
 ```
 
-## Visualising results
+#### Visualising results
 ```{r}
 modelCor(resamples(multimodel)) #correlation matrix of the models
 dotplot(resamples(multimodel), metric="Rsquared") #Rsquare comparison
@@ -1127,7 +1156,7 @@ xyplot(resamples(multimodel), metric="Rsquared") #tree vs lasso
 splom(resamples(multimodel), metric="Rsquared") #all the models' performance interactions
 ```
 
-## Creation of the stack model
+#### Creation of the stack model
 ```{r}
 
 library(caret)
@@ -1158,7 +1187,7 @@ performancefinal #check the values
 
 As we can see, the Rsuqared achieves the best results in comparison to our all previous models. the RMSE is equal to 189661.2 and the Rsquare equals 86.8%. Therefore, we will use this model as an estimation engine to guide the investment on the housing market in London.
 
-# Performance on test data
+### Performance on test data
 
 First I will check the preformance of our model on the test dataset.
 
@@ -1202,9 +1231,9 @@ The silumation gives us positice results with the average profit on all the inve
 
 
 
-# Picking investment portfolio
+### Picking investment portfolio
 
-In this section I will use the best algorithm I identified to choose 200 properties from the out of sample data.
+In this section I will use the best algorithm I identified to choose 200 properties from the out of sample data. I will report 20 first raws of my original dataset with the scores.
 
 ```{r,warning=FALSE,  message=FALSE }
 
@@ -1228,13 +1257,8 @@ mean(oos$profitMargin)
 
 sum(oos$actualProfit)/numchoose
 
-  #oos %>% 
-  #mutate(revenue=(predict-asking_price)) %>% 
-  #filter(buy==1) %>% 
-  #summarise(sum(revenue))
 
-#I will output my choices to the csv file that will be also included to my final submission
-write.csv(oos,"Prawda_Agnieszka.csv")
+oos %>%  head(20)
 
 
 
@@ -1243,4 +1267,5 @@ write.csv(oos,"Prawda_Agnieszka.csv")
 Final perdictions lead us to the following results. The average profit margin of all the properties in the data set equals 3.86%, whereas the average profit from 200 best investments equals 68.45%. Our engine works. I will provide the documentation of all the steps taken and explanantion of all the models in my technial report. 
 
 Thank you.
+
 

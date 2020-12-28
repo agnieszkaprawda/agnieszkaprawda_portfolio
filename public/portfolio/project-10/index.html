@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us"><head>
   <meta charset="utf-8" />
-  <title>Estimation Engine for London House Prices</title>
+  <title>Estimation Engine for London House Prices with Stacked Final Model using Tree Models, LASSO, Random Forest &amp; GBM</title>
 
   <!-- mobile responsive meta -->
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -95,20 +95,35 @@
       <div class="col-lg-8 mx-auto">
         <div class="site-project-single">
           <h1>
-            Estimation Engine for London House Prices
+            Estimation Engine for London House Prices with Stacked Final Model using Tree Models, LASSO, Random Forest &amp; GBM
           </h1>
           <div class="site-project-single-description">
             
 
 
-<style>
-div.navy1 { background-color:#686868; border-radius: 5px; padding: 20px; border-style: groove; color: #ffffff;}
+<style type="text/css">
 
+.pink { background-color:#fae6e6 ; 
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+
+.blue { background-color:#DFF5F6 ; 
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+    
+.whitep { background-color:#fffafa ;
+    border: 3px gray;
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+    
+.whiteb { background-color:#f7ffff ;
+    border: 3px gray;
+    border-radius: 5px; 
+  padding: 20px; color: #000000;}
+
+    
 </style>
-<div id="introduction-and-learning-objectives" class="section level1">
-<h1>Introduction and learning objectives</h1>
-<div class="navy1">
-<p>The purpose of this exercise is to build an estimation engine to guide investment decisions in London house market. I will first build machine learning algorithms (and tune them) to estimate the house prices given variety of information about each property. Then, using my algorithm, I will choose 200 houses to invest in out of about 2000 houses on the market at the moment.</p>
+<p>The purpose of this project is to build an estimation engine to guide investment decisions in London house market. I will first build machine learning algorithms (and tune them) to estimate the house prices given variety of information about each property. Then, using my algorithm, I will choose 200 houses to invest in out of about 2000 houses on the market at the moment.</p>
 <p><b>Objectives</b></p>
 <ol type="i">
 <li>
@@ -127,13 +142,11 @@ Interpreting data mining algorithms and deducing importance of variables
 Using results of data mining algorithms to make business decisions
 </li>
 </ol>
-</div>
-</div>
-<div id="load-data" class="section level1">
-<h1>Load data</h1>
+<div id="load-data" class="section level3">
+<h3>Load data</h3>
 <p>There are two sets of data, i) training data that has the actual prices ii) out of sample data that has the asking prices. I will now load both data sets.</p>
 <p>I will make sure to understand what information each column contains. Note that not all information provided might be useful in predicting house prices, but do not make any assumptions before you decide what information you use in your prediction algorithms.</p>
-<pre class="r"><code>#reading in the data
+<pre class="r pink"><code>#reading in the data
 london_house_prices_2019_training&lt;-read_csv(&quot;~/Documents/LBS/Data Science/Session 10/workshop/training_data_assignment_with_prices.csv&quot;)
 london_house_prices_2019_out_of_sample&lt;-read_csv(&quot;~/Documents/LBS/Data Science/Session 10/workshop/test_data_assignment.csv&quot;)
 
@@ -170,7 +183,7 @@ london_house_prices_2019_out_of_sample$district&lt;-factor(london_house_prices_2
 
 #take a quick look at what&#39;s in the data
 str(london_house_prices_2019_training)</code></pre>
-<pre><code>## tibble [13,998 × 37] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+<pre class="whitep"><code>## tibble [13,998 × 37] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
 ##  $ ID                          : num [1:13998] 2 3 4 5 7 8 9 10 11 12 ...
 ##  $ date                        : Date[1:13998], format: &quot;2019-11-01&quot; &quot;2019-08-08&quot; ...
 ##  $ postcode                    : Factor w/ 12635 levels &quot;BR1 1AB&quot;,&quot;BR1 1LR&quot;,..: 10897 11027 11264 2031 11241 11066 421 9594 9444 873 ...
@@ -248,8 +261,8 @@ str(london_house_prices_2019_training)</code></pre>
 ##   ..   num_light_rail_lines = col_double(),
 ##   ..   distance_to_station = col_double()
 ##   .. )</code></pre>
-<pre class="r"><code>str(london_house_prices_2019_out_of_sample)</code></pre>
-<pre><code>## tibble [1,999 × 37] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+<pre class="r pink"><code>str(london_house_prices_2019_out_of_sample)</code></pre>
+<pre class="whitep"><code>## tibble [1,999 × 37] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
 ##  $ ID                          : num [1:1999] 14434 12562 8866 10721 1057 ...
 ##  $ date                        : Date[1:1999], format: NA NA ...
 ##  $ postcode                    : logi [1:1999] NA NA NA NA NA NA ...
@@ -327,9 +340,9 @@ str(london_house_prices_2019_training)</code></pre>
 ##   ..   distance_to_station = col_double(),
 ##   ..   asking_price = col_double()
 ##   .. )</code></pre>
-<pre class="r"><code>#describe(london_house_prices_2019_training)</code></pre>
-<p>In my predictions, i will not use columns between date:country. For the rest of variables, I will investigate their performance and correlation to price in further steps.</p>
-<pre class="r"><code>#let&#39;s do the initial split
+<pre class="r pink"><code>#describe(london_house_prices_2019_training)</code></pre>
+<p>In my predictions, I will not use columns between date:country. For the rest of variables, I will investigate their performance and correlation to price in further steps.</p>
+<pre class="r pink"><code>#let&#39;s do the initial split
 set.seed(1)
 train_test_split &lt;- initial_split(london_house_prices_2019_training, prop = 0.75) #training set contains 75% of the data
 set.seed(1)
@@ -338,10 +351,10 @@ train_data &lt;- training(train_test_split)
 # Create the testing dataset
 test_data &lt;- testing(train_test_split)</code></pre>
 </div>
-<div id="visualize-data" class="section level1">
-<h1>Visualize data</h1>
+<div id="visualize-data" class="section level3">
+<h3>Visualize data</h3>
 <p>In this section I will visualise my data. The most useful plots will tackle factor variables from our dataset, as the numeric ones we can examine later on in the correlation matrix.</p>
-<pre class="r"><code>#checking the data once again
+<pre class="r pink"><code>#checking the data once again
 #summary(train_data)
 #glimpse(train_data)
 
@@ -369,7 +382,7 @@ vis1 &lt;- train_data_vis1 %&gt;%
 
 vis1</code></pre>
 <p><img src="/portfolio/project-10_files/figure-html/visualize-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#avg price vs nearest station
+<pre class="r pink"><code>#avg price vs nearest station
 
 train_data_vis2 &lt;- train_data %&gt;%
   group_by(nearest_station) %&gt;%
@@ -400,7 +413,7 @@ vis2 &lt;- train_data_vis2 %&gt;%
 
 vis2</code></pre>
 <p><img src="/portfolio/project-10_files/figure-html/visualize-2.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#Graph showing price in ths in particular property types  in regards to different london zones and station types
+<pre class="r pink"><code>#Graph showing price in ths in particular property types  in regards to different london zones and station types
 
 train_data_vis3 &lt;- train_data %&gt;%
   group_by(type_of_closest_station, property_type, london_zone) %&gt;%
@@ -433,7 +446,7 @@ vis3 &lt;- train_data_vis3 %&gt;%
 
 vis3</code></pre>
 <p><img src="/portfolio/project-10_files/figure-html/visualize-3.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code># price vs distance to the station &amp; propety_type
+<pre class="r pink"><code># price vs distance to the station &amp; propety_type
 train_data_vis4 &lt;- train_data %&gt;%
   group_by(property_type, distance_to_station) %&gt;%
   summarise(avg = mean(price))
@@ -446,7 +459,7 @@ vis4 &lt;- train_data_vis4 %&gt;%
 
 vis4</code></pre>
 <p><img src="/portfolio/project-10_files/figure-html/visualize-4.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code># energy_ratings vs price
+<pre class="r pink"><code># energy_ratings vs price
 train_data_vis5 &lt;- train_data %&gt;%
   group_by(current_energy_rating) %&gt;%
   summarise(avg = mean(price))
@@ -457,7 +470,7 @@ vis5 &lt;- train_data_vis5 %&gt;%
 
 vis5</code></pre>
 <p><img src="/portfolio/project-10_files/figure-html/visualize-5.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#correlations
+<pre class="r pink"><code>#correlations
 vis6&lt;- train_data %&gt;% 
   select(distance_to_station, london_zone, price,) %&gt;% #order variables they will appear in ggpairs()
   ggpairs(aes(alpha = 0.3))+
@@ -465,7 +478,7 @@ vis6&lt;- train_data %&gt;%
 
 vis6</code></pre>
 <p><img src="/portfolio/project-10_files/figure-html/visualize-6.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#price vs water_provider
+<pre class="r pink"><code>#price vs water_provider
 train_data_vis7 &lt;- train_data %&gt;%
   group_by(water_company) %&gt;%
   summarise(avg = mean(price))
@@ -478,7 +491,7 @@ vis7 &lt;- train_data_vis7 %&gt;%
 
 vis7</code></pre>
 <p><img src="/portfolio/project-10_files/figure-html/visualize-7.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#price vs freehold_or_leasehold
+<pre class="r pink"><code>#price vs freehold_or_leasehold
 train_data_vis8 &lt;- train_data %&gt;%
   group_by(freehold_or_leasehold) %&gt;%
   summarise(avg = mean(price))
@@ -491,7 +504,7 @@ vis8 &lt;- train_data_vis8 %&gt;%
 
 vis8</code></pre>
 <p><img src="/portfolio/project-10_files/figure-html/visualize-8.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#price vs windows_energy_eff 
+<pre class="r pink"><code>#price vs windows_energy_eff 
 train_data_vis9 &lt;- train_data %&gt;%
   group_by(windows_energy_eff) %&gt;%
   summarise(avg = mean(price))
@@ -504,7 +517,7 @@ vis9 &lt;- train_data_vis9 %&gt;%
 
 vis9</code></pre>
 <p><img src="/portfolio/project-10_files/figure-html/visualize-9.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#price vs tenure  
+<pre class="r pink"><code>#price vs tenure  
 train_data_vis10 &lt;- train_data %&gt;%
   group_by(tenure ) %&gt;%
   summarise(avg = mean(price))
@@ -517,7 +530,7 @@ vis10 &lt;- train_data_vis10 %&gt;%
 
 vis10</code></pre>
 <p><img src="/portfolio/project-10_files/figure-html/visualize-10.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#postcode_short
+<pre class="r pink"><code>#postcode_short
 train_data_vis11 &lt;- train_data %&gt;%
   group_by(postcode_short) %&gt;%
   summarise(avg = mean(price)) %&gt;% 
@@ -543,7 +556,7 @@ vis11&lt;- train_data_vis11 %&gt;%
 
 vis11</code></pre>
 <p><img src="/portfolio/project-10_files/figure-html/visualize-11.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>train_data_vis12 &lt;- train_data %&gt;%
+<pre class="r pink"><code>train_data_vis12 &lt;- train_data %&gt;%
   group_by(total_floor_area,london_zone) %&gt;%
   summarise(avg = mean(price)) %&gt;% 
   arrange(desc(avg))
@@ -572,21 +585,29 @@ vis12&lt;-train_data_vis12%&gt;%
 
 vis12</code></pre>
 <p><img src="/portfolio/project-10_files/figure-html/visualize-12.png" width="648" style="display: block; margin: auto;" /></p>
-<div id="learnings-from-visualisations" class="section level3">
-<h3>Learnings from visualisations:</h3>
-<p>It seems that the price of houses located in the most distinguished districts in London is significantly affected and much higher than in other districts - the same trend tackles the most popular and best located tube stations and postcodes_short.. Therefore, I will create three new varaibles in my data:
-- is_district - that will have value “TRUE” for the most expensive districts and “FALSE” for the rest
-- is_station - that will take the value “TRUE” for the station where house price was above 2,000,000.
-- is_postcode - that will take the value “TRUE” for the postcode_short where house price exceeded 2,000,000.</p>
+<div id="learnings-from-visualisations" class="section level4">
+<h4>Learnings from visualisations</h4>
+It seems that the price of houses located in the most distinguished districts in London is significantly affected and much higher than in other districts - the same trend tackles the most popular and best located tube stations and postcodes_short.. Therefore, I will create three new varaibles in my data:
+<ul>
+<li>
+<code>is_district</code> : that will have value “TRUE” for the most expensive districts and “FALSE” for the rest
+</li>
+<li>
+<code>is_station</code> : that will take the value “TRUE” for the station where house price was above 2,000,000.
+</li>
+<li>
+<code>is_postcode</code> : that will take the value “TRUE” for the postcode_short where house price exceeded 2,000,000.
+</li>
+</ul>
 <p>Additionally, we can learn from the visualisations, that property_type and distance to the station combined also have a significant influence on the price. Also, london_zone and distance_to_station seem to be interconnected.</p>
 <p>When in comes to such variables as “current_energy_rating”, “freehold_or_leasehold”, or“tenure”, we will need to deduct from the further models if any values are really significant for estimating the price or not.</p>
 <p>From the graphs, we can deduct that for “water_company” and “windows_energy_eff” only one value of each variable seems to affect the price significantly. We will further exemine it in the next steps.</p>
 </div>
 </div>
-<div id="feature-engineering" class="section level1">
-<h1>Feature engineering</h1>
+<div id="feature-engineering" class="section level3">
+<h3>Feature engineering</h3>
 <p>I will now add new variables to my dayaset basing on what I found in the section above.</p>
-<pre class="r"><code>#Adding variable &quot;is station&quot; for stations beloning to the one near which the price of a property sis significantly bigger (assumption: over 2,000,000)
+<pre class="r pink"><code>#Adding variable &quot;is station&quot; for stations beloning to the one near which the price of a property sis significantly bigger (assumption: over 2,000,000)
 train_data&lt;- train_data %&gt;% 
 mutate(is_station = ifelse(nearest_station == &quot;hyde park corner&quot; | 
                              nearest_station == &quot;   knightsbridge&quot; |
@@ -672,10 +693,10 @@ mutate(is_postcode = ifelse(postcode_short == &quot;W1B&quot; |
                              postcode_short == &quot;S3&quot;|
                               postcode_short == &quot;W11&quot;, TRUE, FALSE ))</code></pre>
 </div>
-<div id="distribution-of-dependent-variable" class="section level1">
-<h1>Distribution of dependent variable</h1>
+<div id="distribution-of-dependent-variable" class="section level3">
+<h3>Distribution of dependent variable</h3>
 <p>I will now check the distirbution of the “price” variable to check if it follows the Normal distribution.</p>
-<pre class="r"><code>#distribution of price 
+<pre class="r pink"><code>#distribution of price 
 train_data %&gt;% 
   ggplot(aes(x=price))+
   geom_histogram()+
@@ -690,8 +711,8 @@ train_data %&gt;%
         axis.title.x = element_text(size = 8, family=&quot;Montserrat&quot;, face = &quot;bold&quot;),
         axis.text.x=element_text(family=&quot;Montserrat&quot;, size=7))+
     labs(x=&quot;Price&quot;, y=&quot;Count&quot;) </code></pre>
-<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-2-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#distirbution of log price
+<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-3-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r pink"><code>#distirbution of log price
 train_data %&gt;% 
   ggplot(aes(x=log(price)))+
   geom_histogram()+
@@ -706,15 +727,15 @@ train_data %&gt;%
         axis.title.x = element_text(size = 8, family=&quot;Montserrat&quot;, face = &quot;bold&quot;),
         axis.text.x=element_text(family=&quot;Montserrat&quot;, size=7))+
     labs(x=&quot;Log Price&quot;, y=&quot;Count&quot;)</code></pre>
-<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-2-2.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#train_data_log &lt;- train_data %&gt;% 
+<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-3-2.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r pink"><code>#train_data_log &lt;- train_data %&gt;% 
 #  mutate(log_price=log(price))</code></pre>
 <p>Price variable is highly right-skewed. For sake of this exercise I will not run the algorithm on the log price as the stack algorithm can use only one dependent variable. Tree based models that I will build in further steps can handle such a distribution much better and possibly will perform even better for price than for log(price). Therefore, to stay consistent, I will stick to “price” for all my models.</p>
 </div>
-<div id="numeric-variables" class="section level1">
-<h1>Numeric variables</h1>
+<div id="numeric-variables" class="section level3">
+<h3>Numeric variables</h3>
 <p>I will now estimate a correlation table between prices and other continuous variables.</p>
-<pre class="r"><code># produce a correlation table using GGally::ggcor()
+<pre class="r pink"><code># produce a correlation table using GGally::ggcor()
 # this takes a while to plot
 
 
@@ -726,12 +747,12 @@ train_data %&gt;%
 <p><img src="/portfolio/project-10_files/figure-html/correlation%20table-1.png" width="648" style="display: block; margin: auto;" />
 Variables that are most correlated with “price” variable are: average_income, london_zone, co2_emissions_current, co2_emissions_potential, number_habitable_rooms and total_floor_area. Nevertheless, let’s keep in mind, that pairs: co2_emissions_current &amp; co2_emissions_potential and number_habitable_rooms &amp; total_floor_area are highly correlated. In my models i will as well investigate interactions of variables that have a reasonable explanation and are very weakly correlated.</p>
 </div>
-<div id="fit-a-linear-regression-model" class="section level1">
-<h1>Fit a linear regression model</h1>
+<div id="fit-a-linear-regression-model" class="section level3">
+<h3>Fit a linear regression model</h3>
 <p>First linear model comes from the workshop. I will build on it in future models.</p>
-<div id="model-1" class="section level2">
-<h2>Model 1</h2>
-<pre class="r"><code># creating the control for all my future models - it needs to be the same for all of them in order to be able to stack them togehter in the end
+<div id="model-1" class="section level4">
+<h4>Model 1</h4>
+<pre class="r pink"><code># creating the control for all my future models - it needs to be the same for all of them in order to be able to stack them togehter in the end
 CVfolds=15
 
 indexProbs=createMultiFolds(train_data$price,times=1)
@@ -750,9 +771,9 @@ control &lt;- trainControl(method = &quot;cv&quot;, number = CVfolds, returnResa
 # summary of the results
 #summary(model1_lm)</code></pre>
 </div>
-<div id="model-2" class="section level2">
-<h2>Model 2</h2>
-<pre class="r"><code>#we are going to train the model and report the results using k-fold cross validation
+<div id="model-2" class="section level4">
+<h4>Model 2</h4>
+<pre class="r pink"><code>#we are going to train the model and report the results using k-fold cross validation
 #set.seed(1)
 #model2_lm&lt;-train(
 #    price ~ total_floor_area+ number_habitable_rooms+ co2_emissions_current+co2_emissions_potential +average_income+ #longitude+num_tube_lines+num_rail_lines+distance_to_station,
@@ -764,9 +785,9 @@ control &lt;- trainControl(method = &quot;cv&quot;, number = CVfolds, returnResa
 # summary of the results
 #summary(model2_lm)</code></pre>
 </div>
-<div id="model-3" class="section level2">
-<h2>Model 3</h2>
-<pre class="r"><code>#we are going to train the model and report the results using k-fold cross validation
+<div id="model-3" class="section level4">
+<h4>Model 3</h4>
+<pre class="r pink"><code>#we are going to train the model and report the results using k-fold cross validation
 #set.seed(1)
 #model3_lm&lt;-train(
 #    price ~ total_floor_area+ number_habitable_rooms+ co2_emissions_potential +average_income+ longitude+num_tube_lines+property_type+current_energy_rating+windows_energy_eff +district+type_of_closest_station,
@@ -778,9 +799,9 @@ control &lt;- trainControl(method = &quot;cv&quot;, number = CVfolds, returnResa
 # summary of the results
 #summary(model3_lm)</code></pre>
 </div>
-<div id="model-4" class="section level2">
-<h2>Model 4</h2>
-<pre class="r"><code>#we are going to train the model and report the results using k-fold cross validation
+<div id="model-4" class="section level4">
+<h4>Model 4</h4>
+<pre class="r pink"><code>#we are going to train the model and report the results using k-fold cross validation
 #set.seed(1)
 #model4_lm&lt;-train(
 #    price ~ poly(total_floor_area,3)+sqrt(number_habitable_rooms)+number_habitable_rooms +average_income+ #longitude+num_tube_lines+windows_energy_eff +district+type_of_closest_station+ #property_type*type_of_closest_station+london_zone*distance_to_station+london_zone*property_type,
@@ -792,10 +813,10 @@ control &lt;- trainControl(method = &quot;cv&quot;, number = CVfolds, returnResa
 # summary of the results
 #summary(model4_lm)</code></pre>
 </div>
-<div id="model-5---final-model" class="section level2">
-<h2>Model 5 - Final model</h2>
+<div id="model-5---final-model" class="section level4">
+<h4>Model 5 - Final model</h4>
 <p>In this model, I will add all the significant interactions that I found and the postcode_short variable.</p>
-<pre class="r"><code>#we are going to train the model and report the results using k-fold cross validation
+<pre class="r pink"><code>#we are going to train the model and report the results using k-fold cross validation
 set.seed(1)
 model5_lm&lt;-train(
     price ~ poly(total_floor_area,3)+number_habitable_rooms+sqrt(number_habitable_rooms)+average_income+current_energy_rating+windows_energy_eff+ property_type*type_of_closest_station+london_zone*distance_to_station+water_company+num_tube_lines+is_station+total_floor_area:london_zone+total_floor_area:num_tube_lines+average_income:number_habitable_rooms+postcode_short+district,
@@ -806,7 +827,7 @@ model5_lm&lt;-train(
 
 # summary of the results
 summary(model5_lm)</code></pre>
-<pre><code>## 
+<pre class="whitep"><code>## 
 ## Call:
 ## lm(formula = .outcome ~ ., data = dat)
 ## 
@@ -1459,7 +1480,7 @@ summary(model5_lm)</code></pre>
 ## Residual standard error: 213000 on 10216 degrees of freedom
 ## Multiple R-squared:  0.839,  Adjusted R-squared:  0.834 
 ## F-statistic:  188 on 282 and 10216 DF,  p-value: &lt;2e-16</code></pre>
-<pre class="r"><code>performancelr&lt;- list()
+<pre class="r pink"><code>performancelr&lt;- list()
 performancelr[2]&lt;- model5_lm[[4]] %&gt;% 
   select(RMSE) %&gt;% 
   pull()
@@ -1470,19 +1491,19 @@ performancelr[1]&lt;- model5_lm[[4]] %&gt;%
 
 names(performancelr) &lt;- c(&quot;Rsquare&quot;, &quot;RMSE&quot;)
 performancelr</code></pre>
-<pre><code>## $Rsquare
+<pre class="whitep"><code>## $Rsquare
 ## [1] 0.82
 ## 
 ## $RMSE
 ## [1] 222161</code></pre>
 </div>
-<div id="model-log" class="section level2">
-<h2>Model log</h2>
+<div id="model-log" class="section level4">
+<h4>Model log</h4>
 <p>I will now try out how well the log_price performs vs. the unlogged one</p>
 </div>
-<div id="importance" class="section level2">
-<h2>Importance</h2>
-<pre class="r"><code># we can check variable importance as well
+<div id="importance" class="section level4">
+<h4>Importance</h4>
+<pre class="r pink"><code># we can check variable importance as well
 #importance1 &lt;- varImp(model1_lm, scale=TRUE)
 #plot(importance1)
 
@@ -1497,40 +1518,40 @@ performancelr</code></pre>
 
 importance5&lt;- varImp(model5_lm, scale=TRUE)
 plot(importance5)</code></pre>
-<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-8-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#importance5_log&lt;- varImp(model5_lm_log, scale=TRUE)
+<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-9-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r pink"><code>#importance5_log&lt;- varImp(model5_lm_log, scale=TRUE)
 #plot(importance5_log)</code></pre>
 </div>
-<div id="predict-the-values-in-testing-and-out-of-sample-data" class="section level2">
-<h2>Predict the values in testing and out of sample data</h2>
+<div id="predict-the-values-in-testing-and-out-of-sample-data" class="section level4">
+<h4>Predict the values in testing and out of sample data</h4>
 <p>Below I use the predict function to test the performance of the model in testing data and summarize the performance of the linear regression model. I can measure the quality of my predictions when looking at vlaues of RMSE and Rsquare. The lower the RMSE, the lower the error we can get in our predicted data. The higher the Rsquared, the more percentage of data is explained by the model.</p>
-<pre class="r"><code># We can predict the testing values
+<pre class="r pink"><code># We can predict the testing values
 
 #prediting the results on test_data 
 set.seed(1)
 predictions &lt;- predict(model5_lm,test_data)
 summary(predictions)</code></pre>
-<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+<pre class="whitep"><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ## -186064  351066  463098  590293  653951 8552732</code></pre>
-<pre class="r"><code>summary(train_data$price) # checking if the values are similar to the true ones</code></pre>
-<pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+<pre class="r pink"><code>summary(train_data$price) # checking if the values are similar to the true ones</code></pre>
+<pre class="whitep"><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
 ##    77000   350000   460000   594480   655000 10500000</code></pre>
-<pre class="r"><code>lr_results&lt;-data.frame(  RMSE = RMSE(predictions, test_data$price), 
+<pre class="r pink"><code>lr_results&lt;-data.frame(  RMSE = RMSE(predictions, test_data$price), 
                             Rsquare = R2(predictions, test_data$price))
 lr_results </code></pre>
-<pre><code>##     RMSE Rsquare
+<pre class="whitep"><code>##     RMSE Rsquare
 ## 1 202699   0.842</code></pre>
-<pre class="r"><code>#We can predict prices for out of sample data the same way
+<pre class="r pink"><code>#We can predict prices for out of sample data the same way
 #predictions_oos &lt;- predict(model5_lm,london_house_prices_2019_out_of_sample)
 #predictions_oos</code></pre>
 </div>
 </div>
-<div id="tree-model" class="section level1">
-<h1>Tree model</h1>
+<div id="tree-model" class="section level3">
+<h3>Tree model</h3>
 <p>Next I fit a tree model using the same subset of features. Again I will add more variables in the next steps and tune the parameter of my tree to find a better fit.</p>
-<div id="first-model" class="section level2">
-<h2>First model</h2>
-<pre class="r"><code>#model2_tree &lt;- train(
+<div id="first-model" class="section level4">
+<h4>First model</h4>
+<pre class="r pink"><code>#model2_tree &lt;- train(
 #  price ~ distance_to_station +water_company+property_type+whether_old_or_new+freehold_or_leasehold+latitude+ longitude,
 #  train_data,
 #  method = &quot;rpart&quot;,
@@ -1548,9 +1569,9 @@ lr_results </code></pre>
 #importance &lt;- varImp(model2_tree, scale=TRUE)
 #plot(importance)</code></pre>
 </div>
-<div id="model-tree-2" class="section level2">
-<h2>Model tree 2</h2>
-<pre class="r"><code>#model3_tree &lt;- train(
+<div id="model-tree-2" class="section level4">
+<h4>Model tree 2</h4>
+<pre class="r pink"><code>#model3_tree &lt;- train(
 #  price ~ total_floor_area +average_income+ longitude+num_tube_lines #+property_type+london_zone+distance_to_station+latitude+is_station+number_habitable_rooms+current_energy_rating+windows_energy_eff+ #is_district,
 #  train_data,
 #  method = &quot;rpart&quot;,
@@ -1570,9 +1591,9 @@ lr_results </code></pre>
 #plot(importance)
 #importance</code></pre>
 </div>
-<div id="tree-model-4" class="section level2">
-<h2>Tree model 4</h2>
-<pre class="r"><code>#set.seed(1)
+<div id="tree-model-4" class="section level4">
+<h4>Tree model 4</h4>
+<pre class="r pink"><code>#set.seed(1)
 #model4_tree &lt;- train(
 #  price ~ total_floor_area +average_income+ longitude+latitude+
 #    num_tube_lines +
@@ -1595,10 +1616,9 @@ lr_results </code></pre>
 
 #varImp(model4_tree)</code></pre>
 </div>
-</div>
-<div id="next-tree-model" class="section level1">
-<h1>Next tree model</h1>
-<pre class="r"><code>#setting seed
+<div id="next-tree-model" class="section level4">
+<h4>Next tree model</h4>
+<pre class="r pink"><code>#setting seed
 set.seed(1)
 #prediction for next model
 modeltrial2 &lt;- train(
@@ -1611,7 +1631,7 @@ modeltrial2 &lt;- train(
 
 # performance of the tree
 modeltrial2$results</code></pre>
-<pre><code>##         cp   RMSE Rsquared    MAE RMSESD RsquaredSD MAESD
+<pre class="whitep"><code>##         cp   RMSE Rsquared    MAE RMSESD RsquaredSD MAESD
 ## 1  0.00678 280228    0.711 158448  28626     0.0613  4687
 ## 2  0.00857 286345    0.697 163129  33236     0.0657  4141
 ## 3  0.00891 288773    0.692 165861  33296     0.0671  5390
@@ -1627,17 +1647,18 @@ modeltrial2$results</code></pre>
 ## 13 0.07590 369473    0.495 214703  42384     0.0995 15876
 ## 14 0.16197 424347    0.343 235566  57846     0.0698 10491
 ## 15 0.31416 470699    0.294 257490  50547     0.0316 22986</code></pre>
-<pre class="r"><code># view the final tree
+<pre class="r pink"><code># view the final tree
 rpart.plot(modeltrial2$finalModel)</code></pre>
-<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-13-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code># you can also visualize the variable importance
+<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-14-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r pink"><code># you can also visualize the variable importance
 #importance &lt;- varImp(modeltrial2, scale=TRUE)
 #plot(importance)
 
 #varImp(modeltrial2)</code></pre>
-<div id="choosing-the-right-split-for-model-tree-4" class="section level2">
-<h2>Choosing the right split for model tree 4</h2>
-<pre class="r"><code>#modelLookup(&quot;rpart&quot;)
+</div>
+<div id="choosing-the-right-split-for-model-tree-4" class="section level4">
+<h4>Choosing the right split for model tree 4</h4>
+<pre class="r pink"><code>#modelLookup(&quot;rpart&quot;)
 
 #I choose cp values that seems to result in low error based on plot above
 Grid &lt;- expand.grid(cp = seq( 0.000, 0.00085,0.00005))
@@ -1657,7 +1678,7 @@ modeltrial2 &lt;- train(
 
 #performance of the model
 print(modeltrial2)</code></pre>
-<pre><code>## CART 
+<pre class="whitep"><code>## CART 
 ## 
 ## 10499 samples
 ##    16 predictor
@@ -1689,16 +1710,16 @@ print(modeltrial2)</code></pre>
 ## 
 ## Rsquared was used to select the optimal model using the largest value.
 ## The final value used for the model was cp = 0.</code></pre>
-<pre class="r"><code>#plot of the cp values
+<pre class="r pink"><code>#plot of the cp values
 plot(modeltrial2)</code></pre>
-<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-14-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#plotting the tree
+<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-15-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r pink"><code>#plotting the tree
 rpart.plot(modeltrial2$finalModel)</code></pre>
-<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-14-2.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-15-2.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
-<div id="final-tree-model" class="section level2">
-<h2>Final tree model</h2>
-<pre class="r"><code>#choosing small grid so the algorithm choose the best local cp
+<div id="final-tree-model" class="section level4">
+<h4>Final tree model</h4>
+<pre class="r pink"><code>#choosing small grid so the algorithm choose the best local cp
 Grid &lt;- expand.grid(cp = seq( 0.00005, 0.00015,0.00005))
 
 #setting seed
@@ -1714,19 +1735,19 @@ model_tree_final &lt;- train(
 
 #plotting cp
 plot(model_tree_final)</code></pre>
-<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-15-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#plotting tree
+<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-16-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r pink"><code>#plotting tree
 rpart.plot(model_tree_final$finalModel)</code></pre>
-<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-15-2.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#Predict the probabilities using the tree model in testing data
+<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-16-2.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r pink"><code>#Predict the probabilities using the tree model in testing data
 predictions_tree &lt;- predict(model_tree_final,test_data)
 
 tree_results&lt;-data.frame(  RMSE = RMSE(predictions_tree, test_data$price), 
                             Rsquare = R2(predictions_tree, test_data$price))
 tree_results </code></pre>
-<pre><code>##     RMSE Rsquare
+<pre class="whitep"><code>##     RMSE Rsquare
 ## 1 242413   0.777</code></pre>
-<pre class="r"><code>#RMSE &amp; Rsquare of final tree model
+<pre class="r pink"><code>#RMSE &amp; Rsquare of final tree model
 performancetree&lt;- list() #creating list
 performancetree[2]&lt;- model_tree_final[[4]] %&gt;% 
   filter(cp == model_tree_final$bestTune$cp) %&gt;% #adding RMSE
@@ -1740,7 +1761,7 @@ performancetree[1]&lt;- model_tree_final[[4]] %&gt;%
 
 names(performancetree) &lt;- c(&quot;Rsquare&quot;, &quot;RMSE&quot;) #rename
 performancetree</code></pre>
-<pre><code>## $Rsquare
+<pre class="whitep"><code>## $Rsquare
 ## [1] 0.792
 ## 
 ## $RMSE
@@ -1748,12 +1769,12 @@ performancetree</code></pre>
 <p>As expected a single tree in this case does not perform this well, however it is expected. This is why in my further analysis I will use hundreds of trees. One single tree overfits easily and is not the best predictor.</p>
 </div>
 </div>
-<div id="other-algorithms" class="section level1">
-<h1>Other algorithms</h1>
+<div id="other-algorithms" class="section level3">
+<h3>Other algorithms</h3>
 <p>I will use three other algorithms to predict prices. I will also tune the parameters of these algorithms in order to obtain best possible performance.</p>
-<div id="lasso-model" class="section level2">
-<h2>LASSO model</h2>
-<pre class="r"><code>#  LASSO model
+<div id="lasso-model" class="section level4">
+<h4>LASSO model</h4>
+<pre class="r pink"><code>#  LASSO model
 
 #we will look for the optimal lambda in this sequence
 lambda_seq &lt;- seq(0, 5000, length = 1000)
@@ -1773,9 +1794,9 @@ lasso &lt;- train(
   )
 #plotting lamba values
 plot(lasso)</code></pre>
-<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-16-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>coef(lasso$finalModel, lasso$bestTune$lambda) #best lambda</code></pre>
-<pre><code>## 326 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
+<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-17-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r pink"><code>coef(lasso$finalModel, lasso$bestTune$lambda) #best lambda</code></pre>
+<pre class="whitep"><code>## 326 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
 ##                                                    1
 ## (Intercept)                                 594480.4
 ## whether_old_or_newY                           1469.3
@@ -2103,7 +2124,7 @@ plot(lasso)</code></pre>
 ## london_zone:total_floor_area               -358893.9
 ## num_tube_lines:total_floor_area             191029.2
 ## average_income:number_habitable_rooms       206976.3</code></pre>
-<pre class="r"><code>#RMSE &amp; Rsquare of the model
+<pre class="r pink"><code>#RMSE &amp; Rsquare of the model
 performancelasso&lt;- list() #creating a list
 performancelasso[2]&lt;- lasso[[4]] %&gt;%  #adding RMSE
   filter(lambda == lasso$bestTune$lambda) %&gt;% 
@@ -2117,12 +2138,12 @@ performancelasso[1]&lt;- lasso[[4]] %&gt;%  #adding Rsquare
 
 names(performancelasso) &lt;- c(&quot;Rsquare&quot;, &quot;RMSE&quot;) #rename
 performancelasso</code></pre>
-<pre><code>## $Rsquare
+<pre class="whitep"><code>## $Rsquare
 ## [1] 0.823
 ## 
 ## $RMSE
 ## [1] 219953</code></pre>
-<pre class="r"><code>#prediction on test_data
+<pre class="r pink"><code>#prediction on test_data
 predictions_lasso &lt;- predict(lasso,test_data)
 
 
@@ -2130,19 +2151,19 @@ predictions_lasso &lt;- predict(lasso,test_data)
 LASSO_results&lt;-data.frame(  RMSE = RMSE(predictions_lasso, test_data$price), 
                             Rsquare = R2(predictions_lasso, test_data$price))
 LASSO_results </code></pre>
-<pre><code>##     RMSE Rsquare
+<pre class="whitep"><code>##     RMSE Rsquare
 ## 1 201073   0.844</code></pre>
 <p>As we can see, the best performance is for lambda=0, which translates for linear regression with no regularization. Therefore, in my multimodel, I will choose only one of these.</p>
 </div>
-<div id="random-forest" class="section level2">
-<h2>RANDOM FOREST</h2>
+<div id="random-forest" class="section level4">
+<h4>RANDOM FOREST</h4>
 <p>Parameters for random forest models in the ranger function that implements random forest i) ‘mtry’: number of randomly chosen variables to do a split each time ii) splitrule: purity measure we use. I will only use gini iii) min.node.size: Minimum size allowed for a leaf iv) ‘importance’: is an option to get a sense of the importance of the variables. We will use it below.</p>
-<pre class="r"><code>modelLookup(&quot;ranger&quot;)</code></pre>
-<pre><code>##    model     parameter                         label forReg forClass probModel
+<pre class="r pink"><code>modelLookup(&quot;ranger&quot;)</code></pre>
+<pre class="whitep"><code>##    model     parameter                         label forReg forClass probModel
 ## 1 ranger          mtry #Randomly Selected Predictors   TRUE     TRUE      TRUE
 ## 2 ranger     splitrule                Splitting Rule   TRUE     TRUE      TRUE
 ## 3 ranger min.node.size             Minimal Node Size   TRUE     TRUE      TRUE</code></pre>
-<pre class="r"><code># Define the tuning grid: tuneGrid
+<pre class="r pink"><code># Define the tuning grid: tuneGrid
 Gridtune= data.frame(mtry=c(10:15),
                      min.node.size = 5,
                      splitrule=&quot;variance&quot;)
@@ -2164,7 +2185,7 @@ rfregFit &lt;- train(price~poly(total_floor_area,2) +average_income+ longitude+l
 
 #importance of variables
 varImp(rfregFit)</code></pre>
-<pre><code>## ranger variable importance
+<pre class="whitep"><code>## ranger variable importance
 ## 
 ##   only 20 most important variables shown (out of 26)
 ## 
@@ -2189,12 +2210,12 @@ varImp(rfregFit)</code></pre>
 ## type_of_closest_stationrail          0.733
 ## water_companyEssex &amp; Suffolk Water   0.441
 ## current_energy_ratingC               0.400</code></pre>
-<pre class="r"><code>#plot of important variables
+<pre class="r pink"><code>#plot of important variables
 plot(varImp(rfregFit))</code></pre>
-<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-17-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#summary of grid tuning &amp; RMSE &amp;Rsquare
+<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-18-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r pink"><code>#summary of grid tuning &amp; RMSE &amp;Rsquare
 print(rfregFit)</code></pre>
-<pre><code>## Random Forest 
+<pre class="whitep"><code>## Random Forest 
 ## 
 ## 10499 samples
 ##    15 predictor
@@ -2218,25 +2239,25 @@ print(rfregFit)</code></pre>
 ## RMSE was used to select the optimal model using the smallest value.
 ## The final values used for the model were mtry = 10, splitrule = variance
 ##  and min.node.size = 5.</code></pre>
-<pre class="r"><code>#predictions for data_test
+<pre class="r pink"><code>#predictions for data_test
 predictions_rf &lt;-predict(rfregFit,test_data)
 
 # Model prediction performance
 rf_results&lt;-data.frame(  RMSE = RMSE(predictions_rf, test_data$price), 
                             Rsquare = R2(predictions_rf, test_data$price))
 rf_results </code></pre>
-<pre><code>##     RMSE Rsquare
+<pre class="whitep"><code>##     RMSE Rsquare
 ## 1 191418    0.86</code></pre>
 </div>
-<div id="gradient-boosting-machine" class="section level2">
-<h2>GRADIENT BOOSTING MACHINE</h2>
-<pre class="r"><code>modelLookup(&quot;gbm&quot;)</code></pre>
-<pre><code>##   model         parameter                   label forReg forClass probModel
+<div id="gradient-boosting-machine" class="section level4">
+<h4>GRADIENT BOOSTING MACHINE</h4>
+<pre class="r pink"><code>modelLookup(&quot;gbm&quot;)</code></pre>
+<pre class="whitep"><code>##   model         parameter                   label forReg forClass probModel
 ## 1   gbm           n.trees   # Boosting Iterations   TRUE     TRUE      TRUE
 ## 2   gbm interaction.depth          Max Tree Depth   TRUE     TRUE      TRUE
 ## 3   gbm         shrinkage               Shrinkage   TRUE     TRUE      TRUE
 ## 4   gbm    n.minobsinnode Min. Terminal Node Size   TRUE     TRUE      TRUE</code></pre>
-<pre class="r"><code>#Expand the search grid (see above for definitions)
+<pre class="r pink"><code>#Expand the search grid (see above for definitions)
 grid&lt;-expand.grid(interaction.depth = 8,n.trees = 500,shrinkage =0.05, n.minobsinnode = 5)
 #Train for gbm
 #set seed
@@ -2254,7 +2275,7 @@ gbmFit1 &lt;- train(price~poly(total_floor_area,3) +average_income+ longitude+la
 
 #RMSE &amp; Rsquare
 print(gbmFit1)</code></pre>
-<pre><code>## Stochastic Gradient Boosting 
+<pre class="whitep"><code>## Stochastic Gradient Boosting 
 ## 
 ## 10499 samples
 ##    16 predictor
@@ -2273,9 +2294,9 @@ print(gbmFit1)</code></pre>
 ## Tuning parameter &#39;shrinkage&#39; was held constant at a value of 0.05
 ## 
 ## Tuning parameter &#39;n.minobsinnode&#39; was held constant at a value of 5</code></pre>
-<pre class="r"><code>#variables importance
+<pre class="r pink"><code>#variables importance
 varImp(gbmFit1)</code></pre>
-<pre><code>## gbm variable importance
+<pre class="whitep"><code>## gbm variable importance
 ## 
 ##   only 20 most important variables shown (out of 67)
 ## 
@@ -2300,42 +2321,42 @@ varImp(gbmFit1)</code></pre>
 ## freehold_or_leaseholdL            0.870
 ## current_energy_ratingD            0.489
 ## property_typeT                    0.344</code></pre>
-<pre class="r"><code>#plot on variables importance
+<pre class="r pink"><code>#plot on variables importance
 plot(varImp(gbmFit1))</code></pre>
-<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-18-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#performance of predicted values on test_data
+<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-19-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r pink"><code>#performance of predicted values on test_data
 predictions_GBM &lt;-predict(gbmFit1, test_data)
 
 GBM_results&lt;-data.frame(  RMSE = RMSE(predictions_GBM, test_data$price), 
                             Rsquare = R2(predictions_GBM, test_data$price))
 GBM_results </code></pre>
-<pre><code>##     RMSE Rsquare
+<pre class="whitep"><code>##     RMSE Rsquare
 ## 1 186632   0.866</code></pre>
 </div>
 </div>
-<div id="all-models-performance-compared" class="section level1">
-<h1>All models’ performance compared</h1>
+<div id="all-models-performance-compared" class="section level3">
+<h3>All models’ performance compared</h3>
 <p>Now I will compare performance of all my models. To do so, I will compare the Rsquare (not the Adjusted one!) of all the models.</p>
-<pre class="r"><code>performancelr</code></pre>
-<pre><code>## $Rsquare
+<pre class="r pink"><code>performancelr</code></pre>
+<pre class="whitep"><code>## $Rsquare
 ## [1] 0.82
 ## 
 ## $RMSE
 ## [1] 222161</code></pre>
-<pre class="r"><code>performancetree</code></pre>
-<pre><code>## $Rsquare
+<pre class="r pink"><code>performancetree</code></pre>
+<pre class="whitep"><code>## $Rsquare
 ## [1] 0.792
 ## 
 ## $RMSE
 ## [1] 238798</code></pre>
-<pre class="r"><code>performancelasso </code></pre>
-<pre><code>## $Rsquare
+<pre class="r pink"><code>performancelasso </code></pre>
+<pre class="whitep"><code>## $Rsquare
 ## [1] 0.823
 ## 
 ## $RMSE
 ## [1] 219953</code></pre>
-<pre class="r"><code> print(rfregFit)</code></pre>
-<pre><code>## Random Forest 
+<pre class="r pink"><code> print(rfregFit)</code></pre>
+<pre class="whitep"><code>## Random Forest 
 ## 
 ## 10499 samples
 ##    15 predictor
@@ -2359,8 +2380,8 @@ GBM_results </code></pre>
 ## RMSE was used to select the optimal model using the smallest value.
 ## The final values used for the model were mtry = 10, splitrule = variance
 ##  and min.node.size = 5.</code></pre>
-<pre class="r"><code>print(gbmFit1)</code></pre>
-<pre><code>## Stochastic Gradient Boosting 
+<pre class="r pink"><code>print(gbmFit1)</code></pre>
+<pre class="whitep"><code>## Stochastic Gradient Boosting 
 ## 
 ## 10499 samples
 ##    16 predictor
@@ -2383,29 +2404,29 @@ GBM_results </code></pre>
 On the other hand, when we run the tree model, a single tree performs always much worse than more complex models - Random Forest and Gradient Boosting Machine.
 Nevertheless, in the stacking model, it is good to stack numerous models as they are able to catch different kinds of results. E.g. linear regression is able to catch much better the linear trends.</p>
 </div>
-<div id="stacking" class="section level1">
-<h1>Stacking</h1>
+<div id="stacking" class="section level3">
+<h3>Stacking</h3>
 <p>I will now use stacking to ensemble 4 of my created algorithms.</p>
-<pre class="r"><code>multimodel&lt;- list(tree=model_tree_final,lasso=lasso,ranger= rfregFit, gbm= gbmFit1)
+<pre class="r pink"><code>multimodel&lt;- list(tree=model_tree_final,lasso=lasso,ranger= rfregFit, gbm= gbmFit1)
 class(multimodel)&lt;- &quot;caretList&quot;</code></pre>
-<div id="visualising-results" class="section level2">
-<h2>Visualising results</h2>
-<pre class="r"><code>modelCor(resamples(multimodel)) #correlation matrix of the models</code></pre>
-<pre><code>##         tree lasso ranger   gbm
+<div id="visualising-results" class="section level4">
+<h4>Visualising results</h4>
+<pre class="r pink"><code>modelCor(resamples(multimodel)) #correlation matrix of the models</code></pre>
+<pre class="whitep"><code>##         tree lasso ranger   gbm
 ## tree   1.000 0.860  0.912 0.890
 ## lasso  0.860 1.000  0.916 0.866
 ## ranger 0.912 0.916  1.000 0.941
 ## gbm    0.890 0.866  0.941 1.000</code></pre>
-<pre class="r"><code>dotplot(resamples(multimodel), metric=&quot;Rsquared&quot;) #Rsquare comparison</code></pre>
-<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-21-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>xyplot(resamples(multimodel), metric=&quot;Rsquared&quot;) #tree vs lasso</code></pre>
-<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-21-2.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>splom(resamples(multimodel), metric=&quot;Rsquared&quot;) #all the models&#39; performance interactions</code></pre>
-<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-21-3.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r pink"><code>dotplot(resamples(multimodel), metric=&quot;Rsquared&quot;) #Rsquare comparison</code></pre>
+<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-22-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r pink"><code>xyplot(resamples(multimodel), metric=&quot;Rsquared&quot;) #tree vs lasso</code></pre>
+<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-22-2.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r pink"><code>splom(resamples(multimodel), metric=&quot;Rsquared&quot;) #all the models&#39; performance interactions</code></pre>
+<p><img src="/portfolio/project-10_files/figure-html/unnamed-chunk-22-3.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
-<div id="creation-of-the-stack-model" class="section level2">
-<h2>Creation of the stack model</h2>
-<pre class="r"><code>library(caret)
+<div id="creation-of-the-stack-model" class="section level4">
+<h4>Creation of the stack model</h4>
+<pre class="r pink"><code>library(caret)
 library(caretEnsemble)
 model_list&lt;- caretStack(multimodel, #creating a model that stacks both models together
                         trControl=control,
@@ -2414,7 +2435,7 @@ model_list&lt;- caretStack(multimodel, #creating a model that stacks both models
 
 #summary of the model
 summary(model_list)</code></pre>
-<pre><code>## 
+<pre class="whitep"><code>## 
 ## Call:
 ## lm(formula = .outcome ~ ., data = dat)
 ## 
@@ -2435,7 +2456,7 @@ summary(model_list)</code></pre>
 ## Residual standard error: 192000 on 10494 degrees of freedom
 ## Multiple R-squared:  0.865,  Adjusted R-squared:  0.865 
 ## F-statistic: 1.68e+04 on 4 and 10494 DF,  p-value: &lt;2e-16</code></pre>
-<pre class="r"><code># RMSE &amp; Rsquaere
+<pre class="r pink"><code># RMSE &amp; Rsquaere
 performancefinal&lt;- list() #creating a list
 performancefinal[2]&lt;- model_list[[3]] %&gt;% #adding RMSE
   select(RMSE) %&gt;% 
@@ -2447,7 +2468,7 @@ performancefinal[1]&lt;- model_list[[3]] %&gt;% #adding Rsquare
 
 names(performancefinal) &lt;- c(&quot;Rsquare&quot;, &quot;RMSE&quot;) #rename
 performancefinal #check the values</code></pre>
-<pre><code>## $Rsquare
+<pre class="whitep"><code>## $Rsquare
 ## [1] 0.868
 ## 
 ## $RMSE
@@ -2455,10 +2476,10 @@ performancefinal #check the values</code></pre>
 <p>As we can see, the Rsuqared achieves the best results in comparison to our all previous models. the RMSE is equal to 189661.2 and the Rsquare equals 86.8%. Therefore, we will use this model as an estimation engine to guide the investment on the housing market in London.</p>
 </div>
 </div>
-<div id="performance-on-test-data" class="section level1">
-<h1>Performance on test data</h1>
+<div id="performance-on-test-data" class="section level3">
+<h3>Performance on test data</h3>
 <p>First I will check the preformance of our model on the test dataset.</p>
-<pre class="r"><code>numchoose=200 #choosing number of investments
+<pre class="r pink"><code>numchoose=200 #choosing number of investments
 set.seed(1) #set seed
 random_mult&lt;-1/(1-runif(nrow(test_data),min=-0.2, max=0.2))
 test_data$asking_price&lt;-test_data$price*random_mult #creating the asking_price simulation
@@ -2484,15 +2505,15 @@ test_data&lt;-test_data %&gt;%
   mutate(profit=(price-asking_price)/(asking_price), actualProfit=invest*profit)
 
 mean(test_data$profit)</code></pre>
-<pre><code>## [1] 0.0019</code></pre>
-<pre class="r"><code>sum(test_data$actualProfit)/numchoose</code></pre>
-<pre><code>## [1] 0.0678</code></pre>
+<pre class="whitep"><code>## [1] 0.0019</code></pre>
+<pre class="r pink"><code>sum(test_data$actualProfit)/numchoose</code></pre>
+<pre class="whitep"><code>## [1] 0.0678</code></pre>
 <p>The silumation gives us positice results with the average profit on all the investments amouting to 0.19% and the average profit from 200 best investments equal o 6%.</p>
 </div>
-<div id="picking-investment-portfolio" class="section level1">
-<h1>Picking investment portfolio</h1>
-<p>In this section I will use the best algorithm I identified to choose 200 properties from the out of sample data.</p>
-<pre class="r"><code>numchoose=200 # choosing number of properties we will invest in
+<div id="picking-investment-portfolio" class="section level3">
+<h3>Picking investment portfolio</h3>
+<p>In this section I will use the best algorithm I identified to choose 200 properties from the out of sample data. I will report 20 first raws of my original dataset with the scores.</p>
+<pre class="r pink"><code>numchoose=200 # choosing number of properties we will invest in
 
 oos&lt;-london_house_prices_2019_out_of_sample
 #predict the value of houses
@@ -2509,16 +2530,46 @@ oos[1:numchoose,]$buy=1
 oos&lt;-oos %&gt;% mutate( actualProfit=buy*profitMargin)
 #let&#39;s find the actual profit
 mean(oos$profitMargin)</code></pre>
-<pre><code>## [1] 0.0387</code></pre>
-<pre class="r"><code>sum(oos$actualProfit)/numchoose</code></pre>
-<pre><code>## [1] 0.685</code></pre>
-<pre class="r"><code>  #oos %&gt;% 
-  #mutate(revenue=(predict-asking_price)) %&gt;% 
-  #filter(buy==1) %&gt;% 
-  #summarise(sum(revenue))
-
-#I will output my choices to the csv file that will be also included to my final submission
-write.csv(oos,&quot;Prawda_Agnieszka.csv&quot;)</code></pre>
+<pre class="whitep"><code>## [1] 0.0387</code></pre>
+<pre class="r pink"><code>sum(oos$actualProfit)/numchoose</code></pre>
+<pre class="whitep"><code>## [1] 0.685</code></pre>
+<pre class="r pink"><code>oos %&gt;%  head(20)</code></pre>
+<pre class="whitep"><code>## # A tibble: 20 x 44
+##       ID date       postcode property_type whether_old_or_… freehold_or_lea…
+##    &lt;dbl&gt; &lt;date&gt;     &lt;lgl&gt;    &lt;fct&gt;         &lt;fct&gt;            &lt;fct&gt;           
+##  1  5977 NA         NA       F             N                L               
+##  2  9101 NA         NA       F             N                L               
+##  3  7296 NA         NA       F             N                L               
+##  4 15713 NA         NA       F             N                L               
+##  5 11008 NA         NA       F             N                L               
+##  6  5770 NA         NA       F             N                L               
+##  7  8684 NA         NA       F             N                L               
+##  8  5843 NA         NA       S             N                F               
+##  9  9878 NA         NA       D             N                F               
+## 10 11283 NA         NA       F             N                L               
+## 11  3128 NA         NA       F             N                L               
+## 12 12485 NA         NA       F             N                L               
+## 13 10024 NA         NA       F             N                L               
+## 14   656 NA         NA       T             N                F               
+## 15  8866 NA         NA       F             N                L               
+## 16 10952 NA         NA       T             N                L               
+## 17 15439 NA         NA       D             N                F               
+## 18 10237 NA         NA       F             N                L               
+## 19  8567 NA         NA       F             N                L               
+## 20  1003 NA         NA       F             N                L               
+## # … with 38 more variables: address1 &lt;lgl&gt;, address2 &lt;lgl&gt;, address3 &lt;lgl&gt;,
+## #   town &lt;fct&gt;, local_aut &lt;lgl&gt;, county &lt;lgl&gt;, postcode_short &lt;fct&gt;,
+## #   current_energy_rating &lt;fct&gt;, total_floor_area &lt;dbl&gt;,
+## #   number_habitable_rooms &lt;dbl&gt;, co2_emissions_current &lt;dbl&gt;,
+## #   co2_emissions_potential &lt;dbl&gt;, energy_consumption_current &lt;dbl&gt;,
+## #   energy_consumption_potential &lt;dbl&gt;, windows_energy_eff &lt;fct&gt;, tenure &lt;fct&gt;,
+## #   latitude &lt;dbl&gt;, longitude &lt;dbl&gt;, population &lt;dbl&gt;, altitude &lt;dbl&gt;,
+## #   london_zone &lt;dbl&gt;, nearest_station &lt;fct&gt;, water_company &lt;fct&gt;,
+## #   average_income &lt;dbl&gt;, district &lt;fct&gt;, type_of_closest_station &lt;fct&gt;,
+## #   num_tube_lines &lt;dbl&gt;, num_rail_lines &lt;dbl&gt;, num_light_rail_lines &lt;dbl&gt;,
+## #   distance_to_station &lt;dbl&gt;, asking_price &lt;dbl&gt;, is_station &lt;lgl&gt;,
+## #   is_district &lt;lgl&gt;, is_postcode &lt;lgl&gt;, predict &lt;dbl&gt;, profitMargin &lt;dbl&gt;,
+## #   buy &lt;dbl&gt;, actualProfit &lt;dbl&gt;</code></pre>
 <p>Final perdictions lead us to the following results. The average profit margin of all the properties in the data set equals 3.86%, whereas the average profit from 200 best investments equals 68.45%. Our engine works. I will provide the documentation of all the steps taken and explanantion of all the models in my technial report.</p>
 <p>Thank you.</p>
 </div>
