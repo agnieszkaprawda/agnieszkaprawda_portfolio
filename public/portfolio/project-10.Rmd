@@ -692,10 +692,22 @@ model5_lm<-train(
    method = "lm",
     trControl = control)
 
+```
 
+```{r}
 # summary of the results
-summary(model5_lm)
+# summary(model5_lm)
 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 213000 on 10216 degrees of freedom
+## Multiple R-squared:  0.839,  Adjusted R-squared:  0.834 
+## F-statistic:  188 on 282 and 10216 DF,  p-value: <2e-16
+
+```
+
+```{r}
 performancelr<- list()
 performancelr[2]<- model5_lm[[4]] %>% 
   select(RMSE) %>% 
@@ -1000,7 +1012,7 @@ lasso <- train(
 #plotting lamba values
 plot(lasso)
 
-coef(lasso$finalModel, lasso$bestTune$lambda) #best lambda
+#coef(lasso$finalModel, lasso$bestTune$lambda) #best lambda
 
 #RMSE & Rsquare of the model
 performancelasso<- list() #creating a list
@@ -1258,14 +1270,9 @@ mean(oos$profitMargin)
 sum(oos$actualProfit)/numchoose
 
 
-oos %>%  head(20)
-
-
 
 ```
 
 Final perdictions lead us to the following results. The average profit margin of all the properties in the data set equals 3.86%, whereas the average profit from 200 best investments equals 68.45%. Our engine works. I will provide the documentation of all the steps taken and explanantion of all the models in my technial report. 
 
 Thank you.
-
-

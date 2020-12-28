@@ -296,8 +296,8 @@ theme_minimal() +
   scale_y_continuous()+
   scale_fill_manual(values = my_colours2)+ 
    geom_label(aes(label=count),family = &quot;Montserrat&quot;, fontface=&quot;bold&quot;, color=&quot;white&quot;, )+
-   annotation_custom(grid.text(my_text, x=0.85,  y=0.7,gp=gpar(fontfamily=&quot;Montserrat&quot;,fontsize=8.5, col=&quot;#2FABE1&quot;, fontface=&quot;bold&quot;)))</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-8-1.png" width="648" style="display: block; margin: auto;" /><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-8-2.png" width="648" style="display: block; margin: auto;" /></p>
+   annotate(geom= &quot;text&quot;, x=5.5,  y=110, label=my_text, family=&quot;Montserrat&quot;,size=5, color=&quot;#2FABE1&quot;, fontface=&quot;bold&quot;)</code></pre>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-8-1.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
 <div id="average-rating-of-hotels-by-country" class="section level3">
 <h3>Average rating of hotels by country</h3>
@@ -550,13 +550,9 @@ my_colours_positive&lt;- c(&quot;#45B05F&quot;, &quot;tomato&quot;,&quot;#FFBAAD
   my_text1r &lt;- &quot;Negative&quot;
     my_text2r &lt;- &quot;Positive&quot;
     my_text3r &lt;- &quot;Average review score&quot;
-my_grob = grid.text(my_text1r, x=0.43,  y=0.83,gp=gpar(fontfamily=&quot;Montserrat&quot;,fontsize= 11, col=&quot;tomato&quot;, fontface=&quot;bold&quot;))
-my_grob2 = grid.text(my_text2r, x=0.54,  y=0.83,gp=gpar(fontfamily=&quot;Montserrat&quot;,fontsize= 11, col=&quot;#F1FFEB&quot;, fontface=2))
-my_grob3 = grid.text(my_text3r, x=0.68,  y=0.95,gp=gpar(fontfamily=&quot;Montserrat&quot;,fontsize= 8, col=&quot;black&quot;, fontface=2))</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-13-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r blue"><code>quartz()
+
 # negative and positive
-plot_region_reviews&lt;-reviews_by_region_pivot %&gt;%
+reviews_by_region_pivot %&gt;%
   ggplot(aes(x = reorder(region,avg_review), fill=is_extreme))+
   geom_bar(aes(y = score_chart),stat = &quot;identity&quot;)+
   coord_flip() +
@@ -581,13 +577,14 @@ plot_region_reviews&lt;-reviews_by_region_pivot %&gt;%
     labs(title = &quot;The most criticising guests come from Europe,\nthe most positive come from Australia&quot;, subtitle= &quot;Number of positive and negative words per review per continent and average review score&quot;, x= &quot;Region&quot;, y= &quot;Average number of positive/negative words in a review&quot;, caption=&quot;Source: https://www.kaggle.com/ployyyywa/global-hotel-chain-presence&quot;) +
   scale_fill_manual(values = my_colours_positive) +
   scale_y_continuous(labels=abs)+
-   geom_hline(yintercept = -8, linetype=&quot;dashed&quot;, 
+   geom_hline(yintercept = -18, linetype=&quot;dashed&quot;, 
                 color = &quot;tomato&quot;, size=0.8)+
   geom_hline(yintercept = 19.5, linetype=&quot;dashed&quot;, 
-                color = &quot;#45B05F&quot;, size=0.8)
-
-plot_region_reviews +annotation_custom(my_grob) + annotation_custom(my_grob2)+annotation_custom(my_grob3) </code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-13-2.png" width="648" style="display: block; margin: auto;" /></p>
+                color = &quot;#45B05F&quot;, size=0.8)+
+ annotate(geom= &quot;text&quot;, x=5,  y=-2, label=my_text1r, family=&quot;Montserrat&quot;,size=6, color=&quot;tomato&quot;, fontface=&quot;bold&quot;)+
+  annotate(geom= &quot;text&quot;, x=5,  y=1.9, label=my_text2r, family=&quot;Montserrat&quot;,size=6, color=&quot;#F1FFEB&quot;, fontface=2)+
+   annotate(geom= &quot;text&quot;, x=5.5,  y=9, label=my_text3r, family=&quot;Montserrat&quot;,size=4, color=&quot;black&quot;, fontface=2)</code></pre>
+<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-13-1.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
 <div id="reviewers-origin-by-subregion" class="section level3">
 <h3>Reviewers’ origin by Subregion</h3>
@@ -602,7 +599,11 @@ reviews_by_subregion_pivot &lt;- reviews_by_subregion_pivot%&gt;%
                              ifelse(score_chart&lt; -17.5, &quot;2&quot;,
                                     ifelse(score_chart&gt;-17.5 &amp; score_chart &lt;0, &quot;3&quot;, &quot;4&quot;))))
 
-plot_subregion_reviews &lt;-reviews_by_subregion_pivot %&gt;%
+  my_text1s &lt;- &quot;Negative&quot;
+    my_text2s &lt;- &quot;Positive&quot;
+    my_text3s &lt;- &quot;Average \nreview score&quot;
+
+reviews_by_subregion_pivot %&gt;%
   ggplot(aes(x = reorder(sub_region,avg_review), fill = is_extreme))+
   geom_bar(aes(y = score_chart),stat = &quot;identity&quot;)+
   coord_flip() +
@@ -629,16 +630,11 @@ plot_subregion_reviews &lt;-reviews_by_subregion_pivot %&gt;%
    geom_hline(yintercept = -17.5, linetype=&quot;dashed&quot;, 
                 color = &quot;tomato&quot;, size=0.8)+
   geom_hline(yintercept = 17.5, linetype=&quot;dashed&quot;, 
-                color = &quot;#45B05F&quot;, size=0.8)
-     my_text1s &lt;- &quot;Negative&quot;
-    my_text2s &lt;- &quot;Positive&quot;
-    my_text3s &lt;- &quot;Average \nreview score&quot;
-my_grobs1 = grid.text(my_text1s, x=0.425,  y=0.85,gp=gpar(fontfamily=&quot;Montserrat&quot;,fontsize= 8, col=&quot;tomato&quot;, fontface=&quot;bold&quot;))
-my_grobs2 = grid.text(my_text2s, x=0.545,  y=0.85,gp=gpar(fontfamily=&quot;Montserrat&quot;,fontsize= 8, col=&quot;#3FA259&quot;, fontface=2))
-my_grobs3 = grid.text(my_text3s, x=0.77,  y=0.94,gp=gpar(fontfamily=&quot;Montserrat&quot;,fontsize= 9, col=&quot;black&quot;, fontface=2))</code></pre>
+                color = &quot;#45B05F&quot;, size=0.8)+
+ annotate(geom= &quot;text&quot;, x=15,  y=-2, label=my_text1s, family=&quot;Montserrat&quot;,size=4.5, color=&quot;tomato&quot;, fontface=&quot;bold&quot;)+
+  annotate(geom= &quot;text&quot;, x=15,  y=1.9, label=my_text2s, family=&quot;Montserrat&quot;,size=4.5, color=&quot;#F1FFEB&quot;, fontface=2)+
+   annotate(geom= &quot;text&quot;, x=17,  y=12.5, label=my_text3s, family=&quot;Montserrat&quot;,size=3.5, color=&quot;black&quot;, fontface=2)</code></pre>
 <p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-14-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r blue"><code> plot_subregion_reviews + annotation_custom(my_grobs1) + annotation_custom(my_grobs2)+annotation_custom(my_grobs3)</code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-14-2.png" width="648" style="display: block; margin: auto;" /></p>
 </div>
 <div id="creating-wordclouds-with-most-popular-positive-negative-words" class="section level3">
 <h3>Creating wordclouds with most popular positive/ negative words</h3>
@@ -670,7 +666,7 @@ DTM_pos &lt;- DocumentTermMatrix(review_pos, control = list(
             removePunctuation = TRUE,
             stripWhitespace = TRUE))
 dim(DTM_pos) </code></pre>
-<pre class="whiteb"><code>## [1] 6000 5512</code></pre>
+<pre class="whiteb"><code>## [1] 6000 5660</code></pre>
 <pre class="r blue"><code>DTM_neg &lt;- DocumentTermMatrix(review_neg, control = list(
             tolower = TRUE,
             removeNumbers = TRUE,
@@ -678,24 +674,24 @@ dim(DTM_pos) </code></pre>
             removePunctuation = TRUE,
             stripWhitespace = TRUE))
 inspect(DTM_neg) </code></pre>
-<pre class="whiteb"><code>## &lt;&lt;DocumentTermMatrix (documents: 6000, terms: 7458)&gt;&gt;
-## Non-/sparse entries: 74438/44673562
+<pre class="whiteb"><code>## &lt;&lt;DocumentTermMatrix (documents: 6000, terms: 7568)&gt;&gt;
+## Non-/sparse entries: 73268/45334732
 ## Sparsity           : 100%
-## Maximal term length: 21
+## Maximal term length: 18
 ## Weighting          : term frequency (tf)
 ## Sample             :
 ##       Terms
 ## Docs   bathroom bed bit breakfast didn little one rooms small staff
-##   1438        0   1   0         1    0      0   0     1     1     0
-##   2200        0   0   0         0    0      0   0     0     0     2
-##   3412        0   0   0         4    1      0   2     0     0     0
-##   3561        1   1   0         0    0      1   1     3     0     1
-##   4482        0   1   0         0    3      1   1     3     0     1
-##   4703        3   3   0         0    1      0   0     8     2     0
-##   4771        0   2   1         0    0      1   0     0     0     0
-##   4942        1   3   0         3    0      0   1     1     3     2
-##   5658        0   0   0         0    0      1   2     1     0     0
-##   5754        0   0   0         0    0      0   0     0     0     2</code></pre>
+##   2515        2   1   0         0    0      0   1     0     0     0
+##   2620        1   1   0         1    0      1   2     0     0     0
+##   292         0   0   0         0    3      0   0     2     0     2
+##   3331        0   1   0         3    0      0   1     0     0     0
+##   3333        1   4   1         0    2      1   0     0     0     3
+##   4033        0   0   1         0    0      0   0     0     0     0
+##   4332        0   0   0         0    0      0   2     4     1     0
+##   4603        3   0   0         0    2      0   2     0     0     1
+##   4721        0   0   1         4    6      0   0     0     0     1
+##   5519        0   0   0         1    1      1   0     0     0     2</code></pre>
 <pre class="r blue"><code>rm(review_neg,review_pos)</code></pre>
 </div>
 <div id="positive-wordcloud" class="section level4">
@@ -713,13 +709,13 @@ wordCountDoc_pos &lt;- DTM_pos_tidy %&gt;%
         arrange(desc(total_pos)) 
 print(wordCountDoc_pos %&gt;% top_n(5))</code></pre>
 <pre class="whiteb"><code>## # A tibble: 5 x 2
-##   word      total_pos
-##   &lt;chr&gt;         &lt;dbl&gt;
-## 1 staff          2541
-## 2 location       2439
-## 3 good           1729
-## 4 great          1477
-## 5 breakfast      1190</code></pre>
+##   word     total_pos
+##   &lt;chr&gt;        &lt;dbl&gt;
+## 1 staff         2585
+## 2 location      2501
+## 3 good          1770
+## 4 great         1418
+## 5 friendly      1146</code></pre>
 <pre class="r blue"><code>#wordcloud
 library(wordcloud)
 library(wordcloud2)
@@ -751,11 +747,11 @@ print(wordCountDoc_neg %&gt;% top_n(5))</code></pre>
 <pre class="whiteb"><code>## # A tibble: 5 x 2
 ##   word      total_neg
 ##   &lt;chr&gt;         &lt;dbl&gt;
-## 1 breakfast      1075
-## 2 small           871
-## 3 staff           703
-## 4 rooms           637
-## 5 bed             586</code></pre>
+## 1 breakfast      1077
+## 2 small           870
+## 3 staff           700
+## 4 rooms           596
+## 5 bit             578</code></pre>
 <pre class="r blue"><code>#wordcloud
 wordcloud(words = wordCountDoc_neg$word, 
           freq = wordCountDoc_neg$total_neg, 
@@ -813,7 +809,9 @@ bots_by_popularity&lt;-duplicates%&gt;%
   arrange(desc(sum))%&gt;%
   mutate(is_others=ifelse(negative_review_renew==&quot;Meaningful review&quot;,1,0))%&gt;% #deprecated line, originally used for fill aesthetic colouring, but we cancelled the colouring already
   slice(1:2)
-bots_graph &lt;- ggplot(bots_by_popularity, aes(x=reorder(negative_review_renew,-sum), y=sum)) +
+
+my_text1b &lt;- &quot;No Negative, \nNothing, \nnothing, &amp; \nEverything&quot;
+ggplot(bots_by_popularity, aes(x=reorder(negative_review_renew,-sum), y=sum)) +
     geom_bar(stat=&quot;identity&quot;, alpha=0.8)+
 theme_minimal() +
   theme(panel.grid.major.y = element_line(color = &quot;gray60&quot;, size = 0.1),
@@ -834,11 +832,8 @@ theme_minimal() +
     labs(title = &quot;Two-thirds of bots produce meaningless reviews&quot;, subtitle= &quot;&quot;, x=&quot;Type of review&quot;, y=&quot;Count&quot;, caption=&quot;(We define repetitive reviews as exactly one of &#39;No Negative&#39;, &#39;Nothing&#39;, &#39;nothing&#39; and &#39;Everything&#39;)&quot;) +
   scale_y_continuous()+
   scale_fill_manual(values = c(&quot;grey80&quot;))+
-  geom_label(aes(label=sum),family=&quot;Montserrat&quot;, fontface=&quot;bold&quot; )
-my_text1r &lt;- &quot;No Negative, \nNothing, \nnothing, &amp; \nEverything&quot;
-my_grobr1 &lt;- grid.text(my_text1r, x=0.57,  y=0.82,gp=gpar(fontfamily=&quot;Montserrat&quot;,fontsize= 12, col=&quot;#2FABE1&quot;, fontface=&quot;bold&quot;))</code></pre>
+  geom_label(aes(label=sum),family=&quot;Montserrat&quot;, fontface=&quot;bold&quot; )#+</code></pre>
 <p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-19-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r blue"><code> bots_graph + annotation_custom(my_grobr1) </code></pre>
-<p><img src="/portfolio/project-13_files/figure-html/unnamed-chunk-19-2.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r blue"><code>#annotate(geom= &quot;text&quot;, x=1.7,  y=1500, label=my_text1b, family=&quot;Montserrat&quot;,size=7, color=&quot;#2FABE1&quot;,fontface=&quot;bold&quot;)</code></pre>
 <p>Thank you!</p>
 </div>

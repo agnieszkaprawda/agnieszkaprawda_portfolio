@@ -234,7 +234,7 @@ theme_minimal() +
   scale_y_continuous()+
   scale_fill_manual(values = my_colours2)+ 
    geom_label(aes(label=count),family = "Montserrat", fontface="bold", color="white", )+
-   annotation_custom(grid.text(my_text, x=0.85,  y=0.7,gp=gpar(fontfamily="Montserrat",fontsize=8.5, col="#2FABE1", fontface="bold")))
+   annotate(geom= "text", x=5.5,  y=110, label=my_text, family="Montserrat",size=5, color="#2FABE1", fontface="bold")
  
 ```
 
@@ -475,12 +475,9 @@ my_colours_positive<- c("#45B05F", "tomato","#FFBAAD","#A8DDB5") # scale for the
   my_text1r <- "Negative"
     my_text2r <- "Positive"
     my_text3r <- "Average review score"
-my_grob = grid.text(my_text1r, x=0.43,  y=0.83,gp=gpar(fontfamily="Montserrat",fontsize= 11, col="tomato", fontface="bold"))
-my_grob2 = grid.text(my_text2r, x=0.54,  y=0.83,gp=gpar(fontfamily="Montserrat",fontsize= 11, col="#F1FFEB", fontface=2))
-my_grob3 = grid.text(my_text3r, x=0.68,  y=0.95,gp=gpar(fontfamily="Montserrat",fontsize= 8, col="black", fontface=2))
-quartz()
+
 # negative and positive
-plot_region_reviews<-reviews_by_region_pivot %>%
+reviews_by_region_pivot %>%
   ggplot(aes(x = reorder(region,avg_review), fill=is_extreme))+
   geom_bar(aes(y = score_chart),stat = "identity")+
   coord_flip() +
@@ -505,12 +502,13 @@ plot_region_reviews<-reviews_by_region_pivot %>%
     labs(title = "The most criticising guests come from Europe,\nthe most positive come from Australia", subtitle= "Number of positive and negative words per review per continent and average review score", x= "Region", y= "Average number of positive/negative words in a review", caption="Source: https://www.kaggle.com/ployyyywa/global-hotel-chain-presence") +
   scale_fill_manual(values = my_colours_positive) +
   scale_y_continuous(labels=abs)+
-   geom_hline(yintercept = -8, linetype="dashed", 
+   geom_hline(yintercept = -18, linetype="dashed", 
                 color = "tomato", size=0.8)+
   geom_hline(yintercept = 19.5, linetype="dashed", 
-                color = "#45B05F", size=0.8)
-
-plot_region_reviews +annotation_custom(my_grob) + annotation_custom(my_grob2)+annotation_custom(my_grob3) 
+                color = "#45B05F", size=0.8)+
+ annotate(geom= "text", x=5,  y=-2, label=my_text1r, family="Montserrat",size=6, color="tomato", fontface="bold")+
+  annotate(geom= "text", x=5,  y=1.9, label=my_text2r, family="Montserrat",size=6, color="#F1FFEB", fontface=2)+
+   annotate(geom= "text", x=5.5,  y=9, label=my_text3r, family="Montserrat",size=4, color="black", fontface=2)
 
 ```
 
@@ -530,7 +528,11 @@ reviews_by_subregion_pivot <- reviews_by_subregion_pivot%>%
                              ifelse(score_chart< -17.5, "2",
                                     ifelse(score_chart>-17.5 & score_chart <0, "3", "4"))))
 
-plot_subregion_reviews <-reviews_by_subregion_pivot %>%
+  my_text1s <- "Negative"
+    my_text2s <- "Positive"
+    my_text3s <- "Average \nreview score"
+
+reviews_by_subregion_pivot %>%
   ggplot(aes(x = reorder(sub_region,avg_review), fill = is_extreme))+
   geom_bar(aes(y = score_chart),stat = "identity")+
   coord_flip() +
@@ -557,14 +559,11 @@ plot_subregion_reviews <-reviews_by_subregion_pivot %>%
    geom_hline(yintercept = -17.5, linetype="dashed", 
                 color = "tomato", size=0.8)+
   geom_hline(yintercept = 17.5, linetype="dashed", 
-                color = "#45B05F", size=0.8)
-     my_text1s <- "Negative"
-    my_text2s <- "Positive"
-    my_text3s <- "Average \nreview score"
-my_grobs1 = grid.text(my_text1s, x=0.425,  y=0.85,gp=gpar(fontfamily="Montserrat",fontsize= 8, col="tomato", fontface="bold"))
-my_grobs2 = grid.text(my_text2s, x=0.545,  y=0.85,gp=gpar(fontfamily="Montserrat",fontsize= 8, col="#3FA259", fontface=2))
-my_grobs3 = grid.text(my_text3s, x=0.77,  y=0.94,gp=gpar(fontfamily="Montserrat",fontsize= 9, col="black", fontface=2))
- plot_subregion_reviews + annotation_custom(my_grobs1) + annotation_custom(my_grobs2)+annotation_custom(my_grobs3)
+                color = "#45B05F", size=0.8)+
+ annotate(geom= "text", x=15,  y=-2, label=my_text1s, family="Montserrat",size=4.5, color="tomato", fontface="bold")+
+  annotate(geom= "text", x=15,  y=1.9, label=my_text2s, family="Montserrat",size=4.5, color="#F1FFEB", fontface=2)+
+   annotate(geom= "text", x=17,  y=12.5, label=my_text3s, family="Montserrat",size=3.5, color="black", fontface=2)
+   
 ```
 
 ### Creating wordclouds with most popular positive/ negative words
@@ -711,7 +710,9 @@ bots_by_popularity<-duplicates%>%
   arrange(desc(sum))%>%
   mutate(is_others=ifelse(negative_review_renew=="Meaningful review",1,0))%>% #deprecated line, originally used for fill aesthetic colouring, but we cancelled the colouring already
   slice(1:2)
-bots_graph <- ggplot(bots_by_popularity, aes(x=reorder(negative_review_renew,-sum), y=sum)) +
+
+my_text1b <- "No Negative, \nNothing, \nnothing, & \nEverything"
+ggplot(bots_by_popularity, aes(x=reorder(negative_review_renew,-sum), y=sum)) +
     geom_bar(stat="identity", alpha=0.8)+
 theme_minimal() +
   theme(panel.grid.major.y = element_line(color = "gray60", size = 0.1),
@@ -732,11 +733,10 @@ theme_minimal() +
     labs(title = "Two-thirds of bots produce meaningless reviews", subtitle= "", x="Type of review", y="Count", caption="(We define repetitive reviews as exactly one of 'No Negative', 'Nothing', 'nothing' and 'Everything')") +
   scale_y_continuous()+
   scale_fill_manual(values = c("grey80"))+
-  geom_label(aes(label=sum),family="Montserrat", fontface="bold" )
-my_text1r <- "No Negative, \nNothing, \nnothing, & \nEverything"
-my_grobr1 <- grid.text(my_text1r, x=0.57,  y=0.82,gp=gpar(fontfamily="Montserrat",fontsize= 12, col="#2FABE1", fontface="bold"))
- bots_graph + annotation_custom(my_grobr1) 
+  geom_label(aes(label=sum),family="Montserrat", fontface="bold" )#+
+#annotate(geom= "text", x=1.7,  y=1500, label=my_text1b, family="Montserrat",size=7, color="#2FABE1",fontface="bold")
+
+
 ```
 
 Thank you!
-
