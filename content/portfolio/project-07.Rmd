@@ -50,51 +50,7 @@ knitr::opts_chunk$set(class.source = "blue")
 
 knitr::opts_chunk$set(class.output = "whiteb")
 ```
-<!--begin html code: I will mark the html code in my markdown files, these are not directly related to the course material-->
-
-
-
-
-</style>
-<style>
-body {
-text-align: justify}
-
-</style>
-
-
-<style>
-img {
-  border-radius: 15px;
-}
-
-
-<style>
-div.grey { background-color:#808080; border-radius: 5px; padding: 20px; border-style: groove;}
-</style>
-
-<style>
-div.font {color="red"}
-</style>
-
-<style>
-div.navy1 { background-color:#686868; border-radius: 5px; padding: 20px; border-style: groove; color: #ffffff;}
-
-</style>
-
-
-<style>
-div.navy { background-color:#A2A2B6; border-radius: 5px; padding: 20px; border-style: groove; color: #ffffff;}
-
-</style>
-
-<!--end html code-->
-
-# DATA PREPARATION
-
-#### Installing Packages
-
-```{r installing_packages}
+```{r installing_packages, include=FALSE}
 
 #installing needed packages
 library(tidyverse)
@@ -116,10 +72,10 @@ showtext_auto()
 ```{r loading_data}
 
 #Loadning the needed 2 datasets
-movie_data <- fread(input="~/Documents/LBS/Machine Learning/Session 02/data/movies.csv",
+movie_data <- fread(input="~/Documents/LBS/Machine Learning/Session 02/The Assignment/movies.csv",
                     stringsAsFactors = FALSE) #9742 number of rows
 
-rating_data <- fread(input = "~/Documents/LBS/Machine Learning/Session 02/data/ratings.csv",nrows = 1e6) #100836 number of rows
+rating_data <- fread(input = "~/Documents/LBS/Machine Learning/Session 02/The Assignment/ratings.csv",nrows = 1e6) #100836 number of rows
 
 #Creating the genre list for my data
 list_genre <- c("Action", "Adventure", "Animation", "Children", 
@@ -131,7 +87,7 @@ list_genre <- c("Action", "Adventure", "Animation", "Children",
 
 ### Cleaning the Data
 
-##### Cleaning Movies Data
+#### Cleaning Movies Data
 
 ```{r cleaning_movies_data}
 
@@ -179,7 +135,7 @@ movie_data <- movie_data[-removeRows,]
 movie_data
 ```
 
-##### Cleaning Ratings Data
+#### Cleaning Ratings Data
 
 There is a risk that the same user has rated a movie multiple times. I would like to keep only the best rating.
 
@@ -199,7 +155,7 @@ setdiff(unique(movie_data$movieId), unique(rating_data$movieId))
 rating_data
 ```
 
-##### Checking the Data is Clean
+#### Checking the Data is Clean
 
 ```{r performing_data_checks}
 
@@ -237,7 +193,7 @@ searchMatrix %>%  #Some movies have no genres listed, this is not problematic fo
 
 ```
 
-#### Building the Rating Matrix (User-Movie-Interactions Matrix)
+### Building the Rating Matrix (User-Movie-Interactions Matrix)
 
 ```{r rating_matrix}
 
@@ -260,9 +216,9 @@ ratingMatrix <- as(ratingMatrix, "realRatingMatrix") #Converting the rating matr
 
 # STEP 1 - EXPLORATORY ANALYSIS
 
-#### Preparing the Data
+### Preparing the Data
 
-##### Ratings Counts 
+#### Ratings Counts 
 ```{r evaluating_the_data_for_exploratory_analysis}
 
 
@@ -318,7 +274,7 @@ image(user_similarity, main = "100 Top active users' similarity")
 
 ```
 
-#### Build a Histogram to Show the Frequency of Ratings of All Movies
+#### a Histogram Showing the Frequency of Ratings of All Movies
 
 ```{r histogram_frequency_movie_ratings}
 
@@ -346,7 +302,7 @@ rating_data %>%  #Building a histogram
 
 # STEP 2 - SELECT MOST COMMON USERS AND MOVIES
 
-#### Select movies with more than 'm' ratings and users who have given more than 'n' ratings, where m <- c(10, 20, 50, 100, 200); n <- m
+I will select movies with more than 'm' ratings and users who have given more than 'n' ratings, where m <- c(10, 20, 50, 100, 200); n <- m
 
 ```{r m most common movies and n most common users}
 
@@ -372,6 +328,14 @@ top200_rate <- ratingMatrix[rowCounts(ratingMatrix) > 200,colCounts(ratingMatrix
 ```
 
 # STEP 3 - BUILDING RECOMMENDATION SYSTEMS
+
+For building and testing my recommendation systems I built matrixes with movies containing more than m ratings and users who rated more than n movies, where n=m. I selected the following values of m & n to test: 10,20,50,100, 200. 
+For each of the values I ran three models using methods: 
+-	User-user memory-based method (UBCF) 
+-	Item-item memory-based method (IBCF)
+Both of the above are memory based, collaborative filtering methods that learn from the past interactions between users/items to make new recommendations. The assumption behind these is that we have a sufficient number of interaction data in order for our predictions to a) establish similarities between users/items b) predict reliable outcomes. 
+-	Model-based approach using matrix factorisation (LIMBF)
+This method is based on user-item interactions, it allows for a level of approximation for groups or individuals, we can establish a mathematical level of confidence on the model. The drawback of this approach is that it works much slower and demands much bigger computing power to execute – it is much more costly to run.
 
 #### Splitting each subset into test and training data
 
@@ -399,9 +363,9 @@ top200_split <- evaluationScheme(top200_rate, method="split", train=0.8, given=-
 
 ```
 
-#### Build three separate recommendations systems for each of the values of 'n' and 'm' (5 versions for each type of RS)
+I will build three separate recommendations systems for each of the values of 'n' and 'm' (5 versions for each type of RS)
 
-#### Item  Based CF
+### Item  Based CF
 
 ```{r item_based_CF}
 
@@ -423,7 +387,7 @@ top200_IBCF <- Recommender(getData(top200_split, "train"), method = "IBCF", para
 
 ```
 
-#### User Based CF
+### User Based CF
 
 ```{r user_based_CF}
 #TOP10
@@ -445,7 +409,7 @@ top200_UBCF <- Recommender(getData(top200_split, "train"), method = "UBCF", para
 
 ```
 
-#### Model Based CF using Matrix Factorisation
+### Model Based CF using Matrix Factorisation
 
 ```{r model_based_cf_using_mf}
 #TOP10
@@ -467,12 +431,16 @@ top200_LIBMF <- Recommender(getData(top200_split, "train"), method = "LIBMF", pa
 
 ```
 
-#### STEP 4 - Computing RMSE of each model and combination of m x n ####
+In my work, I built in total 15 models. However, before I did it, I set the seed for ‘1234’ in order to split the data for each mxn matrix. It is important to mention, as one of the remarks from the analysis I realized is that the outcome and performance of the models is strongly dependent on the seed we choose. Using different seeds at the end led me to the same model choice, however, the outputs differed significantly from each other.
+Let me now explain how the models behave when we include only common movies/users first. When n and m= 200, we include in our model only the movies that were rated 200 or more times and the users that rated more than 200 movies. In such a manner, we significantly shrink the data. As a result, even though the RMSE is low in comparison to other models, our dataset does not have many values and it is not fully reliable. On the contrary, when we set our n and m=10 or 20, we include also rarely watched movies and not so active users. In this way, we obtain a large dataset including the majority of the observations. However, if we include such rare items/ users, our models have much less predictive power, and that ultimately lead us to higher RMSE. As we will see further from the RMSE analysis, the best choice lies in between, when n & m =100 or 50. The middle point seems to be the tradeoff of the two options mentioned above.
 
-#### Assess performance of the above models for different number of 'items' and 'users'. Remember CF methods are most appropriate for high volume items (often watched movies) and frequent users. So, if you use n,m == 20 then performance changes as opposed to when you use n, == 50.
-#### For each recommendation system we expect to see 5 RMSE numbers, corresponding to n,m == {10,20,50,100,200}
+# STEP 4 - Computing RMSE of each model and combination of m x n ####
 
-#### RMSE_item_based_CF
+I will assess performance of the above models for different number of 'items' and 'users'. I need to remember CF methods are most appropriate for high volume items (often watched movies) and frequent users. So, if I use n,m == 20 then performance changes as opposed to when I use n, == 50.
+
+For each recommendation system we expect to see 5 RMSE numbers, corresponding to n,m == {10,20,50,100,200}
+
+### RMSE_item_based_CF
 
 ```{r RMSE_item_based_CF}
 
@@ -480,47 +448,55 @@ set.seed(1234) # setting seed
 #TOP10
 
 #I compute predicted ratings by giving the model the known part of the test data (i.e. the data of the users for all but 5 movies for each user)
-
+set.seed(1234) # setting seed
 top10_IBCF_predict <- predict(top10_IBCF, getData(top10_split, "known"), type="ratings")
 
 #Finally, I can calculate RMSE between the predictions and the unknown part of the test data (i.e. for the 5 movies that were held out)
-
+set.seed(1234) # setting seed
 top10_IBCF_RMSE <- calcPredictionAccuracy(top10_IBCF_predict, getData(top10_split, "unknown"))[1]
 top10_IBCF_RMSE
 
 #TOP20
 
 #I compute predicted ratings by giving the model the known part of the test data (i.e. the data of the users for all but 5 movies for each user)
+set.seed(1234) # setting seed
 top20_IBCF_predict <- predict(top20_IBCF, getData(top20_split, "known"), type="ratings")
 
 #Finally, I can calculate RMSE between the predictions and the unknown part of the test data (i.e. for the 5 movies that were held out)
+set.seed(1234) # setting seed
 top20_IBCF_RMSE <- calcPredictionAccuracy(top20_IBCF_predict, getData(top20_split, "unknown"))[1]
 top20_IBCF_RMSE
 
 #TOP20
 
 #I compute predicted ratings by giving the model the known part of the test data (i.e. the data of the users for all but 5 movies for each user)
+set.seed(1234) # setting seed
 top50_IBCF_predict <- predict(top50_IBCF, getData(top50_split, "known"), type="ratings")
 
 #Finally, I can calculate RMSE between the predictions and the unknown part of the test data (i.e. for the 5 movies that were held out)
+set.seed(1234) # setting seed
 top50_IBCF_RMSE <- calcPredictionAccuracy(top50_IBCF_predict, getData(top50_split, "unknown"))[1]
 top50_IBCF_RMSE
 
 #TOP20
 
 #I compute predicted ratings by giving the model the known part of the test data (i.e. the data of the users for all but 5 movies for each user)
+set.seed(1234) # setting seed
 top100_IBCF_predict <- predict(top100_IBCF, getData(top100_split, "known"), type="ratings")
 
 #Finally, I can calculate RMSE between the predictions and the unknown part of the test data (i.e. for the 5 movies that were held out)
+set.seed(1234) # setting seed
 top100_IBCF_RMSE <- calcPredictionAccuracy(top100_IBCF_predict, getData(top100_split, "unknown"))[1]
 top100_IBCF_RMSE
 
 #TOP200
 
 #I compute predicted ratings by giving the model the known part of the test data (i.e. the data of the users for all but 5 movies for each user)
+set.seed(1234) # setting seed
 top200_IBCF_predict <- predict(top200_IBCF, getData(top200_split, "known"), type="ratings")
 
 #Finally, I can calculate RMSE between the predictions and the unknown part of the test data (i.e. for the 5 movies that were held out)
+set.seed(1234) # setting seed
 top200_IBCF_RMSE <- calcPredictionAccuracy(top200_IBCF_predict, getData(top200_split, "unknown"))[1]
 top200_IBCF_RMSE
 
@@ -528,74 +504,92 @@ top200_IBCF_RMSE
 
 ```
 
-#### RMSE_user_based_CF
+### RMSE_user_based_CF
 
 ```{r RMSE_user_based_CF}
 set.seed(1234) # setting seed
 #TOP10
 top10_UBCF_predict <- predict(top10_UBCF, getData(top10_split, "known"), type="ratings")
 
+set.seed(1234) # setting seed
 top10_UBCF_RMSE <- calcPredictionAccuracy(top10_UBCF_predict, getData(top10_split, "unknown"))[1]
 top10_UBCF_RMSE
 
 #TOP20
+set.seed(1234) # setting seed
 top20_UBCF_predict <- predict(top20_UBCF, getData(top20_split, "known"), type="ratings")
 
+set.seed(1234) # setting seed
 top20_UBCF_RMSE <- calcPredictionAccuracy(top20_UBCF_predict, getData(top20_split, "unknown"))[1]
 top20_UBCF_RMSE
 
 #TOP50
+set.seed(1234) # setting seed
 top50_UBCF_predict <- predict(top50_UBCF, getData(top50_split, "known"), type="ratings")
 
+set.seed(1234) # setting seed
 top50_UBCF_RMSE <- calcPredictionAccuracy(top50_UBCF_predict, getData(top50_split, "unknown"))[1]
 top50_UBCF_RMSE
 
 #TOP100
+set.seed(1234) # setting seed
 top100_UBCF_predict <- predict(top100_UBCF, getData(top100_split, "known"), type="ratings")
 
+set.seed(1234) # setting seed
 top100_UBCF_RMSE <- calcPredictionAccuracy(top100_UBCF_predict, getData(top100_split, "unknown"))[1]
 top100_UBCF_RMSE
 
 #TOP200
+set.seed(1234) # setting seed
 top200_UBCF_predict <- predict(top200_UBCF, getData(top200_split, "known"), type="ratings")
 
+set.seed(1234) # setting seed
 top200_UBCF_RMSE <- calcPredictionAccuracy(top200_UBCF_predict, getData(top200_split, "unknown"))[1]
 top200_UBCF_RMSE
 
 ```
 
 
-#### RMSE_model_based_CF_using_MF
+### RMSE_model_based_CF_using_MF
 
 ```{r RMSE_model_based_CF_using_MF}
 set.seed(1234) # setting seed
 #TOP10
 top10_LIBMF_predict <- predict(top10_LIBMF, getData(top10_split, "known"), type="ratings")
 
+set.seed(1234) # setting seed
 top10_LIBMF_RMSE <- calcPredictionAccuracy(top10_LIBMF_predict, getData(top10_split, "unknown"))[1]
 top10_LIBMF_RMSE
 
 #TOP20
+set.seed(1234) # setting seed
 top20_LIBMF_predict <- predict(top20_LIBMF, getData(top20_split, "known"), type="ratings")
 
+set.seed(1234) # setting seed
 top20_LIBMF_RMSE <- calcPredictionAccuracy(top20_LIBMF_predict, getData(top20_split, "unknown"))[1]
 top20_LIBMF_RMSE
 
 #TOP50
+set.seed(1234) # setting seed
 top50_LIBMF_predict <- predict(top50_LIBMF, getData(top50_split, "known"), type="ratings")
 
+set.seed(1234) # setting seed
 top50_LIBMF_RMSE <- calcPredictionAccuracy(top50_LIBMF_predict, getData(top50_split, "unknown"))[1]
 top50_LIBMF_RMSE
 
 #TOP100
+set.seed(1234) # setting seed
 top100_LIBMF_predict <- predict(top100_LIBMF, getData(top100_split, "known"), type="ratings")
 
+set.seed(1234) # setting seed
 top100_LIBMF_RMSE <- calcPredictionAccuracy(top100_LIBMF_predict, getData(top100_split, "unknown"))[1]
 top100_LIBMF_RMSE
 
 #TOP200
+set.seed(1234) # setting seed
 top200_LIBMF_predict <- predict(top200_LIBMF, getData(top200_split, "known"), type="ratings")
 
+set.seed(1234) # setting seed
 top200_LIBMF_RMSE <- calcPredictionAccuracy(top200_LIBMF_predict, getData(top200_split, "unknown"))[1]
 top200_LIBMF_RMSE
 
@@ -604,78 +598,8 @@ top200_LIBMF_RMSE
 
 # STEP 5 - REPORTING PLOTS SHOWING HOW RMSE CHANGES GIVEN THE MODEL AND VALUES OF 'N' AND 'M'
 
-#### Your X-axis should be values of n,m and your y-axis should be RMSE
-
-```{r RMSE_plots_item_based_CF}
-rmse_ibcf <- data.frame(top10_IBCF_RMSE, top20_IBCF_RMSE, top50_IBCF_RMSE, top100_IBCF_RMSE, top200_IBCF_RMSE)
-value_mn <- c(10, 20, 50, 100, 200)
-rmse_ibcf 
-rmse_ibcf <- rmse_ibcf %>% 
-  pivot_longer(cols = c("top10_IBCF_RMSE", "top20_IBCF_RMSE", "top50_IBCF_RMSE", "top100_IBCF_RMSE", "top200_IBCF_RMSE" ),names_to = "a", values_to = "value") 
-
-p1<- ggplot(data = rmse_ibcf,  aes(x=value_mn, y = value)) +
-  geom_line() +
-  geom_point() +
-  theme_minimal()+
-  theme( plot.title = element_text(size=15,face="bold", family= "Montserrat"),
-         axis.title.y = element_text(size = 8, angle = 90, family="Montserrat", face = "bold"),
-        axis.text.y=element_text(family="Montserrat", size=7),
-        axis.title.x = element_text(size = 8, family="Montserrat", face = "bold"),
-        axis.text.x=element_text(family="Montserrat", size=7))+
-    labs(title= "RMSE for IBCF", x="m & n value", y=" RMSE")
-p1
-
-```
-
-```{r RMSE_plots_user_based_CF}
-rmse_ubcf <- data.frame(top10_UBCF_RMSE, top20_UBCF_RMSE, top50_UBCF_RMSE, top100_UBCF_RMSE, top200_UBCF_RMSE)
-value_mn <- c(10, 20, 50, 100, 200)
-rmse_ubcf 
-rmse_ubcf <- rmse_ubcf %>% 
-  pivot_longer(cols = c("top10_UBCF_RMSE", "top20_UBCF_RMSE", "top50_UBCF_RMSE", "top100_UBCF_RMSE", "top200_UBCF_RMSE" ),names_to = "a", values_to = "value") 
-
-p2<-ggplot(data = rmse_ubcf,  aes(x=value_mn, y = value)) +
-  geom_line() +
-  geom_point() +
-  theme_minimal()+
-  theme(plot.title = element_text(size=15,face="bold", family= "Montserrat"),
-        axis.title.y = element_text(size = 8, angle = 90, family="Montserrat", face = "bold"),
-        axis.text.y=element_text(family="Montserrat", size=7),
-        axis.title.x = element_text(size = 8, family="Montserrat", face = "bold"),
-        axis.text.x=element_text(family="Montserrat", size=7))+
-    labs(title= "RMSE for UBCF", x="m & n value", y=" RMSE")
-p2
-
-
-```
-
-```{r RMSE_plots_model_based_CF_using_MF}
-rmse_libmf <- data.frame(top10_LIBMF_RMSE, top20_LIBMF_RMSE, top50_LIBMF_RMSE, top100_LIBMF_RMSE, top200_LIBMF_RMSE)
-value_mn <- c(10, 20, 50, 100, 200)
-rmse_libmf 
-rmse_libmf <- rmse_libmf %>% 
-  pivot_longer(cols = c("top10_LIBMF_RMSE", "top20_LIBMF_RMSE", "top50_LIBMF_RMSE", "top100_LIBMF_RMSE", "top200_LIBMF_RMSE" ),names_to = "a", values_to = "value") 
-
-p3<- ggplot(data = rmse_libmf,  aes(x=value_mn, y = value)) +
-  geom_line() +
-  geom_point() +
-  theme_minimal()+
-  theme(plot.title = element_text(size=15,face="bold", family= "Montserrat"),
-        axis.title.y = element_text(size = 8, angle = 90, family="Montserrat", face = "bold"),
-        axis.text.y=element_text(family="Montserrat", size=7),
-        axis.title.x = element_text(size = 8, family="Montserrat", face = "bold"),
-        axis.text.x=element_text(family="Montserrat", size=7))+
-    labs(title= "RMSE for LIBMF", x="m & n value", y=" RMSE")
-p3
-```
-
-
-```{r, fig.height=4, fig.width=4}
-library(gridExtra)
-grid.arrange(p1,p2,p3, nrow = 3)
-
-```
-# Second verison of RMSEs
+For each of my models, I predicted the values on the testing set and then in the next step, I checked the RMSEs for all the models. As we can observe across all the models, when n & m=100, the RMSE turns out to be the lowest for each of the methods.
+The Visualisation of all the RMSEs can help us better understand the performance of all the models. 
 
 ```{r}
 
@@ -721,10 +645,13 @@ geom_point() +
 
 
 ```
-n=m=50 Matrix Factorisation model is the best -> it is based on the interactions between users and items.
 
 
 # STEP 6 - CHOOSING THE OPTIMAL MODEL AND EVALUATING ITS RECOMMENDATIONS
+
+From the above analysis, I can deduct that the best performing method and model I should choose for my recommendation system is the Matrix Factorisation Model with n & m= 100. 
+
+Such a model is based on the interactions between users and items. It is not only dependent on one of these variables. The big advantage is as well, that such a solution does not rely on the assumption of a large historical dataset. However, in the real world, such a model might not perform well for the rare movies. For these, we should try to use perhaps a different model of different m & n values and combine a mixed model that runs different analyses depending on the popularity of the movies and activeness of the users.
 
 ```{r}
 
