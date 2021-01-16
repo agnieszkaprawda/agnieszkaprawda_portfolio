@@ -1,7 +1,7 @@
 ---
 author: Agnieszka Prawda
 date: "2021-01-15T13:45:06+06:00"
-feature_image: images/blog/cover_meetable.jpg
+feature_image: images/blog/MIINT2.png
 image: images/blog/MIINT.png
 title: 'Truner MIINT Impact Investment Programme - Mental Health & Neurological Diseases'
 ---
@@ -13,7 +13,7 @@ What is MIINT?
 
 ##### Watch the pitch video
 
-[![MIINT](http://www.themiint.org/)
+[MIINT](http://www.themiint.org/)
 
 
 We spent 36 h working on the creation of the MVP - including the development of the UI & UX, logistics behind the product, ways of gaining revenue, and coding the backend & frontend of the app.
