@@ -39,7 +39,7 @@ summarylength = 25
 #  # Google Analitycs
   googleAnalitycsID = "AgnieszkaPrawdawebiste "
   # We're using formspree.io for form handling, paste your formspree url below
-  formspreeFormUrl  = "hhttps://formspree.io/f/mqkgwrjp"
+  formspreeFormUrl  = "https://formspree.io/f/mqkgwrjp"
   
   # Navbar Action Button
   [params.navAction]
